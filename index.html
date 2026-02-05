@@ -1346,10 +1346,10 @@
                 font-size: 18px;
             }
 
-            /* Contenido principal con espacio para nav */
+            /* Contenido principal */
             .content {
                 padding: 12px;
-                padding-bottom: 90px;
+                padding-top: 70px; /* Espacio para el botón hamburguesa */
             }
 
             /* Stats dashboard 2x2 compacto */
@@ -1421,9 +1421,6 @@
             }
 
             /* ====== TARJETAS MÓVIL - DISEÑO LIMPIO ====== */
-            .prospect-list {
-                padding-bottom: 20px;
-            }
 
             .prospect-card-enhanced {
                 padding: 0;
@@ -1540,7 +1537,7 @@
                 display: flex;
                 overflow-x: auto;
                 gap: 12px;
-                padding: 0 12px 20px;
+                padding: 0 12px;
                 -webkit-overflow-scrolling: touch;
                 scroll-snap-type: x mandatory;
             }
@@ -1572,69 +1569,144 @@
             }
         }
 
-        /* Navegación móvil - oculta por defecto */
-        .mobile-nav {
+        /* Menú móvil hamburguesa - oculto por defecto */
+        .mobile-menu-btn,
+        .mobile-menu,
+        .mobile-menu-overlay {
             display: none;
         }
 
         @media (max-width: 768px) {
-            .mobile-nav {
+            /* Botón hamburguesa */
+            .mobile-menu-btn {
                 display: flex;
                 position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: #fff;
-                border-top: 1px solid #eee;
-                padding: 6px 0;
-                padding-bottom: calc(6px + env(safe-area-inset-bottom));
-                z-index: 1000;
-                justify-content: space-around;
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            }
-            .mobile-nav-item {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                gap: 3px;
-                background: none;
-                border: none;
-                padding: 10px 8px;
-                cursor: pointer;
-                color: #aaa;
-                font-family: 'Inter', sans-serif;
-                flex: 1;
-                transition: color 0.2s;
-            }
-            .mobile-nav-item.active {
-                color: #1a1a2e;
-            }
-            .mobile-nav-icon {
-                font-size: 20px;
-            }
-            .mobile-nav-label {
-                font-size: 10px;
-                font-weight: 600;
-                letter-spacing: 0.2px;
-            }
-            body.dark .mobile-nav {
-                background: #111;
-                border-top-color: #222;
-                box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
-            }
-            body.dark .mobile-nav-item {
-                color: #555;
-            }
-            body.dark .mobile-nav-item.active {
+                top: 12px;
+                left: 12px;
+                width: 44px;
+                height: 44px;
+                background: #1a1a2e;
                 color: #fff;
+                border: none;
+                border-radius: 12px;
+                font-size: 20px;
+                align-items: center;
+                justify-content: center;
+                z-index: 1001;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+                cursor: pointer;
+            }
+            body.dark .mobile-menu-btn {
+                background: #333;
             }
 
-            /* IMPORTANTE: Espacio para que la nav no tape contenido */
-            #view-porcontactar,
-            #view-pipeline,
-            #view-calendario,
-            #view-informes {
-                padding-bottom: 100px !important;
+            /* Overlay oscuro */
+            .mobile-menu-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1002;
+            }
+            .mobile-menu-overlay.open {
+                display: block;
+            }
+
+            /* Menú lateral */
+            .mobile-menu {
+                display: block;
+                position: fixed;
+                top: 0;
+                left: -280px;
+                width: 280px;
+                height: 100vh;
+                background: #fff;
+                z-index: 1003;
+                transition: left 0.3s ease;
+                box-shadow: 2px 0 20px rgba(0,0,0,0.1);
+            }
+            .mobile-menu.open {
+                left: 0;
+            }
+            body.dark .mobile-menu {
+                background: #1a1a1a;
+            }
+
+            .mobile-menu-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 20px;
+                border-bottom: 1px solid #eee;
+            }
+            body.dark .mobile-menu-header {
+                border-bottom-color: #333;
+            }
+            .mobile-menu-title {
+                font-size: 20px;
+                font-weight: 600;
+                color: #1a1a2e;
+            }
+            body.dark .mobile-menu-title {
+                color: #fff;
+            }
+            .mobile-menu-close {
+                width: 36px;
+                height: 36px;
+                background: #f5f5f5;
+                border: none;
+                border-radius: 50%;
+                font-size: 16px;
+                cursor: pointer;
+                color: #666;
+            }
+            body.dark .mobile-menu-close {
+                background: #333;
+                color: #aaa;
+            }
+
+            .mobile-menu-items {
+                padding: 16px 12px;
+            }
+            .mobile-menu-item {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                width: 100%;
+                padding: 16px;
+                background: none;
+                border: none;
+                border-radius: 12px;
+                font-size: 16px;
+                font-family: 'Inter', sans-serif;
+                color: #666;
+                cursor: pointer;
+                text-align: left;
+                margin-bottom: 4px;
+            }
+            .mobile-menu-item:hover,
+            .mobile-menu-item.active {
+                background: #f5f5f5;
+                color: #1a1a2e;
+            }
+            body.dark .mobile-menu-item {
+                color: #888;
+            }
+            body.dark .mobile-menu-item:hover,
+            body.dark .mobile-menu-item.active {
+                background: #2a2a2a;
+                color: #fff;
+            }
+            .mobile-menu-item span {
+                font-size: 18px;
+            }
+
+            /* Header ajustado para el botón hamburguesa */
+            .header {
+                padding-left: 70px !important;
             }
         }
 
@@ -3802,13 +3874,21 @@
                 }
             });
 
-            // Update mobile nav active state
-            document.querySelectorAll('.mobile-nav-item[data-view]').forEach(item => {
+            // Update mobile menu active state
+            document.querySelectorAll('.mobile-menu-item[data-view]').forEach(item => {
                 item.classList.remove('active');
                 if (item.dataset.view === viewName) {
                     item.classList.add('active');
                 }
             });
+        }
+
+        // Toggle mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            const overlay = document.getElementById('mobileMenuOverlay');
+            menu.classList.toggle('open');
+            overlay.classList.toggle('open');
         }
 
         // Move company to Contactado
@@ -4216,24 +4296,28 @@
         })();
     </script>
 
-    <!-- Navegación móvil -->
-    <nav class="mobile-nav">
-        <button class="mobile-nav-item active" onclick="showView('pipeline')" data-view="pipeline">
-            <span class="mobile-nav-icon">◉</span>
-            <span class="mobile-nav-label">Pipeline</span>
-        </button>
-        <button class="mobile-nav-item" onclick="showView('porcontactar')" data-view="porcontactar">
-            <span class="mobile-nav-icon">▤</span>
-            <span class="mobile-nav-label">Empresas</span>
-        </button>
-        <button class="mobile-nav-item" onclick="showView('calendario')" data-view="calendario">
-            <span class="mobile-nav-icon">▦</span>
-            <span class="mobile-nav-label">Calendario</span>
-        </button>
-        <button class="mobile-nav-item" onclick="showView('informes')" data-view="informes">
-            <span class="mobile-nav-icon">◧</span>
-            <span class="mobile-nav-label">Informes</span>
-        </button>
+    <!-- Menú móvil hamburguesa -->
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
+    <nav class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <span class="mobile-menu-title">SNARO</span>
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
+        </div>
+        <div class="mobile-menu-items">
+            <button class="mobile-menu-item active" onclick="showView('pipeline'); toggleMobileMenu();" data-view="pipeline">
+                <span>◉</span> Pipeline
+            </button>
+            <button class="mobile-menu-item" onclick="showView('porcontactar'); toggleMobileMenu();" data-view="porcontactar">
+                <span>▤</span> Empresas
+            </button>
+            <button class="mobile-menu-item" onclick="showView('calendario'); toggleMobileMenu();" data-view="calendario">
+                <span>▦</span> Calendario
+            </button>
+            <button class="mobile-menu-item" onclick="showView('informes'); toggleMobileMenu();" data-view="informes">
+                <span>◧</span> Informes
+            </button>
+        </div>
     </nav>
 </body>
 </html>
