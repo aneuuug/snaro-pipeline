@@ -1705,11 +1705,10 @@
 
             .mobile-menu-header {
                 display: flex;
-                justify-content: center;
+                justify-content: flex-end;
                 align-items: center;
-                padding: 20px;
+                padding: 12px 16px;
                 border-bottom: 1px solid #eee;
-                position: relative;
             }
             body.dark .mobile-menu-header {
                 border-bottom-color: #333;
@@ -1724,8 +1723,6 @@
                 color: #fff;
             }
             .mobile-menu-close {
-                position: absolute;
-                right: 16px;
                 width: 32px;
                 height: 32px;
                 background: #f5f5f5;
@@ -4384,7 +4381,6 @@
     <div class="mobile-menu-overlay" id="mobileMenuOverlay" onclick="toggleMobileMenu()"></div>
     <nav class="mobile-menu" id="mobileMenu">
         <div class="mobile-menu-header">
-            <span class="mobile-menu-title">SNARO</span>
             <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
         </div>
         <div class="mobile-menu-items">
