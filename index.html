@@ -1165,16 +1165,24 @@
             border-color: #ddd;
             transform: translateX(4px);
         }
-        .prospect-card-enhanced .tier-indicator {
+        .prospect-card-enhanced .sector-indicator {
             width: 4px;
             height: 50px;
             border-radius: 2px;
             flex-shrink: 0;
         }
-        .prospect-card-enhanced .tier-indicator.enterprise { background: #1a1a2e; }
-        .prospect-card-enhanced .tier-indicator.midmarket { background: #0f4c75; }
-        .prospect-card-enhanced .tier-indicator.pyme { background: #3d5a80; }
-        .prospect-card-enhanced .tier-indicator.micro { background: #ccc; }
+        /* Colores por sector */
+        .sector-indicator.energia { background: #f59e0b; }
+        .sector-indicator.servicios { background: #6366f1; }
+        .sector-indicator.industria { background: #64748b; }
+        .sector-indicator.construccion { background: #f97316; }
+        .sector-indicator.tecnologia { background: #06b6d4; }
+        .sector-indicator.salud { background: #ec4899; }
+        .sector-indicator.alimentacion { background: #22c55e; }
+        .sector-indicator.logistica { background: #8b5cf6; }
+        .sector-indicator.distribucion { background: #14b8a6; }
+        .sector-indicator.automocion { background: #ef4444; }
+        .sector-indicator.default { background: #9ca3af; }
 
         .prospect-main-info { flex: 1; min-width: 0; }
         .prospect-main-info .company-name {
@@ -3315,9 +3323,10 @@
                     const revenue = parseRevenue(p.detail);
                     const tier = getRevenueTier(revenue);
                     const provincia = p.location.split(',')[1]?.trim() || p.location;
+                    const sectorClass = p.sector.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/g, '') || 'default';
                     return `
                     <div class="prospect-card-enhanced" onclick="openProspectDetail(${p.id})">
-                        <div class="tier-indicator ${tier}"></div>
+                        <div class="sector-indicator ${sectorClass}"></div>
                         <div class="prospect-main-info">
                             <div class="company-name">${p.name}</div>
                             <div class="company-tags">
