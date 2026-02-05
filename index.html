@@ -1325,7 +1325,7 @@
         body.dark .chart-bar-value { color: #ddd; }
 
         /* ============================================ */
-        /* ESTILOS MÓVIL */
+        /* ESTILOS MÓVIL - DISEÑO PROFESIONAL */
         /* ============================================ */
         @media (max-width: 768px) {
             /* Ocultar sidebar en móvil */
@@ -1338,7 +1338,7 @@
                 grid-template-columns: 1fr;
             }
 
-            /* Header más compacto */
+            /* Header compacto */
             .header {
                 padding: 12px 16px;
             }
@@ -1346,158 +1346,226 @@
                 font-size: 18px;
             }
 
-            /* Contenido principal */
+            /* Contenido principal con espacio para nav */
             .content {
-                padding: 16px;
+                padding: 12px;
+                padding-bottom: 90px;
             }
 
-            /* Stats dashboard 2x2 */
+            /* Stats dashboard 2x2 compacto */
             .stats-dashboard {
                 grid-template-columns: 1fr 1fr;
-                gap: 12px;
-                padding: 16px;
-                margin-bottom: 16px;
+                gap: 8px;
+                padding: 12px;
+                margin-bottom: 12px;
+                border-radius: 16px;
             }
             .stat-card {
-                padding: 16px 12px;
+                padding: 14px 10px;
+                border-radius: 12px;
             }
             .stat-card .stat-value {
-                font-size: 24px;
+                font-size: 22px;
             }
             .stat-card .stat-label {
-                font-size: 9px;
+                font-size: 8px;
+                letter-spacing: 0.3px;
             }
             .stat-card .stat-revenue {
-                font-size: 10px;
+                font-size: 9px;
             }
 
-            /* Filter pills scroll horizontal */
+            /* Filter pills - scroll horizontal limpio */
             .filter-pills {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: 8px;
-                -webkit-overflow-scrolling: touch;
-            }
-            .filter-pill {
-                flex-shrink: 0;
-                padding: 6px 12px;
-                font-size: 11px;
+                display: none; /* Ocultar en móvil - usar dashboard para filtrar */
             }
 
-            /* Filtros apilados */
+            /* Búsqueda prominente */
             .filters-bar {
                 flex-direction: column !important;
                 gap: 8px !important;
+                margin-bottom: 12px !important;
             }
-            .filters-bar input,
+            .filters-bar input {
+                width: 100% !important;
+                padding: 14px 16px !important;
+                font-size: 16px !important; /* Evita zoom en iOS */
+                border-radius: 12px !important;
+            }
             .filters-bar select,
             .filter-select {
                 width: 100% !important;
-                min-width: unset !important;
+                padding: 12px !important;
+                font-size: 14px !important;
+                border-radius: 10px !important;
             }
 
-            /* Toolbar */
+            /* Ocultar toolbar secundario */
             .toolbar {
-                flex-direction: column;
-                gap: 12px;
-                align-items: stretch !important;
-            }
-            .toolbar > div {
-                justify-content: space-between;
+                display: none !important;
             }
 
-            /* Tarjetas de empresa */
-            .prospect-card-enhanced {
-                padding: 16px;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 12px;
+            /* View summary compacto */
+            .view-summary {
+                margin-bottom: 12px;
+                padding: 0 4px;
             }
+            .summary-number {
+                font-size: 28px;
+            }
+            .summary-label {
+                font-size: 13px;
+            }
+            .summary-hint {
+                display: none;
+            }
+
+            /* ====== TARJETAS MÓVIL - DISEÑO LIMPIO ====== */
+            .prospect-list {
+                padding-bottom: 20px;
+            }
+
+            .prospect-card-enhanced {
+                padding: 0;
+                margin-bottom: 12px;
+                border-radius: 16px;
+                overflow: hidden;
+                flex-direction: column;
+                gap: 0;
+                border: none;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+
             .prospect-card-enhanced .tier-indicator {
                 width: 100%;
                 height: 4px;
+                border-radius: 0;
+            }
+
+            .prospect-main-info {
+                padding: 16px 16px 12px;
             }
             .prospect-main-info .company-name {
-                font-size: 14px;
+                font-size: 16px;
+                font-weight: 600;
+                margin-bottom: 8px;
             }
             .company-tags {
                 gap: 6px;
             }
             .tag-sector, .tag-location {
-                font-size: 10px;
-                padding: 3px 8px;
+                font-size: 11px;
+                padding: 4px 10px;
+                border-radius: 6px;
             }
+
             .prospect-revenue-section {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                text-align: left;
+                padding: 12px 16px;
+                background: #f8f8f8;
+                border-top: 1px solid #eee;
             }
             .prospect-revenue-section .revenue-amount {
-                font-size: 20px;
+                font-size: 24px;
+                font-weight: 700;
             }
-            /* Botones grandes y accesibles en móvil */
+            .prospect-revenue-section .tier-badge {
+                font-size: 10px;
+                padding: 5px 12px;
+            }
+
+            /* Botones de acción - zona táctil grande */
             .prospect-actions-inline {
                 display: flex;
-                gap: 8px;
-                margin-top: 8px;
-                width: 100%;
+                border-top: 1px solid #eee;
+                margin: 0;
+                gap: 0;
             }
             .prospect-actions-inline .action-btn {
                 flex: 1;
-                padding: 14px 16px;
-                font-size: 13px;
+                padding: 16px;
+                font-size: 14px;
+                font-weight: 600;
                 text-align: center;
-                border-radius: 10px;
+                border-radius: 0;
+                border: none;
+                margin: 0;
+            }
+            .prospect-actions-inline .action-btn.primary {
+                background: #1a1a2e;
+                color: #fff;
             }
             .prospect-actions-inline .action-btn.secondary {
-                flex: 0 0 50px;
+                background: #f5f5f5;
+                color: #999;
+                flex: 0 0 60px;
+                border-left: 1px solid #eee;
             }
 
-            /* Pipeline en móvil - scroll horizontal */
+            /* Dark mode móvil */
+            body.dark .prospect-card-enhanced {
+                box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            }
+            body.dark .prospect-revenue-section {
+                background: #1a1a1a;
+                border-top-color: #333;
+            }
+            body.dark .prospect-actions-inline .action-btn.secondary {
+                background: #2a2a2a;
+                border-left-color: #333;
+            }
+
+            /* ====== PIPELINE MÓVIL ====== */
+            .pipeline-summary {
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 12px;
+            }
+            .pipeline-metric {
+                flex: 1;
+                min-width: calc(50% - 4px);
+                text-align: center;
+                padding: 12px 8px;
+                background: #f5f5f5;
+                border-radius: 12px;
+            }
+            body.dark .pipeline-metric {
+                background: #222;
+            }
+
             .pipeline-board {
                 display: flex;
                 overflow-x: auto;
                 gap: 12px;
-                padding-bottom: 16px;
+                padding: 0 12px 20px;
                 -webkit-overflow-scrolling: touch;
+                scroll-snap-type: x mandatory;
             }
             .pipeline-column {
-                min-width: 280px;
+                min-width: 85vw;
                 flex-shrink: 0;
+                scroll-snap-align: center;
+                border-radius: 16px;
             }
 
-            /* Pipeline summary */
-            .pipeline-summary {
-                flex-direction: column;
-                gap: 12px;
-                padding: 16px;
-            }
-
-            /* View summary */
-            .view-summary {
-                margin-bottom: 16px;
-            }
-            .summary-number {
-                font-size: 36px;
-            }
-
-            /* Tabla en móvil - scroll horizontal */
-            .prospect-table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            /* Modal en móvil */
+            /* Modal móvil */
             .modal {
-                width: 95%;
-                max-height: 90vh;
-                margin: 5vh auto;
+                width: 100%;
+                max-width: 100%;
+                max-height: 100vh;
+                margin: 0;
+                border-radius: 0;
             }
 
             /* Ocultar elementos no esenciales */
             .theme-toggle {
-                right: 50px;
+                top: 10px;
+                right: 12px;
+                width: 32px;
+                height: 32px;
             }
             .connection-badge {
                 display: none;
@@ -1517,55 +1585,48 @@
                 left: 0;
                 right: 0;
                 background: #fff;
-                border-top: 1px solid #e0e0e0;
-                padding: 8px 0;
-                padding-bottom: calc(8px + env(safe-area-inset-bottom));
+                border-top: 1px solid #eee;
+                padding: 6px 0;
+                padding-bottom: calc(6px + env(safe-area-inset-bottom));
                 z-index: 1000;
                 justify-content: space-around;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
             }
             .mobile-nav-item {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 2px;
+                gap: 3px;
                 background: none;
                 border: none;
-                padding: 8px 12px;
+                padding: 10px 8px;
                 cursor: pointer;
-                color: #888;
+                color: #aaa;
                 font-family: 'Inter', sans-serif;
                 flex: 1;
+                transition: color 0.2s;
             }
             .mobile-nav-item.active {
-                color: #000;
+                color: #1a1a2e;
             }
             .mobile-nav-icon {
-                font-size: 18px;
+                font-size: 20px;
             }
             .mobile-nav-label {
                 font-size: 10px;
-                font-weight: 500;
+                font-weight: 600;
+                letter-spacing: 0.2px;
             }
             body.dark .mobile-nav {
-                background: #1a1a1a;
-                border-top-color: #333;
+                background: #111;
+                border-top-color: #222;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
             }
             body.dark .mobile-nav-item {
-                color: #666;
+                color: #555;
             }
             body.dark .mobile-nav-item.active {
                 color: #fff;
-            }
-
-            /* Espacio para la nav fija */
-            .content {
-                padding-bottom: 100px;
-            }
-            .prospect-list {
-                padding-bottom: 80px;
-            }
-            .pipeline-board {
-                padding-bottom: 80px;
             }
         }
 
