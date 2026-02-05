@@ -1253,7 +1253,7 @@
                         <span class="summary-number" id="prospectCount">115</span>
                         <span class="summary-label">empresas por contactar</span>
                     </div>
-                    <div class="summary-hint">Distribuidoras y mayoristas de Euskadi · Los cambios se guardan automáticamente</div>
+                    <div class="summary-hint">Empresas de Euskadi · Los cambios se guardan automáticamente</div>
                 </div>
 
                 <!-- Filtros -->
@@ -1263,18 +1263,16 @@
                            oninput="filterProspects()">
                     <select id="filterSector" style="padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px; min-width: 180px; cursor: pointer;" onchange="filterProspects()">
                         <option value="">Todos los sectores</option>
-                        <option value="HORECA">Alimentación HORECA</option>
-                        <option value="Cash">Cash & Carry</option>
-                        <option value="Congelados">Congelados</option>
-                        <option value="Lácteos">Lácteos</option>
-                        <option value="Vinos">Vinos y Bodegas</option>
-                        <option value="Café">Café y Bebidas</option>
-                        <option value="Pescado">Pescado y Marisco</option>
-                        <option value="Cárnicas">Cárnicas</option>
-                        <option value="Frutas">Frutas y Verduras</option>
+                        <option value="Automoción">Automoción</option>
+                        <option value="Industria">Industria y Manufactura</option>
+                        <option value="Tecnología">Tecnología</option>
+                        <option value="Alimentación">Alimentación</option>
                         <option value="Logística">Logística y Transporte</option>
-                        <option value="Industrial">Suministros Industriales</option>
-                        <option value="Eléctrico">Material Eléctrico</option>
+                        <option value="Construcción">Construcción</option>
+                        <option value="Energía">Energía</option>
+                        <option value="Servicios">Servicios</option>
+                        <option value="Distribución">Distribución</option>
+                        <option value="Salud">Salud y Farmacia</option>
                     </select>
                     <select id="filterLocation" style="padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px; min-width: 140px; cursor: pointer;" onchange="filterProspects()">
                         <option value="">Todas las zonas</option>
@@ -1655,179 +1653,157 @@
         // ============================================
         const STORAGE_KEY = 'snaro_pipeline_data';
 
-        // Datos iniciales - Empresas Euskadi (350 empresas)
+        // Datos iniciales - Empresas Euskadi (350 empresas - todos los sectores)
         const initialProspects = [
-            // GRANDES DISTRIBUIDORAS
-            { id: 1, name: 'Grupo Eroski', sector: 'Gran Distribución', location: 'Elorrio, Bizkaia', priority: 'high', detail: 'Cooperativa. Supermercados, hipermercados y plataformas logísticas' },
-            { id: 2, name: 'Uvesco (BM Supermercados)', sector: 'Gran Distribución', location: 'Irun, Gipuzkoa', priority: 'high', detail: '280+ supermercados BM en el norte' },
-            { id: 3, name: 'Mercabilbao', sector: 'Mercado Central', location: 'Basauri, Bizkaia', priority: 'high', detail: '200+ empresas de frutas, verduras, pescado y carne' },
-            { id: 4, name: 'Mercadona Logística Norte', sector: 'Gran Distribución', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Bloque logístico norte, almacén Vitoria' },
+            // AUTOMOCIÓN
+            { id: 1, name: 'CIE Automotive', sector: 'Automoción', location: 'Bilbao', priority: 'high', detail: 'Grupo global de componentes para automoción. Cotiza en bolsa' },
+            { id: 2, name: 'Gestamp Bizkaia', sector: 'Automoción', location: 'Abadiano, Bizkaia', priority: 'high', detail: 'Componentes metálicos para carrocería' },
+            { id: 3, name: 'Mercedes-Benz Vitoria', sector: 'Automoción', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fábrica de furgonetas. 5.000+ empleados' },
+            { id: 4, name: 'Michelin Vitoria', sector: 'Automoción', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fabricación de neumáticos' },
+            { id: 5, name: 'Irizar', sector: 'Automoción', location: 'Ormaiztegi, Gipuzkoa', priority: 'high', detail: 'Fabricante de autobuses de lujo' },
+            { id: 6, name: 'CAF (Construcciones y Auxiliar de Ferrocarriles)', sector: 'Automoción', location: 'Beasain, Gipuzkoa', priority: 'high', detail: 'Trenes y material ferroviario. Cotiza en bolsa' },
+            { id: 7, name: 'Fagor Ederlan', sector: 'Automoción', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Componentes de fundición para automoción' },
+            { id: 8, name: 'Batz Group', sector: 'Automoción', location: 'Igorre, Bizkaia', priority: 'high', detail: 'Troqueles y componentes automoción' },
+            { id: 9, name: 'Maier', sector: 'Automoción', location: 'Gernika, Bizkaia', priority: 'high', detail: 'Inyección plástico para automoción' },
+            { id: 10, name: 'Grupo Antolin Euskadi', sector: 'Automoción', location: 'Bizkaia', priority: 'medium', detail: 'Interiores de vehículos' },
 
-            // BIZKAIA - HORECA Y ALIMENTACIÓN
-            { id: 5, name: 'Paco Sánchez Hostelería', sector: 'Alimentación HORECA', location: 'Pol. Bekea, Galdakao', priority: 'high', detail: '40 años. Alimentación, bebidas, droguería para hostelería' },
-            { id: 6, name: 'Hermanos Basarrate', sector: 'Alimentación HORECA', location: 'Bizkaia', priority: 'high', detail: '40 años. Embutidos, lácteos, conservas, vinos' },
-            { id: 7, name: 'Menéndez y Cía', sector: 'Alimentación HORECA', location: 'Bizkaia', priority: 'medium', detail: '50+ años en distribución hostelería' },
-            { id: 8, name: 'Exclusivas Pasafama', sector: 'Hostelería', location: 'Bizkaia', priority: 'high', detail: '3.000 referencias en stock' },
-            { id: 9, name: 'Cash Basauri', sector: 'Cash & Carry', location: 'Basauri, Bizkaia', priority: 'medium', detail: 'Cash and carry para hostelería y comercios' },
-            { id: 10, name: 'Distribuciones Álvaro', sector: 'Alimentación', location: 'Derio, Bizkaia', priority: 'medium', detail: 'Mayorista alimentación seca y bebidas' },
-            { id: 11, name: 'Grupo Caternor', sector: 'Catering HORECA', location: 'Bizkaia', priority: 'medium', detail: 'Productos para catering y restauración colectiva' },
-            { id: 12, name: 'Distribuciones Urko', sector: 'Alimentación HORECA', location: 'Bizkaia', priority: 'medium', detail: 'Mayorista canal HORECA' },
+            // INDUSTRIA Y MANUFACTURA
+            { id: 11, name: 'Sidenor', sector: 'Industria', location: 'Basauri, Bizkaia', priority: 'high', detail: 'Aceros especiales. Grupo industrial siderúrgico' },
+            { id: 12, name: 'Tubacex', sector: 'Industria', location: 'Llodio, Araba', priority: 'high', detail: 'Tubos de acero inoxidable. Cotiza en bolsa' },
+            { id: 13, name: 'Tubos Reunidos', sector: 'Industria', location: 'Amurrio, Araba', priority: 'high', detail: 'Fabricación de tubos sin soldadura' },
+            { id: 14, name: 'Arcelormittal Sestao', sector: 'Industria', location: 'Sestao, Bizkaia', priority: 'high', detail: 'Acería y laminación' },
+            { id: 15, name: 'Vicinay Cadenas', sector: 'Industria', location: 'Bilbao', priority: 'high', detail: 'Cadenas y anclas para offshore' },
+            { id: 16, name: 'ITP Aero', sector: 'Industria', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Motores aeronáuticos. Rolls-Royce' },
+            { id: 17, name: 'Aernnova', sector: 'Industria', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Aeroestructuras para aviación' },
+            { id: 18, name: 'Sener', sector: 'Industria', location: 'Getxo, Bizkaia', priority: 'high', detail: 'Ingeniería y construcción' },
+            { id: 19, name: 'Danobat Group', sector: 'Industria', location: 'Elgoibar, Gipuzkoa', priority: 'high', detail: 'Máquina-herramienta avanzada' },
+            { id: 20, name: 'Fagor Arrasate', sector: 'Industria', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Prensas y líneas de estampación' },
 
-            // BIZKAIA - LÁCTEOS
-            { id: 13, name: 'Dislobiz S.L.', sector: 'Lácteos', location: 'Pol. Ugaldeguren, Zamudio', priority: 'high', detail: 'Distribuidor Danone y Reny Picot' },
-            { id: 14, name: 'KAIKU Km0', sector: 'Lácteos', location: 'Bizkaia', priority: 'medium', detail: 'Productos lácteos locales y proximidad' },
-            { id: 15, name: 'Productos Lácteos Miera', sector: 'Lácteos', location: 'Bizkaia', priority: 'low', detail: 'Quesos y mantequillas' },
+            // TECNOLOGÍA
+            { id: 21, name: 'Tecnalia', sector: 'Tecnología', location: 'Derio, Bizkaia', priority: 'high', detail: 'Centro tecnológico. I+D+i' },
+            { id: 22, name: 'Ikerlan', sector: 'Tecnología', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Centro de investigación tecnológica' },
+            { id: 23, name: 'Vicomtech', sector: 'Tecnología', location: 'Donostia', priority: 'high', detail: 'Inteligencia artificial y visión' },
+            { id: 24, name: 'Virtualware', sector: 'Tecnología', location: 'Basauri, Bizkaia', priority: 'high', detail: 'Realidad virtual y aumentada' },
+            { id: 25, name: 'Ibermática', sector: 'Tecnología', location: 'Donostia', priority: 'high', detail: 'Servicios IT y transformación digital' },
+            { id: 26, name: 'Grupo Servicios Informáticos', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Soluciones software empresarial' },
+            { id: 27, name: 'LKS Next', sector: 'Tecnología', location: 'Mondragón, Gipuzkoa', priority: 'medium', detail: 'Consultoría y tecnología' },
+            { id: 28, name: 'Nexica', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Cloud y servicios gestionados' },
+            { id: 29, name: 'Gaia - Cluster TIC', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Asociación empresas tecnológicas' },
+            { id: 30, name: 'Deusto Tech', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Investigación aplicada Universidad Deusto' },
 
-            // BIZKAIA - BEBIDAS Y CAFÉ
-            { id: 16, name: 'Norbega (Coca-Cola)', sector: 'Bebidas', location: 'Galdakao, Bizkaia', priority: 'high', detail: 'Fabricación y distribución Coca-Cola zona norte' },
-            { id: 17, name: 'Vinos Mendia', sector: 'Vinos y Licores', location: 'Pol. Ugaldeguren, Zamudio', priority: 'high', detail: 'Fundada en 1902. 120+ años' },
-            { id: 18, name: 'Café Baqué', sector: 'Café', location: 'Bilbao', priority: 'high', detail: 'Tostadero desde 1890. 130+ años' },
-            { id: 19, name: 'Café Fortaleza', sector: 'Café', location: 'Bizkaia', priority: 'medium', detail: 'Café y productos cafetería hostelería' },
-            { id: 20, name: 'Zuvillaga', sector: 'Bebidas', location: 'Bizkaia', priority: 'medium', detail: 'Especialistas bebidas Vizcaya' },
-            { id: 21, name: 'Begano Distribuciones', sector: 'Bebidas', location: 'Galdakao, Bizkaia', priority: 'medium', detail: 'Cervezas, refrescos, aguas' },
-            { id: 22, name: 'Distribuciones Bidasoa', sector: 'Bebidas', location: 'Bizkaia', priority: 'low', detail: 'Bebidas alcohólicas y refrescos' },
-            { id: 23, name: 'ALEYFA', sector: 'Vinos', location: 'Gallarta, Bizkaia', priority: 'low', detail: 'Distribución mayorista vinos' },
+            // ENERGÍA
+            { id: 31, name: 'Iberdrola', sector: 'Energía', location: 'Bilbao', priority: 'high', detail: 'Multinacional energética. Sede central' },
+            { id: 32, name: 'Petronor', sector: 'Energía', location: 'Muskiz, Bizkaia', priority: 'high', detail: 'Refinería de petróleo Repsol' },
+            { id: 33, name: 'Ingeteam', sector: 'Energía', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Equipos eléctricos y electrónica de potencia' },
+            { id: 34, name: 'Gamesa (Siemens Gamesa)', sector: 'Energía', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Aerogeneradores eólicos' },
+            { id: 35, name: 'Solarpack', sector: 'Energía', location: 'Getxo, Bizkaia', priority: 'high', detail: 'Energía solar fotovoltaica' },
+            { id: 36, name: 'Krean', sector: 'Energía', location: 'Mondragón, Gipuzkoa', priority: 'medium', detail: 'Servicios energéticos y sostenibilidad' },
+            { id: 37, name: 'EDP España', sector: 'Energía', location: 'Bilbao', priority: 'medium', detail: 'Comercializadora energía' },
+            { id: 38, name: 'Nortegas', sector: 'Energía', location: 'Bilbao', priority: 'medium', detail: 'Distribuidora de gas natural' },
 
-            // BIZKAIA - FRESCOS
-            { id: 24, name: 'Cárnicas Bilbao', sector: 'Cárnicas', location: 'Mercabilbao, Basauri', priority: 'medium', detail: 'Mayorista cárnicos y embutidos' },
-            { id: 25, name: 'Pescados Lorena', sector: 'Pescado y Marisco', location: 'Mercabilbao, Basauri', priority: 'medium', detail: 'Pescado fresco, reparto diario restaurantes' },
-            { id: 26, name: 'Frutas Badiola', sector: 'Frutas y Verduras', location: 'Mercabilbao, Basauri', priority: 'medium', detail: 'Mayorista frutas y hortalizas' },
-            { id: 27, name: 'Verduras Etxebarria', sector: 'Frutas y Verduras', location: 'Bizkaia', priority: 'low', detail: 'Verduras de proximidad' },
+            // CONSTRUCCIÓN
+            { id: 39, name: 'Construcciones Sukia', sector: 'Construcción', location: 'Donostia', priority: 'high', detail: 'Construcción e ingeniería civil' },
+            { id: 40, name: 'Construcciones Amenabar', sector: 'Construcción', location: 'Tolosa, Gipuzkoa', priority: 'high', detail: 'Obra civil y edificación' },
+            { id: 41, name: 'Grupo Laz', sector: 'Construcción', location: 'Bilbao', priority: 'high', detail: 'Constructora y promoción inmobiliaria' },
+            { id: 42, name: 'Balzola', sector: 'Construcción', location: 'Bilbao', priority: 'high', detail: 'Obras públicas y construcción' },
+            { id: 43, name: 'Viuda de Sainz', sector: 'Construcción', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Constructora y materiales' },
+            { id: 44, name: 'Errece Construcciones', sector: 'Construcción', location: 'Gipuzkoa', priority: 'medium', detail: 'Edificación y rehabilitación' },
 
-            // BIZKAIA - CONGELADOS
-            { id: 28, name: 'Congelados del Norte', sector: 'Congelados', location: 'Bizkaia', priority: 'high', detail: 'Pescados, carnes, verduras, precocinados congelados' },
-            { id: 29, name: 'La Sirena (Centro Distribución)', sector: 'Congelados', location: 'Bizkaia', priority: 'medium', detail: 'Centro distribución cadena La Sirena' },
+            // SALUD Y FARMACIA
+            { id: 45, name: 'Grupo Quirónsalud Euskadi', sector: 'Salud', location: 'Bilbao', priority: 'high', detail: 'Hospitales y clínicas privadas' },
+            { id: 46, name: 'IMQ', sector: 'Salud', location: 'Bilbao', priority: 'high', detail: 'Aseguradora y servicios sanitarios' },
+            { id: 47, name: 'Policlínica Gipuzkoa', sector: 'Salud', location: 'Donostia', priority: 'high', detail: 'Hospital privado de referencia' },
+            { id: 48, name: 'Faes Farma', sector: 'Salud', location: 'Leioa, Bizkaia', priority: 'high', detail: 'Laboratorio farmacéutico. Cotiza en bolsa' },
+            { id: 49, name: 'Bial Industrial Farmacéutica', sector: 'Salud', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Fabricación farmacéutica' },
+            { id: 50, name: 'Laboratorios Cinfa', sector: 'Salud', location: 'Gipuzkoa', priority: 'medium', detail: 'Medicamentos genéricos' },
+            { id: 51, name: 'Bidafarma', sector: 'Salud', location: 'Bilbao', priority: 'medium', detail: 'Distribución farmacéutica' },
+            { id: 52, name: 'Alliance Healthcare', sector: 'Salud', location: 'Bizkaia', priority: 'medium', detail: 'Distribución farmacéutica' },
+            { id: 53, name: 'Cofares Euskadi', sector: 'Salud', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Cooperativa farmacéutica' },
 
-            // BIZKAIA - CASH & CARRY
-            { id: 30, name: 'Makro Bilbao', sector: 'Cash & Carry', location: 'Barakaldo, Bizkaia', priority: 'high', detail: 'Mayorista para profesionales' },
-            { id: 31, name: 'GM Food Ibérica', sector: 'Cash & Carry', location: 'Bizkaia', priority: 'medium', detail: 'Gros Mercat, Cash Diplo' },
+            // SERVICIOS EMPRESARIALES
+            { id: 54, name: 'KPMG Bilbao', sector: 'Servicios', location: 'Bilbao', priority: 'high', detail: 'Auditoría y consultoría' },
+            { id: 55, name: 'Deloitte Bilbao', sector: 'Servicios', location: 'Bilbao', priority: 'high', detail: 'Auditoría y consultoría' },
+            { id: 56, name: 'PwC Bilbao', sector: 'Servicios', location: 'Bilbao', priority: 'high', detail: 'Auditoría y consultoría' },
+            { id: 57, name: 'EY Bilbao', sector: 'Servicios', location: 'Bilbao', priority: 'high', detail: 'Auditoría y consultoría' },
+            { id: 58, name: 'Grupo Urdaneta', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Asesoría fiscal y legal' },
+            { id: 59, name: 'Adecco Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'ETT y RRHH' },
+            { id: 60, name: 'Randstad Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'ETT y RRHH' },
+            { id: 61, name: 'Manpower Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'ETT y soluciones de talento' },
+            { id: 62, name: 'Eulen Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Servicios integrales empresas' },
+            { id: 63, name: 'ISS Facility Services', sector: 'Servicios', location: 'Bizkaia', priority: 'medium', detail: 'Facility management' },
 
-            // BIZKAIA - OTROS
-            { id: 32, name: 'Don Justo', sector: 'Alimentación Internacional', location: 'Bilbao', priority: 'low', detail: 'Productos latinoamericanos, import/export' },
-            { id: 33, name: 'Dispronat', sector: 'Dietética y Eco', location: 'Bizkaia', priority: 'low', detail: 'Desde 1987. Nutrición, dietética, eco' },
-            { id: 34, name: 'Oleaga S.A.', sector: 'Alimentación', location: 'Pol. Ugaldeguren II, Zamudio', priority: 'low', detail: 'Productos alimenticios variados' },
+            // BANCA Y FINANZAS
+            { id: 64, name: 'Kutxabank', sector: 'Servicios', location: 'Bilbao', priority: 'high', detail: 'Banco vasco. Sede central' },
+            { id: 65, name: 'Laboral Kutxa', sector: 'Servicios', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Cooperativa de crédito' },
+            { id: 66, name: 'BBVA Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'high', detail: 'Sede territorial norte' },
+            { id: 67, name: 'Caja Rural de Navarra', sector: 'Servicios', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Cooperativa de crédito' },
+            { id: 68, name: 'Seguros Bilbao', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Compañía de seguros' },
 
-            // BIZKAIA - LOGÍSTICA Y TRANSPORTE
-            { id: 35, name: 'Transportes Gallastegui', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: 'Mercancías carretera, flota propia, almacenaje' },
-            { id: 36, name: 'ALDINOR', sector: 'Logística', location: 'Arrigorriaga, Bizkaia', priority: 'high', detail: 'Fundada 1989. Operador logístico zona norte. Especialistas ADR' },
-            { id: 37, name: 'Transfloren', sector: 'Transporte', location: 'Bizkaia', priority: 'low', detail: 'Transporte y logística integral' },
-            { id: 38, name: 'Transportes Azkar', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: 'Transporte urgente y logística' },
+            // DISTRIBUCIÓN Y RETAIL
+            { id: 69, name: 'Grupo Eroski', sector: 'Distribución', location: 'Elorrio, Bizkaia', priority: 'high', detail: 'Cooperativa. Supermercados e hipermercados' },
+            { id: 70, name: 'Uvesco (BM Supermercados)', sector: 'Distribución', location: 'Irun, Gipuzkoa', priority: 'high', detail: '280+ supermercados BM' },
+            { id: 71, name: 'El Corte Inglés Bilbao', sector: 'Distribución', location: 'Bilbao', priority: 'high', detail: 'Grandes almacenes' },
+            { id: 72, name: 'Ikea Barakaldo', sector: 'Distribución', location: 'Barakaldo, Bizkaia', priority: 'high', detail: 'Mobiliario y decoración' },
+            { id: 73, name: 'Leroy Merlin Bilbao', sector: 'Distribución', location: 'Barakaldo, Bizkaia', priority: 'medium', detail: 'Bricolaje y decoración' },
+            { id: 74, name: 'Media Markt Bilbao', sector: 'Distribución', location: 'Barakaldo, Bizkaia', priority: 'medium', detail: 'Electrónica de consumo' },
+            { id: 75, name: 'Decathlon Euskadi', sector: 'Distribución', location: 'Bizkaia', priority: 'medium', detail: 'Artículos deportivos' },
 
-            // BIZKAIA - INDUSTRIAL
-            { id: 39, name: 'Gobesa', sector: 'Material Eléctrico', location: 'Zamudio', priority: 'high', detail: 'Desde 1981. Amplio stock eléctrico' },
-            { id: 40, name: 'Royme S.A.', sector: 'Suministros Industriales', location: 'Bilbao', priority: 'medium', detail: 'Rodamientos, transmisiones, componentes' },
-            { id: 41, name: 'Hierros Alfonso', sector: 'Siderurgia', location: 'Bilbao', priority: 'medium', detail: 'Almacén productos siderúrgicos' },
-            { id: 42, name: 'Saltoki Bizkaia', sector: 'Fontanería y Calefacción', location: 'Bizkaia', priority: 'medium', detail: 'Fontanería, calefacción, climatización' },
-            { id: 43, name: 'Tornillería Vizcaína', sector: 'Fijaciones', location: 'Bizkaia', priority: 'low', detail: 'Tornillería y fijación industrial' },
-            { id: 44, name: 'Bilbaína de Rodamientos', sector: 'Suministros Industriales', location: 'Bilbao', priority: 'low', detail: 'Rodamientos y componentes mecánicos' },
+            // LOGÍSTICA Y TRANSPORTE
+            { id: 76, name: 'Puerto de Bilbao', sector: 'Logística', location: 'Bilbao', priority: 'high', detail: 'Autoridad portuaria. Hub logístico' },
+            { id: 77, name: 'Grupo Azkar', sector: 'Logística', location: 'Bizkaia', priority: 'high', detail: 'Líder en Euskadi. Transporte y almacenaje' },
+            { id: 78, name: 'Transportes Ochoa', sector: 'Logística', location: 'Irun, Gipuzkoa', priority: 'high', detail: 'Logística internacional' },
+            { id: 79, name: 'Dachser Irun', sector: 'Logística', location: 'Irun, Gipuzkoa', priority: 'high', detail: 'Hub logístico internacional' },
+            { id: 80, name: 'DHL Vitoria', sector: 'Logística', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Centro distribución internacional' },
+            { id: 81, name: 'Centro Transportes Vitoria', sector: 'Logística', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Centro intermodal' },
 
-            // GIPUZKOA - FERRETERÍA INDUSTRIAL
-            { id: 45, name: 'Suministros Industriales Txofre', sector: 'Ferretería Industrial', location: 'Donostia', priority: 'high', detail: '40+ años. Flota propia toda Gipuzkoa' },
-            { id: 46, name: 'C.L.C. Maquinaria y Servicios', sector: 'Ferretería Industrial', location: 'Pol. 27, Donostia', priority: 'medium', detail: '35+ años. Industria y construcción' },
-            { id: 47, name: 'Suministros Aguado', sector: 'Soldadura Industrial', location: 'Gipuzkoa', priority: 'high', detail: 'Desde 1957. Distribuidor oficial LINDE' },
-            { id: 48, name: 'Comercial Gama', sector: 'Suministros Industriales', location: 'Donostia', priority: 'medium', detail: '20+ años. Hernani, Rentería, Lasarte...' },
-            { id: 49, name: 'Comercial Urcelay', sector: 'Fijaciones', location: 'Bergara, Gipuzkoa', priority: 'medium', detail: 'Desde 1958. 500m² almacén. 65+ años' },
-            { id: 50, name: 'Ferretería Yarza C.B.', sector: 'Ferretería', location: 'Donostia', priority: 'low', detail: '33 años en centro Donostia' },
-            { id: 51, name: 'Suministros Mondragón', sector: 'Suministros Industriales', location: 'Arrasate, Gipuzkoa', priority: 'medium', detail: 'Ferretería industrial zona Mondragón' },
-            { id: 52, name: 'Herramientas Eibar', sector: 'Herramientas', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Herramientas precisión y maquinaria' },
-            { id: 53, name: 'Tornillería Urola', sector: 'Fijaciones', location: 'Alto Urola, Gipuzkoa', priority: 'low', detail: 'Fabricante tornillería especial' },
+            // ALIMENTACIÓN (representativo)
+            { id: 82, name: 'Grupo Lar España', sector: 'Alimentación', location: 'Bilbao', priority: 'high', detail: 'Inversiones retail alimentación' },
+            { id: 83, name: 'Mercabilbao', sector: 'Alimentación', location: 'Basauri, Bizkaia', priority: 'high', detail: 'Mercado central mayorista' },
+            { id: 84, name: 'Café Baqué', sector: 'Alimentación', location: 'Bilbao', priority: 'medium', detail: 'Tostadero desde 1890' },
+            { id: 85, name: 'KAIKU', sector: 'Alimentación', location: 'Bizkaia', priority: 'medium', detail: 'Productos lácteos' },
+            { id: 86, name: 'Conservas Ortiz', sector: 'Alimentación', location: 'Ondarroa, Bizkaia', priority: 'medium', detail: 'Conservas de pescado premium' },
 
-            // GIPUZKOA - ALIMENTACIÓN
-            { id: 54, name: 'Galatea S.L.', sector: 'Congelados', location: 'Gipuzkoa', priority: 'high', detail: 'Congelados alta calidad hostelería' },
-            { id: 55, name: 'Almacenes Usabiaga', sector: 'Alimentación', location: 'Tolosa, Gipuzkoa', priority: 'medium', detail: 'Distribución comercio minorista' },
-            { id: 56, name: 'Distribuciones Oiartzun', sector: 'Alimentación', location: 'Oiartzun, Gipuzkoa', priority: 'medium', detail: 'Mayorista alimentación y bebidas hostelería' },
-            { id: 57, name: 'Makro Donostia', sector: 'Cash & Carry', location: 'Donostia', priority: 'high', detail: 'Cash and carry profesionales' },
-            { id: 58, name: 'Cash Echavarri', sector: 'Cash & Carry', location: 'Gipuzkoa', priority: 'medium', detail: 'Cash and carry alimentación hostelería' },
-            { id: 59, name: 'Gros Mercat Gipuzkoa', sector: 'Cash & Carry', location: 'Gipuzkoa', priority: 'medium', detail: 'Cash and carry profesionales' },
+            // EDUCACIÓN Y FORMACIÓN
+            { id: 87, name: 'Universidad de Deusto', sector: 'Servicios', location: 'Bilbao', priority: 'high', detail: 'Universidad privada de referencia' },
+            { id: 88, name: 'Mondragon Unibertsitatea', sector: 'Servicios', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Universidad cooperativa' },
+            { id: 89, name: 'IMH - Instituto Máquina Herramienta', sector: 'Servicios', location: 'Elgoibar, Gipuzkoa', priority: 'medium', detail: 'FP y formación industrial' },
+            { id: 90, name: 'Tknika', sector: 'Servicios', location: 'Errenteria, Gipuzkoa', priority: 'medium', detail: 'Centro innovación FP' },
 
-            // GIPUZKOA - FRESCOS
-            { id: 60, name: 'Frutas Errasti', sector: 'Frutas y Verduras', location: 'Donostia', priority: 'medium', detail: 'Mayorista frutas, reparto diario' },
-            { id: 61, name: 'Pescados Aristegui', sector: 'Pescado y Marisco', location: 'Pasaia, Gipuzkoa', priority: 'high', detail: 'Pescados y mariscos Cantábrico' },
-            { id: 62, name: 'Lonja de Getaria', sector: 'Pescado', location: 'Getaria, Gipuzkoa', priority: 'medium', detail: 'Subasta y distribución pescado fresco' },
-            { id: 63, name: 'Lonja de Hondarribia', sector: 'Pescado', location: 'Hondarribia, Gipuzkoa', priority: 'medium', detail: 'Cofradía pescado artesanal' },
-            { id: 64, name: 'Cárnicas Iriarte', sector: 'Cárnicas', location: 'Gipuzkoa', priority: 'medium', detail: 'Carnes y embutidos calidad' },
-            { id: 65, name: 'Quesos Idiazabal Aranburu', sector: 'Lácteos', location: 'Idiazabal, Gipuzkoa', priority: 'medium', detail: 'Queso Idiazabal D.O., trazabilidad' },
-            { id: 66, name: 'Lácteos Ultzama', sector: 'Lácteos', location: 'Gipuzkoa', priority: 'low', detail: 'Lácteos de proximidad' },
+            // TURISMO Y HOSTELERÍA
+            { id: 91, name: 'NH Hoteles Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Cadena hotelera' },
+            { id: 92, name: 'Meliá Bilbao', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Hotel 5 estrellas' },
+            { id: 93, name: 'Grupo Sagardi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Restauración vasca' },
+            { id: 94, name: 'Azurmendi', sector: 'Servicios', location: 'Larrabetzu, Bizkaia', priority: 'high', detail: 'Restaurante 3 estrellas Michelin' },
+            { id: 95, name: 'Arzak', sector: 'Servicios', location: 'Donostia', priority: 'high', detail: 'Restaurante 3 estrellas Michelin' },
 
-            // GIPUZKOA - CAFÉ Y BEBIDAS
-            { id: 67, name: 'Café Arostegui', sector: 'Café', location: 'Donostia', priority: 'medium', detail: 'Tostadero y distribución hostelería' },
-            { id: 68, name: 'Distribuciones Zabaleta', sector: 'Bebidas', location: 'Gipuzkoa', priority: 'low', detail: 'Bebidas y refrescos' },
-            { id: 69, name: 'Congelados Urbieta', sector: 'Congelados', location: 'Gipuzkoa', priority: 'low', detail: 'Mayorista congelados' },
+            // MÁS INDUSTRIA
+            { id: 96, name: 'Orkli', sector: 'Industria', location: 'Ordizia, Gipuzkoa', priority: 'high', detail: 'Componentes calefacción y solar' },
+            { id: 97, name: 'Ulma Group', sector: 'Industria', location: 'Oñati, Gipuzkoa', priority: 'high', detail: 'Construcción, packaging, agrícola' },
+            { id: 98, name: 'Copreci', sector: 'Industria', location: 'Aretxabaleta, Gipuzkoa', priority: 'high', detail: 'Componentes electrodomésticos' },
+            { id: 99, name: 'Orbea', sector: 'Industria', location: 'Mallabia, Bizkaia', priority: 'high', detail: 'Fabricante de bicicletas' },
+            { id: 100, name: 'BH Bikes', sector: 'Industria', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fabricante de bicicletas' },
+            { id: 101, name: 'Jata', sector: 'Industria', location: 'Abadiano, Bizkaia', priority: 'medium', detail: 'Electrodomésticos' },
+            { id: 102, name: 'Arteche', sector: 'Industria', location: 'Mungia, Bizkaia', priority: 'high', detail: 'Equipos eléctricos. Cotiza en bolsa' },
+            { id: 103, name: 'Zigor', sector: 'Industria', location: 'Igorre, Bizkaia', priority: 'medium', detail: 'SAIs y electrónica de potencia' },
+            { id: 104, name: 'Egamaster', sector: 'Industria', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Herramientas profesionales' },
+            { id: 105, name: 'Bellota Tools', sector: 'Industria', location: 'Legazpi, Gipuzkoa', priority: 'medium', detail: 'Herramientas agrícolas e industriales' },
 
-            // GIPUZKOA - LOGÍSTICA
-            { id: 70, name: 'Transportes Ochoa', sector: 'Transporte', location: 'Irun, Gipuzkoa', priority: 'high', detail: 'Mercancías y logística internacional' },
-            { id: 71, name: 'Dachser Irun', sector: 'Logística', location: 'Irun, Gipuzkoa', priority: 'high', detail: 'Hub logístico internacional' },
-            { id: 72, name: 'XPO Logistics Gipuzkoa', sector: 'Logística', location: 'Gipuzkoa', priority: 'medium', detail: 'Operador logístico global' },
-            { id: 73, name: 'Logística Bidasoa', sector: 'Logística', location: 'Irun, Gipuzkoa', priority: 'medium', detail: 'Almacenaje y distribución frontera' },
+            // MÁS TECNOLOGÍA
+            { id: 106, name: 'BCSC (Basque Cybersecurity Centre)', sector: 'Tecnología', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Centro ciberseguridad' },
+            { id: 107, name: 'Sherpa.ai', sector: 'Tecnología', location: 'Bilbao', priority: 'high', detail: 'Inteligencia artificial' },
+            { id: 108, name: 'Biolan', sector: 'Tecnología', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Biosensores y diagnóstico' },
+            { id: 109, name: 'Createc 3D', sector: 'Tecnología', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Impresión 3D industrial' },
+            { id: 110, name: 'Savvy Data Systems', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'IoT e industria 4.0' },
+            { id: 111, name: 'Lantek', sector: 'Tecnología', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Software para industria metálica' },
+            { id: 112, name: 'Sisteplant', sector: 'Tecnología', location: 'Derio, Bizkaia', priority: 'medium', detail: 'Software industrial y MES' },
+            { id: 113, name: 'Innovae', sector: 'Tecnología', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Realidad aumentada industrial' },
+            { id: 114, name: 'Datik', sector: 'Tecnología', location: 'Donostia', priority: 'medium', detail: 'Visión artificial y AI' },
 
-            // GIPUZKOA - ELÉCTRICO
-            { id: 74, name: 'Electro Stocks Donostia', sector: 'Material Eléctrico', location: 'Donostia', priority: 'medium', detail: 'Almacén material eléctrico' },
-            { id: 75, name: 'Sonepar Gipuzkoa', sector: 'Material Eléctrico', location: 'Gipuzkoa', priority: 'medium', detail: 'Material eléctrico y automatización' },
-            { id: 76, name: 'Saltoki Gipuzkoa', sector: 'Fontanería', location: 'Gipuzkoa', priority: 'medium', detail: 'Fontanería y calefacción' },
-
-            // ARABA - JUNDIZ
-            { id: 77, name: 'Covirán S.C.A.', sector: 'Ultramarinos', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Cooperativa compras, red supermercados' },
-            { id: 78, name: 'Congelados Bedarona S.L.', sector: 'Congelados', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Comercialización productos congelados' },
-            { id: 79, name: 'Campovega', sector: 'Frío Industrial', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Almacén frigorífico y congelado' },
-            { id: 80, name: 'Udapa', sector: 'Alimentación', location: 'Jundiz, Vitoria', priority: 'low', detail: 'Distribución de patatas' },
-            { id: 81, name: 'Merkapack', sector: 'Hostelería', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Utillaje y consumibles alimentación' },
-            { id: 82, name: 'Makro Vitoria', sector: 'Cash & Carry', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Cash and carry profesionales' },
-            { id: 83, name: 'Gros Mercat Vitoria', sector: 'Cash & Carry', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Cash and carry alimentación' },
-
-            // ARABA - OTRAS DISTRIBUIDORAS
-            { id: 84, name: 'Comercial Numaga', sector: 'Café y Té', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Mayorista café, té, infusiones, galletas' },
-            { id: 85, name: 'Grandes Vinos Jaki', sector: 'Vinos', location: 'Vitoria-Gasteiz', priority: 'medium', detail: '30+ años en vino' },
-            { id: 86, name: 'Patatas Ascarza', sector: 'Agrícola', location: 'Vitoria-Gasteiz', priority: 'low', detail: 'Agricultores de patatas' },
-            { id: 87, name: 'Pescados Mariano Alonso', sector: 'Pescado y Marisco', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Pescado y marisco fresco' },
-            { id: 88, name: 'Cárnicas Arriola', sector: 'Cárnicas', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Cárnicos y embutidos alaveses' },
-            { id: 89, name: 'Frutas García', sector: 'Frutas y Verduras', location: 'Vitoria-Gasteiz', priority: 'low', detail: 'Mayorista frutas y hortalizas' },
-            { id: 90, name: 'Almacenes Ojuel', sector: 'Alimentación', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Mayorista comercio y hostelería' },
-            { id: 91, name: 'CEVISA (Castellanos y Echarria)', sector: 'Maquinaria', location: 'Vitoria-Gasteiz', priority: 'medium', detail: '50+ años maquinaria metalúrgica' },
-            { id: 92, name: 'Giraldo', sector: 'Distribución', location: 'Legutiano, Araba', priority: 'low', detail: '30+ años experiencia' },
-
-            // ARABA - BODEGAS RIOJA ALAVESA
-            { id: 93, name: 'Bodegas CVNE - Viña Real', sector: 'Vinos', location: 'Laguardia', priority: 'high', detail: 'Bodega histórica, export internacional' },
-            { id: 94, name: 'Bodegas Faustino', sector: 'Vinos', location: 'Oion', priority: 'high', detail: 'Grupo bodeguero, varias bodegas' },
-            { id: 95, name: 'Marqués de Riscal', sector: 'Vinos', location: 'Elciego', priority: 'high', detail: 'Bodega Gehry, alta exportación' },
-            { id: 96, name: 'Bodegas Ysios', sector: 'Vinos', location: 'Laguardia', priority: 'medium', detail: 'Bodega Calatrava, icónica' },
-            { id: 97, name: 'Bodegas Artadi', sector: 'Vinos', location: 'Laguardia', priority: 'high', detail: 'Vinos autor, demanda internacional' },
-            { id: 98, name: 'Bodegas Luis Cañas', sector: 'Vinos', location: 'Villabuena de Álava', priority: 'medium', detail: '90+ años historia familiar' },
-            { id: 99, name: 'Bodegas Ostatu', sector: 'Vinos', location: 'Samaniego', priority: 'medium', detail: 'Bodega familiar, venta directa' },
-            { id: 100, name: 'Bodegas Eguren Ugarte', sector: 'Vinos', location: 'Laguardia', priority: 'medium', detail: '5 generaciones, enoturismo' },
-            { id: 101, name: 'Bodegas Campillo', sector: 'Vinos', location: 'Laguardia', priority: 'low', detail: 'Grupo Faustino' },
-            { id: 102, name: 'Bodegas Murua', sector: 'Vinos', location: 'Elciego', priority: 'low', detail: 'Vinos alta gama' },
-
-            // ARABA - LOGÍSTICA
-            { id: 103, name: 'Centro Transportes Vitoria (CTV)', sector: 'Hub Logístico', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Centro intermodal, múltiples operadores' },
-            { id: 104, name: 'Transportes Azkar Vitoria', sector: 'Transporte', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Hub transporte urgente norte' },
-            { id: 105, name: 'DHL Vitoria', sector: 'Logística', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Centro distribución internacional' },
-            { id: 106, name: 'DB Schenker Vitoria', sector: 'Logística', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Operador logístico internacional' },
-            { id: 107, name: 'GLS Vitoria', sector: 'Paquetería', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Paquetería y mensajería' },
-            { id: 108, name: 'Logística Alavesa', sector: 'Logística', location: 'Araba', priority: 'low', detail: 'Operador local con almacenaje' },
-
-            // ARABA - INDUSTRIAL
-            { id: 109, name: 'Mercedes-Benz Vitoria', sector: 'Automoción', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fábrica y distribución furgonetas' },
-            { id: 110, name: 'Michelin Vitoria', sector: 'Neumáticos', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fábrica y distribución neumáticos' },
-            { id: 111, name: 'Saltoki Araba', sector: 'Fontanería', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Fontanería y calefacción' },
-            { id: 112, name: 'Electro Stocks Vitoria', sector: 'Material Eléctrico', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Almacén material eléctrico' },
-            { id: 113, name: 'Suministros Industriales Álava', sector: 'Suministros', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Ferretería y suministros industriales' },
-            { id: 114, name: 'Aceros Bergara Vitoria', sector: 'Siderurgia', location: 'Jundiz, Vitoria', priority: 'low', detail: 'Almacén aceros y siderúrgicos' },
-            { id: 115, name: 'Materiales Larrinaga', sector: 'Construcción', location: 'Vitoria-Gasteiz', priority: 'low', detail: 'Materiales de construcción' },
-
-            // NUEVAS EMPRESAS - BIZKAIA TRANSPORTE Y LOGÍSTICA
-            { id: 116, name: 'IFA Retail', sector: 'Gran Distribución', location: 'Euskadi', priority: 'medium', detail: 'Central de compras que agrupa múltiples cadenas de distribución' },
-            { id: 117, name: 'Grupo Azkar', sector: 'Transporte', location: 'Bizkaia', priority: 'high', detail: 'Líder en Euskadi. 350M€ facturación. Transporte, almacenaje' },
-            { id: 118, name: 'Grupo Sparber', sector: 'Transporte', location: 'Bilbao', priority: 'high', detail: '62M€ facturación. Transporte aéreo, marítimo, terrestre' },
-            { id: 119, name: 'Grupo Erhardt', sector: 'Transporte', location: 'Puerto de Bilbao', priority: 'high', detail: '43M€. Agente de aduanas, transitario, logística' },
-            { id: 120, name: 'Transnatur Norte', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: '38M€ facturación. Transporte terrestre' },
-            { id: 121, name: 'Biladu', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: '32M€ facturación. Transporte de mercancías' },
-            { id: 122, name: 'Iru Trans', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: 'Transporte de mercancías y grupaje' },
-            { id: 123, name: 'Grupo Logi', sector: 'Logística', location: 'Pol. Martiartu, Arrigorriaga', priority: 'medium', detail: 'Oficinas en Bizkaia, Araba y Gipuzkoa' },
-            { id: 124, name: 'Hellmann Worldwide', sector: 'Logística', location: 'Amorebieta-Etxano', priority: 'medium', detail: '12.000 empleados mundial. Logística internacional' },
-            { id: 125, name: 'Rohlig Logistics', sector: 'Logística', location: 'Loiu, Bizkaia', priority: 'medium', detail: 'Fundada 1852. Transporte marítimo, aéreo' },
-            { id: 126, name: 'Transportes Villar', sector: 'Logística', location: 'Iurreta, Bizkaia', priority: 'medium', detail: 'Almacenaje, transporte y distribución' },
-            { id: 127, name: 'SEUR Bilbao', sector: 'Paquetería', location: 'Bizkaia', priority: 'medium', detail: 'Delegación paquetería y mensajería urgente' },
-            { id: 128, name: 'Tipsa Bizkaia', sector: 'Paquetería', location: 'Bizkaia', priority: 'medium', detail: 'Transporte urgente y paquetería para empresas' },
+            // MÁS CONSTRUCCIÓN E INMOBILIARIA
+            { id: 115, name: 'Neinor Homes', sector: 'Construcción', location: 'Bilbao', priority: 'high', detail: 'Promotora inmobiliaria. Cotiza en bolsa' },
+            { id: 116, name: 'Visesa', sector: 'Construcción', location: 'Bilbao', priority: 'medium', detail: 'Vivienda social Gobierno Vasco' },
+            { id: 117, name: 'Grupo Eibar', sector: 'Construcción', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Promoción y construcción' },
+            { id: 118, name: 'Construcciones ACR', sector: 'Construcción', location: 'Donostia', priority: 'medium', detail: 'Edificación y obra civil' },
 
             // NUEVAS EMPRESAS - BIZKAIA FABRICACIÓN
             { id: 129, name: 'Gestamp Bizkaia', sector: 'Fabricación', location: 'Abadino, Bizkaia', priority: 'high', detail: 'Multinacional componentes metálicos. 115 plantas en 24 países' },
