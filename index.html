@@ -2584,18 +2584,14 @@
         // ============================================
 
         const SUPABASE_CONFIG_KEY = 'snaro_supabase_config';
+        const SUPABASE_URL = 'https://ubdlhszgaehlzlfkxbcq.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InViZGxoc3pnYWVobHpsZmt4YmNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAzMDczNDUsImV4cCI6MjA4NTg4MzM0NX0._TLSNagvsjSp8Z8zB9I5Oh0dqtg1ARptmjqpXSngFd8';
         let supabaseClient = null;
         let isCloudConnected = false;
 
-        // Initialize on load
+        // Initialize on load - auto connect
         (function initSupabase() {
-            const config = localStorage.getItem(SUPABASE_CONFIG_KEY);
-            if (config) {
-                try {
-                    const { url, key } = JSON.parse(config);
-                    connectToSupabase(url, key);
-                } catch (e) {}
-            }
+            connectToSupabase(SUPABASE_URL, SUPABASE_KEY);
         })();
 
         async function connectToSupabase(url, key) {
