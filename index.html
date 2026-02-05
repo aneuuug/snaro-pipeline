@@ -1246,6 +1246,87 @@
         body.dark .action-btn.primary { background: #3a3a5e; }
         body.dark .action-btn.secondary { background: #333; color: #aaa; }
 
+        /* Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .chart-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #eee;
+        }
+        .chart-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .chart-bar-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+        }
+        .chart-bar-label {
+            width: 100px;
+            font-size: 12px;
+            color: #555;
+            flex-shrink: 0;
+        }
+        .chart-bar-container {
+            flex: 1;
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .chart-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            min-width: 2px;
+        }
+        .chart-bar-value {
+            width: 60px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: right;
+            color: #333;
+            flex-shrink: 0;
+        }
+        /* Colores para sectores */
+        .bar-energia { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+        .bar-servicios { background: linear-gradient(90deg, #6366f1, #818cf8); }
+        .bar-industria { background: linear-gradient(90deg, #64748b, #94a3b8); }
+        .bar-construccion { background: linear-gradient(90deg, #f97316, #fb923c); }
+        .bar-tecnologia { background: linear-gradient(90deg, #06b6d4, #22d3ee); }
+        .bar-salud { background: linear-gradient(90deg, #ec4899, #f472b6); }
+        .bar-alimentacion { background: linear-gradient(90deg, #22c55e, #4ade80); }
+        .bar-logistica { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
+        .bar-distribucion { background: linear-gradient(90deg, #14b8a6, #2dd4bf); }
+        .bar-automocion { background: linear-gradient(90deg, #ef4444, #f87171); }
+        .bar-default { background: linear-gradient(90deg, #9ca3af, #d1d5db); }
+        /* Colores para provincias */
+        .bar-bizkaia { background: linear-gradient(90deg, #1a1a2e, #2d2d44); }
+        .bar-gipuzkoa { background: linear-gradient(90deg, #0f4c75, #1b6ca8); }
+        .bar-araba { background: linear-gradient(90deg, #0d7377, #14919b); }
+        .bar-euskadi { background: linear-gradient(90deg, #c2703a, #e09556); }
+
+        body.dark .chart-card { background: #222; border-color: #333; }
+        body.dark .chart-card h3 { color: #fff; }
+        body.dark .chart-bar-label { color: #aaa; }
+        body.dark .chart-bar-container { background: #333; }
+        body.dark .chart-bar-value { color: #ddd; }
+
+        @media (max-width: 768px) {
+            .charts-section { grid-template-columns: 1fr; }
+        }
+
         /* Quick Filter Pills */
         .filter-pills {
             display: flex;
@@ -1641,6 +1722,18 @@
                         <div class="stat-value" id="countMicro">0</div>
                         <div class="stat-label">Micro</div>
                         <div class="stat-revenue">< 1M€</div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section" id="chartsSection">
+                    <div class="chart-card">
+                        <h3>Distribución por Sector</h3>
+                        <div id="chartSector"></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Distribución por Provincia</h3>
+                        <div id="chartProvincia"></div>
                     </div>
                 </div>
 
@@ -2962,6 +3055,78 @@
             document.getElementById('countMidmarket').textContent = counts.midmarket.toLocaleString();
             document.getElementById('countPyme').textContent = counts.pyme.toLocaleString();
             document.getElementById('countMicro').textContent = counts.micro.toLocaleString();
+
+            // Actualizar gráficos
+            renderCharts(prospects);
+        }
+
+        // Renderizar gráficos de distribución
+        function renderCharts(prospects) {
+            // Contar por sector
+            const sectorCounts = {};
+            const provinciaCounts = {};
+
+            prospects.forEach(p => {
+                // Sector
+                const sector = p.sector || 'Otros';
+                sectorCounts[sector] = (sectorCounts[sector] || 0) + 1;
+
+                // Provincia
+                const location = p.location || '';
+                let provincia = 'Otros';
+                if (location.includes('Bizkaia')) provincia = 'Bizkaia';
+                else if (location.includes('Gipuzkoa')) provincia = 'Gipuzkoa';
+                else if (location.includes('Araba') || location.includes('Álava')) provincia = 'Araba';
+                else if (location.includes('Euskadi')) provincia = 'Euskadi';
+                provinciaCounts[provincia] = (provinciaCounts[provincia] || 0) + 1;
+            });
+
+            // Ordenar sectores por cantidad
+            const sortedSectors = Object.entries(sectorCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8); // Top 8
+
+            const sortedProvincias = Object.entries(provinciaCounts)
+                .sort((a, b) => b[1] - a[1]);
+
+            const maxSector = sortedSectors[0]?.[1] || 1;
+            const maxProvincia = sortedProvincias[0]?.[1] || 1;
+
+            // Render sector chart
+            const sectorChart = document.getElementById('chartSector');
+            if (sectorChart) {
+                sectorChart.innerHTML = sortedSectors.map(([sector, count]) => {
+                    const pct = (count / maxSector) * 100;
+                    const barClass = 'bar-' + sector.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z]/g, '');
+                    return `
+                        <div class="chart-bar-item">
+                            <span class="chart-bar-label">${sector}</span>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-fill ${barClass || 'bar-default'}" style="width: ${pct}%"></div>
+                            </div>
+                            <span class="chart-bar-value">${count.toLocaleString()}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            // Render provincia chart
+            const provinciaChart = document.getElementById('chartProvincia');
+            if (provinciaChart) {
+                provinciaChart.innerHTML = sortedProvincias.map(([provincia, count]) => {
+                    const pct = (count / maxProvincia) * 100;
+                    const barClass = 'bar-' + provincia.toLowerCase();
+                    return `
+                        <div class="chart-bar-item">
+                            <span class="chart-bar-label">${provincia}</span>
+                            <div class="chart-bar-container">
+                                <div class="chart-bar-fill ${barClass || 'bar-default'}" style="width: ${pct}%"></div>
+                            </div>
+                            <span class="chart-bar-value">${count.toLocaleString()}</span>
+                        </div>
+                    `;
+                }).join('');
+            }
         }
 
         // Cargar datos desde localStorage o usar iniciales
