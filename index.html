@@ -1060,11 +1060,33 @@
             border-radius: 12px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
             border: 2px solid transparent;
         }
         .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-        .stat-card.active { border-color: #000; transform: translateY(-3px); }
+        .stat-card.active { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+
+        /* Cuando hay filtro activo, las no seleccionadas se ponen grises */
+        .stats-dashboard.has-filter .stat-card:not(.active) {
+            background: #e5e5e5 !important;
+            opacity: 0.6;
+        }
+        .stats-dashboard.has-filter .stat-card:not(.active) .stat-value,
+        .stats-dashboard.has-filter .stat-card:not(.active) .stat-label,
+        .stats-dashboard.has-filter .stat-card:not(.active) .stat-revenue {
+            color: #888 !important;
+        }
+        .stats-dashboard.has-filter .stat-card:not(.active):hover {
+            opacity: 0.8;
+        }
+        body.dark .stats-dashboard.has-filter .stat-card:not(.active) {
+            background: #333 !important;
+        }
+        body.dark .stats-dashboard.has-filter .stat-card:not(.active) .stat-value,
+        body.dark .stats-dashboard.has-filter .stat-card:not(.active) .stat-label,
+        body.dark .stats-dashboard.has-filter .stat-card:not(.active) .stat-revenue {
+            color: #666 !important;
+        }
         .stat-card .stat-value { font-size: 32px; font-weight: 600; margin-bottom: 6px; }
         .stat-card .stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
         .stat-card .stat-revenue { font-size: 11px; opacity: 0.7; }
@@ -2902,6 +2924,12 @@
             document.querySelectorAll('.filter-pill').forEach(pill => {
                 pill.classList.toggle('active', pill.dataset.tier === tier);
             });
+
+            // Actualizar dashboard - añadir clase has-filter si hay filtro
+            const dashboard = document.getElementById('statsDashboard');
+            if (dashboard) {
+                dashboard.classList.toggle('has-filter', tier !== '');
+            }
 
             // Actualizar stat cards
             document.querySelectorAll('.stat-card').forEach(card => {
