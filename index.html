@@ -26,6 +26,53 @@
         .connection-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
         .connection-badge.online .dot { background: #28a745; }
         .connection-badge.offline .dot { background: #ffc107; }
+
+        /* Dark mode toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 12px;
+            right: 90px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover { background: #f5f5f5; }
+
+        /* Dark mode styles */
+        body.dark {
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        body.dark .header { background: #1a1a1a; border-bottom-color: #333; }
+        body.dark .sidebar { background: #1a1a1a; border-right-color: #333; }
+        body.dark .main-content { background: #111; }
+        body.dark .pipeline-column { background: #222; }
+        body.dark .pipeline-card { background: #2a2a2a; border-color: #333; }
+        body.dark .pipeline-card:hover { background: #333; }
+        body.dark .prospect-card { background: #222; }
+        body.dark .prospect-card:hover { background: #2a2a2a; }
+        body.dark .sidebar-item { color: #999; }
+        body.dark .sidebar-item:hover, body.dark .sidebar-item.active { color: #fff; background: #333; }
+        body.dark .modal { background: #222; }
+        body.dark .modal-header { border-bottom-color: #333; }
+        body.dark input, body.dark select, body.dark textarea { background: #333; border-color: #444; color: #e0e0e0; }
+        body.dark .theme-toggle { background: #333; border-color: #444; }
+        body.dark .connection-badge.online { background: #1e3a29; color: #6fcf97; }
+        body.dark .connection-badge.offline { background: #3d3520; color: #f2c94c; }
+        body.dark .column-header { border-bottom-color: #333; }
+        body.dark .logo-text { color: #fff; }
+        body.dark .detail-grid, body.dark .info-section { background: #2a2a2a; }
+        body.dark .tabs .tab { color: #999; }
+        body.dark .tabs .tab.active { color: #fff; border-bottom-color: #fff; }
+
         * {
             margin: 0;
             padding: 0;
@@ -1147,6 +1194,9 @@
     </style>
 </head>
 <body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">☀️</button>
+
     <!-- Connection Badge -->
     <div id="connectionBadge" class="connection-badge offline" onclick="showSupabaseConfig()">
         <span class="dot"></span>
@@ -2700,6 +2750,25 @@
             document.getElementById('supabaseModal').classList.remove('active');
             showNotification('Desconectado');
         }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.querySelector('.theme-toggle');
+            body.classList.toggle('dark');
+            const isDark = body.classList.contains('dark');
+            btn.textContent = isDark ? '🌙' : '☀️';
+            localStorage.setItem('snaro-theme', isDark ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        (function loadTheme() {
+            const saved = localStorage.getItem('snaro-theme');
+            if (saved === 'dark') {
+                document.body.classList.add('dark');
+                document.querySelector('.theme-toggle').textContent = '🌙';
+            }
+        })();
     </script>
 </body>
 </html>
