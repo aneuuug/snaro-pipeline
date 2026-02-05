@@ -1010,6 +1010,157 @@
         body.dark .prospect-table tr:hover td { background: #2a2a2a; }
         body.dark .quick-btn { background: #333; border-color: #444; }
 
+        /* Revenue Tiers System */
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tier-enterprise { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: #fff; }
+        .tier-midmarket { background: linear-gradient(135deg, #0f4c75 0%, #1b6ca8 100%); color: #fff; }
+        .tier-pyme { background: linear-gradient(135deg, #3d5a80 0%, #5c7a9e 100%); color: #fff; }
+        .tier-micro { background: #e8e8e8; color: #666; }
+
+        /* Revenue Bar */
+        .revenue-bar-container {
+            width: 100%;
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        .revenue-bar {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        .revenue-bar.enterprise { background: linear-gradient(90deg, #1a1a2e, #16213e); }
+        .revenue-bar.midmarket { background: linear-gradient(90deg, #0f4c75, #1b6ca8); }
+        .revenue-bar.pyme { background: linear-gradient(90deg, #3d5a80, #5c7a9e); }
+        .revenue-bar.micro { background: #ccc; }
+
+        /* Stats Dashboard */
+        .stats-dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            border-radius: 12px;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .stat-card.active { border-color: #000; }
+        .stat-card .stat-value { font-size: 28px; font-weight: 500; margin-bottom: 4px; }
+        .stat-card .stat-label { font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-card .stat-revenue { font-size: 12px; color: #999; margin-top: 4px; }
+        .stat-card.enterprise .stat-value { color: #1a1a2e; }
+        .stat-card.midmarket .stat-value { color: #0f4c75; }
+        .stat-card.pyme .stat-value { color: #3d5a80; }
+        .stat-card.micro .stat-value { color: #888; }
+
+        body.dark .stats-dashboard { background: linear-gradient(135deg, #222 0%, #1a1a1a 100%); }
+        body.dark .stat-card { background: #2a2a2a; }
+        body.dark .stat-card .stat-label { color: #888; }
+        body.dark .stat-card .stat-revenue { color: #666; }
+
+        /* Revenue Display in Card */
+        .revenue-display {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-top: 6px;
+        }
+        .revenue-amount {
+            font-size: 18px;
+            font-weight: 500;
+            color: #000;
+        }
+        .revenue-unit {
+            font-size: 12px;
+            color: #666;
+        }
+        body.dark .revenue-amount { color: #fff; }
+
+        /* Enhanced Prospect Card */
+        .prospect-card-enhanced {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 16px;
+            align-items: start;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #f0f0f0;
+        }
+        .prospect-card-enhanced:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-color: #e0e0e0;
+        }
+        .prospect-card-enhanced .tier-indicator {
+            width: 4px;
+            height: 100%;
+            min-height: 60px;
+            border-radius: 2px;
+        }
+        .prospect-card-enhanced .tier-indicator.enterprise { background: linear-gradient(180deg, #1a1a2e, #16213e); }
+        .prospect-card-enhanced .tier-indicator.midmarket { background: linear-gradient(180deg, #0f4c75, #1b6ca8); }
+        .prospect-card-enhanced .tier-indicator.pyme { background: linear-gradient(180deg, #3d5a80, #5c7a9e); }
+        .prospect-card-enhanced .tier-indicator.micro { background: #ddd; }
+
+        .prospect-main-info { flex: 1; }
+        .prospect-main-info .company-name { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+        .prospect-main-info .company-meta { font-size: 12px; color: #666; display: flex; gap: 12px; flex-wrap: wrap; }
+        .prospect-main-info .company-meta span { display: flex; align-items: center; gap: 4px; }
+
+        .prospect-revenue-section { text-align: right; min-width: 120px; }
+        .prospect-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+
+        body.dark .prospect-card-enhanced { background: #222; border-color: #333; }
+        body.dark .prospect-card-enhanced:hover { background: #2a2a2a; border-color: #444; }
+        body.dark .prospect-main-info .company-name { color: #fff; }
+        body.dark .prospect-main-info .company-meta { color: #888; }
+
+        /* Quick Filter Pills */
+        .filter-pills {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+        .filter-pill {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-pill:hover { border-color: #000; }
+        .filter-pill.active { background: #000; color: #fff; border-color: #000; }
+        body.dark .filter-pill { background: #333; border-color: #444; color: #ccc; }
+        body.dark .filter-pill.active { background: #fff; color: #000; }
+
         .prospect-card {
             background: #fff;
             padding: 20px 0;
@@ -1354,26 +1505,59 @@
         <main class="content">
             <!-- View: Por Contactar -->
             <div class="view" id="view-porcontactar" style="display: none;">
-                <!-- Resumen -->
-                <div class="view-summary">
+                <!-- Header con título y contador -->
+                <div class="view-summary" style="margin-bottom: 24px;">
                     <div class="summary-main">
-                        <span class="summary-number" id="prospectCount">115</span>
+                        <span class="summary-number" id="prospectCount">0</span>
                         <span class="summary-label">empresas por contactar</span>
                     </div>
-                    <div class="summary-hint">Empresas de Euskadi · Los cambios se guardan automáticamente</div>
+                    <div class="summary-hint">Base de datos SABI · Empresas de Euskadi</div>
+                </div>
+
+                <!-- Dashboard de Segmentación por Facturación -->
+                <div class="stats-dashboard" id="statsDashboard">
+                    <div class="stat-card enterprise" onclick="filterByTier('enterprise')" id="statEnterprise">
+                        <div class="stat-value" id="countEnterprise">0</div>
+                        <div class="stat-label">Enterprise</div>
+                        <div class="stat-revenue">> 100M€</div>
+                    </div>
+                    <div class="stat-card midmarket" onclick="filterByTier('midmarket')" id="statMidmarket">
+                        <div class="stat-value" id="countMidmarket">0</div>
+                        <div class="stat-label">Mid-Market</div>
+                        <div class="stat-revenue">10M€ - 100M€</div>
+                    </div>
+                    <div class="stat-card pyme" onclick="filterByTier('pyme')" id="statPyme">
+                        <div class="stat-value" id="countPyme">0</div>
+                        <div class="stat-label">PYME</div>
+                        <div class="stat-revenue">1M€ - 10M€</div>
+                    </div>
+                    <div class="stat-card micro" onclick="filterByTier('micro')" id="statMicro">
+                        <div class="stat-value" id="countMicro">0</div>
+                        <div class="stat-label">Micro</div>
+                        <div class="stat-revenue">< 1M€</div>
+                    </div>
+                </div>
+
+                <!-- Quick Filter Pills -->
+                <div class="filter-pills" id="filterPills">
+                    <button class="filter-pill active" onclick="filterByTier('')" data-tier="">Todas</button>
+                    <button class="filter-pill" onclick="filterByTier('enterprise')" data-tier="enterprise">Enterprise (>100M€)</button>
+                    <button class="filter-pill" onclick="filterByTier('midmarket')" data-tier="midmarket">Mid-Market (10-100M€)</button>
+                    <button class="filter-pill" onclick="filterByTier('pyme')" data-tier="pyme">PYME (1-10M€)</button>
+                    <button class="filter-pill" onclick="filterByTier('micro')" data-tier="micro">Micro (<1M€)</button>
                 </div>
 
                 <!-- Filtros principales -->
                 <div class="filters-bar" style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
-                    <input type="text" id="searchProspects" placeholder="Buscar empresa, sector, localidad..."
-                           style="flex: 2; min-width: 250px; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px;"
+                    <input type="text" id="searchProspects" placeholder="Buscar empresa..."
+                           style="flex: 2; min-width: 200px; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px;"
                            oninput="filterProspects()">
                     <select id="filterSector" class="filter-select" onchange="filterProspects()">
                         <option value="">Todos los sectores</option>
-                        <option value="Automoción">Automoción</option>
-                        <option value="Industria">Industria</option>
-                        <option value="Tecnología">Tecnología</option>
                         <option value="Energía">Energía</option>
+                        <option value="Industria">Industria</option>
+                        <option value="Automoción">Automoción</option>
+                        <option value="Tecnología">Tecnología</option>
                         <option value="Construcción">Construcción</option>
                         <option value="Servicios">Servicios</option>
                         <option value="Salud">Salud</option>
@@ -1382,19 +1566,17 @@
                         <option value="Distribución">Distribución</option>
                     </select>
                     <select id="filterLocation" class="filter-select" onchange="filterProspects()">
-                        <option value="">Todas las zonas</option>
+                        <option value="">Todas las provincias</option>
                         <option value="Bizkaia">Bizkaia</option>
                         <option value="Gipuzkoa">Gipuzkoa</option>
                         <option value="Araba">Araba</option>
-                        <option value="Bilbao">Bilbao</option>
-                        <option value="Donostia">Donostia</option>
-                        <option value="Vitoria">Vitoria</option>
                     </select>
-                    <select id="filterPriority" class="filter-select" onchange="filterProspects()">
-                        <option value="">Todas prioridades</option>
-                        <option value="high">Alta prioridad</option>
-                        <option value="medium">Media prioridad</option>
-                        <option value="low">Baja prioridad</option>
+                    <select id="filterRevenue" class="filter-select" onchange="filterProspects()" style="display: none;">
+                        <option value="">Cualquier facturación</option>
+                        <option value="enterprise">> 100M€</option>
+                        <option value="midmarket">10M€ - 100M€</option>
+                        <option value="pyme">1M€ - 10M€</option>
+                        <option value="micro">< 1M€</option>
                     </select>
                 </div>
 
@@ -1403,14 +1585,14 @@
                     <div style="display: flex; gap: 8px; align-items: center;">
                         <span style="font-size: 12px; color: #666;">Ordenar:</span>
                         <select id="sortBy" class="filter-select-small" onchange="filterProspects()">
-                            <option value="priority">Por prioridad</option>
+                            <option value="revenue-desc">Mayor facturación</option>
+                            <option value="revenue-asc">Menor facturación</option>
                             <option value="name">Alfabético (A-Z)</option>
-                            <option value="name-desc">Alfabético (Z-A)</option>
                             <option value="sector">Por sector</option>
-                            <option value="location">Por zona</option>
                         </select>
                     </div>
                     <div style="display: flex; gap: 8px; align-items: center;">
+                        <span style="font-size: 12px; color: #666; margin-right: 8px;" id="filteredCount">Mostrando 0</span>
                         <span style="font-size: 12px; color: #666;">Vista:</span>
                         <button class="view-btn active" id="viewCards" onclick="setProspectView('cards')" title="Tarjetas">▦</button>
                         <button class="view-btn" id="viewTable" onclick="setProspectView('table')" title="Tabla">☰</button>
@@ -2571,6 +2753,105 @@
             }
         };
 
+        // ============================================
+        // SISTEMA DE FACTURACIÓN Y TIERS
+        // ============================================
+
+        // Variable global para filtro de tier activo
+        let activeTierFilter = '';
+
+        // Extraer facturación del campo detail (formato: "Facturación: 11358M€ · 0 empleados")
+        function parseRevenue(detail) {
+            if (!detail) return 0;
+            const match = detail.match(/Facturación:\s*([\d.,]+)(M|K)?€/i);
+            if (!match) return 0;
+
+            let value = parseFloat(match[1].replace('.', '').replace(',', '.'));
+            const unit = match[2]?.toUpperCase();
+
+            if (unit === 'M') return value; // Ya está en millones
+            if (unit === 'K') return value / 1000; // Convertir K a M
+            return value / 1000; // Asumir que está en miles si no tiene unidad
+        }
+
+        // Clasificar empresa por tier según facturación
+        function getRevenueTier(revenue) {
+            if (revenue >= 100) return 'enterprise';  // > 100M€
+            if (revenue >= 10) return 'midmarket';    // 10-100M€
+            if (revenue >= 1) return 'pyme';          // 1-10M€
+            return 'micro';                           // < 1M€
+        }
+
+        // Obtener nombre del tier
+        function getTierName(tier) {
+            const names = {
+                'enterprise': 'Enterprise',
+                'midmarket': 'Mid-Market',
+                'pyme': 'PYME',
+                'micro': 'Micro'
+            };
+            return names[tier] || tier;
+        }
+
+        // Formatear facturación para display
+        function formatRevenue(revenue) {
+            if (revenue >= 1000) return (revenue / 1000).toFixed(0) + 'B€';
+            if (revenue >= 1) return revenue.toFixed(0) + 'M€';
+            if (revenue >= 0.001) return (revenue * 1000).toFixed(0) + 'K€';
+            return 'N/D';
+        }
+
+        // Calcular porcentaje para barra de revenue (escala logarítmica)
+        function getRevenueBarWidth(revenue) {
+            if (revenue <= 0) return 5;
+            // Escala logarítmica: max ~12000M€ (Iberdrola)
+            const maxLog = Math.log10(12000);
+            const valueLog = Math.log10(Math.max(revenue, 0.1));
+            return Math.min(100, Math.max(5, (valueLog / maxLog) * 100));
+        }
+
+        // Filtrar por tier (click en pills o dashboard)
+        function filterByTier(tier) {
+            activeTierFilter = tier;
+
+            // Actualizar pills activos
+            document.querySelectorAll('.filter-pill').forEach(pill => {
+                pill.classList.toggle('active', pill.dataset.tier === tier);
+            });
+
+            // Actualizar stat cards
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            if (tier) {
+                const card = document.getElementById('stat' + tier.charAt(0).toUpperCase() + tier.slice(1));
+                if (card) card.classList.add('active');
+            }
+
+            filterProspects();
+        }
+
+        // Actualizar dashboard de estadísticas
+        function updateStatsDashboard() {
+            const prospects = getByStatus('porcontactar');
+
+            let counts = { enterprise: 0, midmarket: 0, pyme: 0, micro: 0 };
+            let revenues = { enterprise: 0, midmarket: 0, pyme: 0, micro: 0 };
+
+            prospects.forEach(p => {
+                const revenue = parseRevenue(p.detail);
+                const tier = getRevenueTier(revenue);
+                counts[tier]++;
+                revenues[tier] += revenue;
+            });
+
+            // Actualizar contadores
+            document.getElementById('countEnterprise').textContent = counts.enterprise.toLocaleString();
+            document.getElementById('countMidmarket').textContent = counts.midmarket.toLocaleString();
+            document.getElementById('countPyme').textContent = counts.pyme.toLocaleString();
+            document.getElementById('countMicro').textContent = counts.micro.toLocaleString();
+        }
+
         // Cargar datos desde localStorage o usar iniciales
         function loadData() {
             const saved = localStorage.getItem(STORAGE_KEY);
@@ -2663,6 +2944,7 @@
 
         // Render all views
         function renderAll() {
+            updateStatsDashboard();
             renderProspects();
             renderPipeline();
         }
@@ -2681,38 +2963,48 @@
         function renderProspects(filteredList = null) {
             const list = document.getElementById('prospectList');
             const count = document.getElementById('prospectCount');
+            const filteredCountEl = document.getElementById('filteredCount');
             const prospects = getByStatus('porcontactar');
             const data = filteredList || prospects;
 
-            count.textContent = data.length;
+            count.textContent = prospects.length.toLocaleString();
+            if (filteredCountEl) {
+                filteredCountEl.textContent = `Mostrando ${data.length.toLocaleString()}`;
+            }
+
+            // Actualizar dashboard
+            updateStatsDashboard();
 
             if (data.length === 0) {
                 list.innerHTML = `
-                    <div class="empty-state">
-                        <p>Sin resultados</p>
-                        <p class="empty-hint">Prueba con otros filtros</p>
+                    <div class="empty-state" style="text-align: center; padding: 60px 20px; color: #666;">
+                        <p style="font-size: 18px; margin-bottom: 8px;">Sin resultados</p>
+                        <p style="font-size: 13px;">Prueba con otros filtros o segmentos</p>
                     </div>
                 `;
                 return;
             }
 
-            // Sorting
-            const sortBy = document.getElementById('sortBy')?.value || 'priority';
+            // Sorting - por defecto por facturación (mayor a menor)
+            const sortBy = document.getElementById('sortBy')?.value || 'revenue-desc';
             const sorted = [...data].sort((a, b) => {
-                if (sortBy === 'priority') {
-                    const order = { high: 0, medium: 1, low: 2 };
-                    return order[a.priority] - order[b.priority];
+                const revA = parseRevenue(a.detail);
+                const revB = parseRevenue(b.detail);
+
+                if (sortBy === 'revenue-desc') {
+                    return revB - revA;
+                } else if (sortBy === 'revenue-asc') {
+                    return revA - revB;
                 } else if (sortBy === 'name') {
                     return a.name.localeCompare(b.name);
-                } else if (sortBy === 'name-desc') {
-                    return b.name.localeCompare(a.name);
                 } else if (sortBy === 'sector') {
                     return a.sector.localeCompare(b.sector);
-                } else if (sortBy === 'location') {
-                    return a.location.localeCompare(b.location);
                 }
-                return 0;
+                return revB - revA; // Default: mayor facturación primero
             });
+
+            // Limitar a 100 para rendimiento inicial (scroll infinito se puede añadir después)
+            const displayData = sorted.slice(0, 100);
 
             // Render based on view
             if (currentView === 'table') {
@@ -2720,50 +3012,69 @@
                     <table class="prospect-table">
                         <thead>
                             <tr>
-                                <th>Empresa</th>
-                                <th>Sector</th>
-                                <th>Localidad</th>
-                                <th>Prioridad</th>
-                                <th>Acciones</th>
+                                <th style="width: 40%;">Empresa</th>
+                                <th style="width: 15%;">Facturación</th>
+                                <th style="width: 12%;">Tier</th>
+                                <th style="width: 13%;">Sector</th>
+                                <th style="width: 12%;">Provincia</th>
+                                <th style="width: 8%;">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${sorted.map(p => `
-                                <tr>
+                            ${displayData.map(p => {
+                                const revenue = parseRevenue(p.detail);
+                                const tier = getRevenueTier(revenue);
+                                return `
+                                <tr onclick="openProspectDetail(${p.id})" style="cursor: pointer;">
                                     <td>
-                                        <span class="company-name" onclick="openProspectDetail(${p.id})">${p.name}</span>
-                                        <div style="font-size: 11px; color: #999; margin-top: 2px;">${p.detail.substring(0, 60)}${p.detail.length > 60 ? '...' : ''}</div>
+                                        <span class="company-name" style="font-weight: 500;">${p.name}</span>
                                     </td>
-                                    <td>${p.sector}</td>
-                                    <td>${p.location}</td>
-                                    <td><span class="badge badge-${p.priority}">${p.priority === 'high' ? 'Alta' : p.priority === 'medium' ? 'Media' : 'Baja'}</span></td>
+                                    <td style="font-weight: 500; font-size: 14px;">${formatRevenue(revenue)}</td>
+                                    <td><span class="tier-badge tier-${tier}">${getTierName(tier)}</span></td>
+                                    <td style="font-size: 12px; color: #666;">${p.sector}</td>
+                                    <td style="font-size: 12px; color: #666;">${p.location.split(',')[1]?.trim() || p.location}</td>
                                     <td>
-                                        <div class="quick-actions">
-                                            <button class="quick-btn" onclick="moveToContactado(${p.id})" title="Mover a Contactado">→</button>
-                                            <button class="quick-btn" onclick="markInterested(${p.id})" title="Alta prioridad">★</button>
-                                            <button class="quick-btn" onclick="markNotInterested(${p.id})" title="Descartar">✕</button>
+                                        <div class="quick-actions" style="display: flex; gap: 4px;">
+                                            <button class="quick-btn" onclick="event.stopPropagation(); moveToContactado(${p.id})" title="Contactar">→</button>
+                                            <button class="quick-btn" onclick="event.stopPropagation(); markNotInterested(${p.id})" title="Descartar">✕</button>
                                         </div>
                                     </td>
                                 </tr>
-                            `).join('')}
+                            `}).join('')}
                         </tbody>
                     </table>
+                    ${sorted.length > 100 ? `<div style="text-align: center; padding: 20px; color: #666; font-size: 13px;">Mostrando 100 de ${sorted.length.toLocaleString()} empresas. Usa filtros para refinar la búsqueda.</div>` : ''}
                 `;
             } else {
-                list.innerHTML = sorted.map(p => `
-                    <div class="prospect-card priority-${p.priority}" onclick="openProspectDetail(${p.id})">
-                        <div class="priority-indicator"></div>
-                        <div class="prospect-info">
-                            <div class="name">${p.name}</div>
-                            <div class="meta">${p.sector} · ${p.location}</div>
-                            <div class="detail">${p.detail}</div>
+                list.innerHTML = displayData.map(p => {
+                    const revenue = parseRevenue(p.detail);
+                    const tier = getRevenueTier(revenue);
+                    const barWidth = getRevenueBarWidth(revenue);
+                    return `
+                    <div class="prospect-card-enhanced" onclick="openProspectDetail(${p.id})">
+                        <div class="tier-indicator ${tier}"></div>
+                        <div class="prospect-main-info">
+                            <div class="company-name">${p.name}</div>
+                            <div class="company-meta">
+                                <span>${p.sector}</span>
+                                <span>📍 ${p.location.split(',')[1]?.trim() || p.location}</span>
+                            </div>
+                            <div class="revenue-bar-container">
+                                <div class="revenue-bar ${tier}" style="width: ${barWidth}%;"></div>
+                            </div>
                         </div>
-                        <div style="display: flex; gap: 8px; align-items: center;">
-                            <button class="quick-btn" onclick="event.stopPropagation(); markInterested(${p.id})" title="Alta prioridad">★</button>
-                            <button class="btn-move" onclick="event.stopPropagation(); moveToContactado(${p.id})">→</button>
+                        <div class="prospect-revenue-section">
+                            <span class="tier-badge tier-${tier}">${getTierName(tier)}</span>
+                            <div class="revenue-display">
+                                <span class="revenue-amount">${formatRevenue(revenue)}</span>
+                            </div>
+                            <div class="prospect-actions">
+                                <button class="quick-btn" onclick="event.stopPropagation(); moveToContactado(${p.id})" title="Contactar">→</button>
+                                <button class="quick-btn" onclick="event.stopPropagation(); markNotInterested(${p.id})" title="Descartar">✕</button>
+                            </div>
                         </div>
                     </div>
-                `).join('');
+                `}).join('') + (sorted.length > 100 ? `<div style="text-align: center; padding: 20px; color: #666; font-size: 13px;">Mostrando 100 de ${sorted.length.toLocaleString()} empresas. Usa filtros para refinar.</div>` : '');
             }
         }
 
@@ -2793,16 +3104,19 @@
 
         // Filter prospects
         function filterProspects() {
-            const search = document.getElementById('searchProspects').value.toLowerCase();
-            const sector = document.getElementById('filterSector').value;
-            const location = document.getElementById('filterLocation').value;
-            const priority = document.getElementById('filterPriority')?.value || '';
+            const search = document.getElementById('searchProspects')?.value.toLowerCase() || '';
+            const sector = document.getElementById('filterSector')?.value || '';
+            const location = document.getElementById('filterLocation')?.value || '';
 
             let filtered = getByStatus('porcontactar');
 
-            // Priority filter
-            if (priority) {
-                filtered = filtered.filter(p => p.priority === priority);
+            // Tier filter (from pills or dashboard)
+            if (activeTierFilter) {
+                filtered = filtered.filter(p => {
+                    const revenue = parseRevenue(p.detail);
+                    const tier = getRevenueTier(revenue);
+                    return tier === activeTierFilter;
+                });
             }
 
             // Text search
@@ -2810,7 +3124,6 @@
                 filtered = filtered.filter(p =>
                     p.name.toLowerCase().includes(search) ||
                     p.sector.toLowerCase().includes(search) ||
-                    p.detail.toLowerCase().includes(search) ||
                     p.location.toLowerCase().includes(search)
                 );
             }
