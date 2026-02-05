@@ -317,7 +317,7 @@
             color: #000;
             font-size: 26px;
             font-weight: 300;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             cursor: pointer;
@@ -1618,12 +1618,16 @@
                 right: 14px;
                 top: 50%;
                 transform: translateY(-50%);
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
                 background: transparent;
-                border: none;
+                border: 1px solid #ccc;
+                border-radius: 50%;
                 box-shadow: none;
+            }
+            body.dark .theme-toggle.header-theme {
+                border-color: #555;
             }
             .theme-toggle.header-theme:hover,
             .theme-toggle.header-theme:active {
@@ -3951,6 +3955,12 @@
                     item.classList.add('active');
                 }
             });
+
+            // Mostrar botón + solo en Empresas
+            const addBtn = document.querySelector('.btn-add');
+            if (addBtn) {
+                addBtn.style.display = viewName === 'porcontactar' ? 'flex' : 'none';
+            }
         }
 
         // Toggle mobile menu
