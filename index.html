@@ -1498,32 +1498,33 @@
                 border-radius: 3px;
             }
 
-            /* Botones de acción */
+            /* Botones de acción - Estilo Apple */
             .prospect-actions-inline {
                 display: flex;
-                gap: 0;
-                margin: 0;
-                border-top: 1px solid #f0f0f0;
+                gap: 8px;
+                padding: 12px 14px;
+                border-top: none;
+                justify-content: flex-end;
+                align-items: center;
             }
             .prospect-actions-inline .action-btn {
-                flex: 1;
-                padding: 10px;
-                font-size: 12px;
+                padding: 6px 14px;
+                font-size: 13px;
                 font-weight: 500;
                 text-align: center;
-                border-radius: 0;
+                border-radius: 16px;
                 border: none;
+                letter-spacing: -0.2px;
             }
             .prospect-actions-inline .action-btn.primary {
-                background: #000;
+                background: #007AFF;
                 color: #fff;
             }
             .prospect-actions-inline .action-btn.secondary {
-                background: #fafafa;
-                color: #aaa;
-                flex: 0 0 44px;
+                background: #f2f2f7;
+                color: #8e8e93;
+                padding: 6px 10px;
                 font-size: 14px;
-                border-left: 1px solid #f0f0f0;
             }
 
             /* Dark mode móvil */
@@ -1545,16 +1546,12 @@
             body.dark .prospect-revenue-section .revenue-amount {
                 color: #fff;
             }
-            body.dark .prospect-actions-inline {
-                border-top-color: #252525;
-            }
             body.dark .prospect-actions-inline .action-btn.primary {
-                background: #333;
+                background: #0A84FF;
             }
             body.dark .prospect-actions-inline .action-btn.secondary {
-                background: #151515;
-                border-left-color: #252525;
-                color: #555;
+                background: #2c2c2e;
+                color: #636366;
             }
 
             /* ====== PIPELINE MÓVIL ====== */
