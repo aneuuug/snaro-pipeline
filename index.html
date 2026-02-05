@@ -1,0 +1,2714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNARO — Pipeline</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Connection Status Badge */
+        .connection-badge {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .connection-badge.online { background: #d4edda; color: #155724; }
+        .connection-badge.offline { background: #fff3cd; color: #856404; }
+        .connection-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+        .connection-badge.online .dot { background: #28a745; }
+        .connection-badge.offline .dot { background: #ffc107; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-weight: 300;
+            color: #000;
+            background: #fff;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Header */
+        .header {
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+        }
+
+        .logo-container:hover .logo {
+            opacity: 0.8;
+        }
+
+        .logo-container:hover .logo-text {
+            color: #666;
+        }
+
+        .logo {
+            height: 36px;
+            width: auto;
+            transition: opacity 0.2s;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.25em;
+            color: #bbb;
+            text-transform: uppercase;
+            transition: color 0.2s;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-name {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: #000;
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        /* Layout */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 81px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 200px;
+            padding: 40px 24px;
+            border-right: 1px solid #f0f0f0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 40px;
+        }
+
+        .sidebar-title {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            cursor: pointer;
+            font-size: 13px;
+            color: #666;
+            transition: color 0.2s;
+        }
+
+        .sidebar-item:hover {
+            color: #000;
+        }
+
+        .sidebar-item.active {
+            color: #000;
+            font-weight: 400;
+        }
+
+        .team-avatar {
+            width: 24px;
+            height: 24px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: #666;
+        }
+
+        /* Content */
+        .content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        /* Pipeline Summary */
+        .pipeline-summary {
+            display: flex;
+            align-items: baseline;
+            gap: 48px;
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .pipeline-metric {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+        }
+
+        .metric-value.small {
+            font-size: 24px;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .main-metric .metric-value {
+            font-size: 42px;
+        }
+
+        .main-metric .metric-label {
+            color: #666;
+        }
+
+        /* Top Actions */
+        .top-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 0;
+            border: 1px solid #000;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            transition: all 0.2s;
+            background: #fff;
+            color: #000;
+        }
+
+        .btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-add {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            border: none;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #000;
+            font-size: 26px;
+            font-weight: 300;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            padding: 0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.05);
+            z-index: 100;
+        }
+
+        .btn-add:hover {
+            background: rgba(255,255,255,0.85);
+            transform: scale(1.05);
+        }
+
+        /* Pipeline Board */
+        .pipeline-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .pipeline-column {
+            background: #f8f8f8;
+            padding: 20px;
+            min-height: 400px;
+            border-radius: 8px;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            margin-bottom: 12px;
+        }
+
+        .column-header h3 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .column-count {
+            font-size: 11px;
+            font-weight: 400;
+            color: #666;
+        }
+
+        /* Client Cards */
+        .client-card {
+            padding: 16px;
+            margin-bottom: 8px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        .client-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .client-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .client-card .name {
+            font-size: 14px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .client-card .sector {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .client-card .mrr {
+            font-size: 13px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .client-card .mrr.active {
+            color: #22c55e;
+        }
+
+        .client-card.has-date {
+            position: relative;
+            padding-top: 32px;
+        }
+
+        .card-date {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 10px;
+            font-weight: 500;
+            color: #f97316;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .col-cliente {
+            background: #f8fdf8;
+        }
+
+        .col-cliente .column-count {
+            color: #22c55e;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.95);
+            z-index: 1000;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 60px 40px;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            width: 100%;
+            max-width: 640px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .modal-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: #000;
+        }
+
+        .modal-body {
+            padding: 32px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #e0e0e0;
+            color: #000;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #ccc;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        /* Investigation Results */
+        .investigation-box {
+            background: #fafafa;
+            padding: 32px;
+            margin-top: 32px;
+        }
+
+        .investigation-box h4 {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 24px;
+        }
+
+        .investigation-box.loading {
+            text-align: center;
+            padding: 48px;
+        }
+
+        .investigation-box .spinner {
+            width: 24px;
+            height: 24px;
+            border: 1px solid #e0e0e0;
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        .investigation-box .loading-text {
+            font-size: 12px;
+            color: #999;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .info-item {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-item .label {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 6px;
+        }
+
+        .info-item .value {
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        .alerts-section {
+            margin-top: 32px;
+        }
+
+        .alerts-section h5 {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+        .alert-item:last-child {
+            border-bottom: none;
+        }
+
+        .alert-item .icon {
+            color: #999;
+        }
+
+        .alert-item .text {
+            color: #000;
+        }
+
+        .alert-item .date {
+            font-size: 11px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .alert-item.critical .icon {
+            color: #000;
+        }
+
+        .opportunities-section {
+            margin-top: 32px;
+        }
+
+        .opportunities-section h5 {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .opportunity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+            color: #444;
+        }
+
+        .opportunity-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Client Detail Modal */
+        .client-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .client-detail-header h2 {
+            font-size: 24px;
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .client-detail-header .sector {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 8px 16px;
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        .status-badge.active {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .tab {
+            padding: 16px 0;
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+            border-bottom: 1px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #666;
+        }
+
+        .tab.active {
+            color: #000;
+            border-color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Activity Log */
+        .activity-log {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-content strong {
+            display: block;
+            font-size: 13px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .activity-content p {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .activity-date {
+            font-size: 11px;
+            color: #ccc;
+        }
+
+        /* Notes */
+        .notes-box {
+            background: #fafafa;
+            padding: 24px;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 32px;
+        }
+
+        .action-buttons .btn {
+            font-size: 11px;
+        }
+
+        /* Move selector */
+        .move-section {
+            margin-top: 40px;
+            padding-top: 32px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .move-section select {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .move-section select:focus {
+            outline: none;
+            border-color: #000;
+        }
+
+        /* Form buttons */
+        .form-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .form-buttons .btn {
+            flex: 1;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .empty-state .empty-hint {
+            font-size: 12px;
+            color: #ccc;
+            margin-top: 8px;
+        }
+
+        .empty-column {
+            text-align: center;
+            padding: 40px 16px;
+            color: #ccc;
+            font-size: 12px;
+        }
+
+        /* View Summary */
+        .view-summary {
+            margin-bottom: 48px;
+        }
+
+        .summary-main {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .summary-number {
+            font-size: 48px;
+            font-weight: 300;
+            letter-spacing: -0.03em;
+        }
+
+        .summary-label {
+            font-size: 16px;
+            color: #666;
+        }
+
+        .summary-hint {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Prospect List */
+        .prospect-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prospect-card {
+            background: #fff;
+            padding: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .prospect-card:hover {
+            padding-left: 8px;
+        }
+
+        .prospect-card:last-child {
+            border-bottom: none;
+        }
+
+        .priority-indicator {
+            width: 3px;
+            height: 40px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .prospect-card.priority-high .priority-indicator {
+            background: #000;
+        }
+
+        .prospect-card.priority-medium .priority-indicator {
+            background: #999;
+        }
+
+        .prospect-info {
+            flex: 1;
+        }
+
+        .prospect-info .name {
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .prospect-info .meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .prospect-info .detail {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .btn-move {
+            width: 40px;
+            height: 40px;
+            background: #fafafa;
+            border: none;
+            border-radius: 50%;
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-move:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Calendar Layout */
+        .calendar-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 48px;
+            max-width: 900px;
+        }
+
+        /* Mini Calendar */
+        .mini-calendar {
+            background: #fafafa;
+            padding: 24px;
+            border-radius: 12px;
+            height: fit-content;
+        }
+
+        .mini-cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .mini-cal-title {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .mini-cal-nav {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 18px;
+            color: #999;
+            border-radius: 50%;
+            transition: all 0.2s;
+        }
+
+        .mini-cal-nav:hover {
+            background: #e0e0e0;
+            color: #000;
+        }
+
+        .mini-cal-weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 8px;
+        }
+
+        .mini-cal-weekdays span {
+            text-align: center;
+            font-size: 10px;
+            font-weight: 500;
+            color: #999;
+            padding: 4px 0;
+        }
+
+        .mini-cal-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .mini-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: #333;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.15s;
+            position: relative;
+        }
+
+        .mini-day:hover {
+            background: #e0e0e0;
+        }
+
+        .mini-day.empty {
+            color: transparent;
+            pointer-events: none;
+        }
+
+        .mini-day.today {
+            background: #000;
+            color: #fff;
+        }
+
+        .mini-day.has-audit {
+            font-weight: 500;
+        }
+
+        .mini-day.has-audit::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            width: 4px;
+            height: 4px;
+            background: #f97316;
+            border-radius: 50%;
+        }
+
+        .mini-day.today.has-audit::after {
+            background: #fff;
+        }
+
+        /* Audit Agenda */
+        .audit-agenda {
+            flex: 1;
+        }
+
+        .agenda-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .agenda-title {
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #999;
+        }
+
+        .agenda-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .audit-card {
+            display: flex;
+            gap: 16px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .audit-card:last-child {
+            border-bottom: none;
+        }
+
+        .audit-date-box {
+            width: 48px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .audit-date-day {
+            font-size: 24px;
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+
+        .audit-date-month {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+        }
+
+        .audit-details {
+            flex: 1;
+        }
+
+        .audit-company {
+            font-size: 15px;
+            font-weight: 400;
+            margin-bottom: 4px;
+        }
+
+        .audit-type {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .audit-tag {
+            display: inline-block;
+            font-size: 10px;
+            padding: 4px 8px;
+            background: #fff3e0;
+            color: #f97316;
+            border-radius: 4px;
+        }
+
+        .no-audits {
+            text-align: center;
+            padding: 48px 24px;
+            color: #999;
+        }
+
+        .no-audits p {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .no-audits-hint {
+            font-size: 12px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <!-- Connection Badge -->
+    <div id="connectionBadge" class="connection-badge offline" onclick="showSupabaseConfig()">
+        <span class="dot"></span>
+        <span id="connectionText">Local</span>
+    </div>
+
+    <!-- Modal: Supabase Config -->
+    <div class="modal-overlay" id="supabaseModal">
+        <div class="modal" style="max-width: 480px;">
+            <div class="modal-header">
+                <h2>Configuración Nube</h2>
+                <button class="modal-close" onclick="document.getElementById('supabaseModal').classList.remove('active')">×</button>
+            </div>
+            <div class="modal-body" id="supabaseModalContent">
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-container" onclick="showView('pipeline')">
+            <img src="Brand/Snaro trans.png" alt="SNARO" class="logo">
+            <span class="logo-text">SNARO</span>
+        </div>
+        <div class="user-info">
+            <button onclick="exportData()" style="padding: 8px 16px; background: transparent; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 11px; color: #666; cursor: pointer; margin-right: 16px;">Exportar</button>
+            <span class="user-name">Ane</span>
+            <div class="user-avatar">A</div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Ventas</div>
+                <div class="sidebar-item active" data-view="pipeline" onclick="showView('pipeline')">Pipeline</div>
+                <div class="sidebar-item" data-view="porcontactar" onclick="showView('porcontactar')">Por contactar</div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Gestión</div>
+                <div class="sidebar-item" data-view="calendario" onclick="showView('calendario')">Calendario</div>
+                <div class="sidebar-item" data-view="informes" onclick="showView('informes')">Informes</div>
+            </div>
+            <div class="sidebar-section" style="margin-top: auto; padding-top: 40px; border-top: 1px solid #f0f0f0;">
+                <div class="sidebar-item" onclick="if(confirm('¿Resetear todos los datos?')) { resetToInitial(); renderAll(); }" style="color: #ccc; font-size: 11px;">Resetear datos</div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="content">
+            <!-- View: Por Contactar -->
+            <div class="view" id="view-porcontactar" style="display: none;">
+                <!-- Resumen -->
+                <div class="view-summary">
+                    <div class="summary-main">
+                        <span class="summary-number" id="prospectCount">115</span>
+                        <span class="summary-label">empresas por contactar</span>
+                    </div>
+                    <div class="summary-hint">Distribuidoras y mayoristas de Euskadi · Los cambios se guardan automáticamente</div>
+                </div>
+
+                <!-- Filtros -->
+                <div class="filters-bar" style="display: flex; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #f0f0f0;">
+                    <input type="text" id="searchProspects" placeholder="Buscar empresa..."
+                           style="flex: 1; padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px;"
+                           oninput="filterProspects()">
+                    <select id="filterSector" style="padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px; min-width: 180px; cursor: pointer;" onchange="filterProspects()">
+                        <option value="">Todos los sectores</option>
+                        <option value="HORECA">Alimentación HORECA</option>
+                        <option value="Cash">Cash & Carry</option>
+                        <option value="Congelados">Congelados</option>
+                        <option value="Lácteos">Lácteos</option>
+                        <option value="Vinos">Vinos y Bodegas</option>
+                        <option value="Café">Café y Bebidas</option>
+                        <option value="Pescado">Pescado y Marisco</option>
+                        <option value="Cárnicas">Cárnicas</option>
+                        <option value="Frutas">Frutas y Verduras</option>
+                        <option value="Logística">Logística y Transporte</option>
+                        <option value="Industrial">Suministros Industriales</option>
+                        <option value="Eléctrico">Material Eléctrico</option>
+                    </select>
+                    <select id="filterLocation" style="padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px; min-width: 140px; cursor: pointer;" onchange="filterProspects()">
+                        <option value="">Todas las zonas</option>
+                        <option value="Bizkaia">Bizkaia</option>
+                        <option value="Gipuzkoa">Gipuzkoa</option>
+                        <option value="Araba">Araba</option>
+                        <option value="Vitoria">Vitoria / Jundiz</option>
+                        <option value="Donostia">Donostia</option>
+                        <option value="Bilbao">Bilbao</option>
+                    </select>
+                </div>
+
+                <div class="prospect-list" id="prospectList">
+                    <!-- Se carga dinámicamente con JavaScript -->
+                </div>
+            </div>
+
+            <!-- View: Pipeline -->
+            <div class="view" id="view-pipeline" style="display: block;">
+
+            <!-- Pipeline Summary -->
+            <div class="pipeline-summary">
+                <div class="pipeline-metric main-metric">
+                    <span class="metric-value" id="mrrPotencial">0€</span>
+                    <span class="metric-label">MRR potencial en pipeline</span>
+                </div>
+                <div class="pipeline-metric">
+                    <span class="metric-value small" id="mrrActual">0€</span>
+                    <span class="metric-label">MRR actual</span>
+                </div>
+                <div class="pipeline-metric">
+                    <span class="metric-value small" id="empresasActivas">0</span>
+                    <span class="metric-label">empresas activas</span>
+                </div>
+            </div>
+
+            <!-- Pipeline Board -->
+            <div class="pipeline-board">
+                <!-- Contactados -->
+                <div class="pipeline-column" id="col-contactado">
+                    <div class="column-header">
+                        <h3>Contactado</h3>
+                        <span class="column-count">0€</span>
+                    </div>
+                    <div class="empty-column">Sin empresas</div>
+                </div>
+
+                <!-- Reunión -->
+                <div class="pipeline-column" id="col-reunion">
+                    <div class="column-header">
+                        <h3>Reunión</h3>
+                        <span class="column-count">0€</span>
+                    </div>
+                    <div class="empty-column">Sin empresas</div>
+                </div>
+
+                <!-- Piloto -->
+                <div class="pipeline-column" id="col-piloto">
+                    <div class="column-header">
+                        <h3>Piloto</h3>
+                        <span class="column-count">0€</span>
+                    </div>
+                    <div class="empty-column">Sin empresas</div>
+                </div>
+
+                <!-- Cliente -->
+                <div class="pipeline-column col-cliente" id="col-cliente">
+                    <div class="column-header">
+                        <h3>Cliente</h3>
+                        <span class="column-count">0€</span>
+                    </div>
+                    <div class="empty-column">Sin clientes aún</div>
+                </div>
+            </div>
+            </div>
+
+            <!-- View: Calendario -->
+            <div class="view" id="view-calendario" style="display: none;">
+                <div class="calendar-layout">
+                    <!-- Mini calendario -->
+                    <div class="mini-calendar">
+                        <div class="mini-cal-header">
+                            <button class="mini-cal-nav" onclick="changeMonth(-1)">‹</button>
+                            <span class="mini-cal-title" id="calendarMonth">Febrero 2026</span>
+                            <button class="mini-cal-nav" onclick="changeMonth(1)">›</button>
+                        </div>
+                        <div class="mini-cal-weekdays">
+                            <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+                        </div>
+                        <div class="mini-cal-grid" id="calendarDays"></div>
+                    </div>
+
+                    <!-- Lista de auditorías -->
+                    <div class="audit-agenda">
+                        <div class="agenda-header">
+                            <span class="agenda-title">Próximas auditorías</span>
+                        </div>
+                        <div class="agenda-list" id="auditList">
+                            <div class="no-audits">
+                                <p>Sin auditorías programadas</p>
+                                <p class="no-audits-hint">Las auditorías aparecerán aquí cuando añadas empresas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View: Informes (placeholder) -->
+            <div class="view" id="view-informes" style="display: none;">
+                <div class="top-actions">
+                    <h1 class="page-title">Informes</h1>
+                </div>
+                <p style="color: #999; font-size: 13px;">Métricas y análisis. Próximamente.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Add Button -->
+    <button class="btn-add" onclick="openAddModal()">+</button>
+
+    <!-- Modal: Añadir Empresa -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Nueva empresa</h2>
+                <button class="modal-close" onclick="closeAddModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="companyName" placeholder="Distribuciones García S.L.">
+                    </div>
+                    <div class="form-group">
+                        <label>CIF</label>
+                        <input type="text" id="companyCIF" placeholder="B12345678">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Sector</label>
+                        <select id="companySector">
+                            <option value="">Seleccionar</option>
+                            <option value="distribucion">Distribución</option>
+                            <option value="fabricacion">Fabricación</option>
+                            <option value="logistica">Logística</option>
+                            <option value="comercio">Comercio</option>
+                            <option value="servicios">Servicios</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Contacto</label>
+                        <input type="text" id="companyContact" placeholder="Nombre del contacto">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Notas</label>
+                    <textarea id="companyNotes" rows="2" placeholder="Contexto, necesidades, cómo lo conociste"></textarea>
+                </div>
+
+                <button class="btn" style="width: 100%;" onclick="investigateCompany()">
+                    Investigar empresa
+                </button>
+
+                <!-- Investigation Loading -->
+                <div class="investigation-box loading" id="investigationLoading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p class="loading-text">Investigando empresa</p>
+                </div>
+
+                <!-- Investigation Results -->
+                <div class="investigation-box" id="investigationResults" style="display: none;">
+                    <h4>Resultados</h4>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="label">Facturación</div>
+                            <div class="value" id="resFacturacion">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Empleados</div>
+                            <div class="value" id="resEmpleados">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Constitución</div>
+                            <div class="value" id="resConstitucion">—</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Última auditoría</div>
+                            <div class="value" id="resAuditoria">—</div>
+                        </div>
+                    </div>
+
+                    <div class="alerts-section" id="alertsSection">
+                        <h5>Alertas</h5>
+                        <div id="alertsList"></div>
+                    </div>
+
+                    <div class="opportunities-section">
+                        <h5>Oportunidades</h5>
+                        <div id="opportunitiesList"></div>
+                    </div>
+                </div>
+
+                <div class="form-buttons">
+                    <button class="btn" onclick="closeAddModal()">Cancelar</button>
+                    <button class="btn btn-primary" id="saveBtn" onclick="saveCompany()">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Detalle Cliente -->
+    <div class="modal-overlay" id="clientDetailModal">
+        <div class="modal" style="max-width: 720px;">
+            <div class="modal-header">
+                <h2>Empresa</h2>
+                <button class="modal-close" onclick="closeClientDetail()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="client-detail-header">
+                    <div>
+                        <h2 id="detailName">Gastronort S.L.</h2>
+                        <p class="sector" id="detailSector">Distribución HORECA</p>
+                    </div>
+                    <span class="status-badge" id="detailStatus">Por contactar</span>
+                </div>
+
+                <div class="tabs">
+                    <div class="tab active" onclick="showTab('info')">Información</div>
+                    <div class="tab" onclick="showTab('activity')">Actividad</div>
+                    <div class="tab" onclick="showTab('investigation')">Investigación</div>
+                </div>
+
+                <div class="tab-content active" id="tab-info">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="label">CIF</div>
+                            <div class="value">B48123456</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Empleados</div>
+                            <div class="value">45</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Facturación</div>
+                            <div class="value">3.2M€</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Contacto</div>
+                            <div class="value">Juan García</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Teléfono</div>
+                            <div class="value">944 123 456</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Email</div>
+                            <div class="value">jgarcia@gastronort.com</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 32px;">
+                        <div class="sidebar-title" style="margin-bottom: 12px;">Notas</div>
+                        <div class="notes-box">
+                            Contacto inicial por email. Interesados en automatizar la gestión de pedidos de sus clientes (restaurantes). Actualmente lo hacen todo manual con Excel. Tienen 3 personas dedicadas a esto.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-activity">
+                    <ul class="activity-log">
+                        <li class="activity-item">
+                            <div class="activity-icon">→</div>
+                            <div class="activity-content">
+                                <strong>Email enviado</strong>
+                                <p>Presentación de SNARO y propuesta de valor</p>
+                            </div>
+                            <div class="activity-date">04/02/2026</div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">·</div>
+                            <div class="activity-content">
+                                <strong>Nota añadida</strong>
+                                <p>Encontrado en LinkedIn. El director publicó sobre problemas de gestión.</p>
+                            </div>
+                            <div class="activity-date">03/02/2026</div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">○</div>
+                            <div class="activity-content">
+                                <strong>Empresa investigada</strong>
+                                <p>Datos obtenidos del Registro Mercantil</p>
+                            </div>
+                            <div class="activity-date">03/02/2026</div>
+                        </li>
+                    </ul>
+
+                    <div class="action-buttons">
+                        <button class="btn">Registrar llamada</button>
+                        <button class="btn">Registrar email</button>
+                        <button class="btn">Añadir nota</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-investigation">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="label">Razón Social</div>
+                            <div class="value">Gastronort Distribuciones S.L.</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Constitución</div>
+                            <div class="value">15/03/2008</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Capital Social</div>
+                            <div class="value">150.000€</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Administrador</div>
+                            <div class="value">María López Etxebarria</div>
+                        </div>
+                    </div>
+
+                    <div class="alerts-section" style="margin-top: 32px;">
+                        <h5>Alertas</h5>
+                        <div class="alert-item">
+                            <span class="icon">—</span>
+                            <div>
+                                <div class="text">No han depositado cuentas anuales en 2 años</div>
+                                <div class="date">Última presentación: 2023</div>
+                            </div>
+                        </div>
+                        <div class="alert-item">
+                            <span class="icon">—</span>
+                            <div>
+                                <div class="text">Noticia: Gastronort amplía plantilla ante aumento de demanda</div>
+                                <div class="date">El Correo — Octubre 2025</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="opportunities-section" style="margin-top: 32px;">
+                        <h5>Oportunidades</h5>
+                        <div class="opportunity-item">
+                            <span>→</span>
+                            <span>Automatización de pedidos — Tienen muchos clientes HORECA</span>
+                        </div>
+                        <div class="opportunity-item">
+                            <span>→</span>
+                            <span>Gestión documental — No tienen cuentas al día, posible caos admin</span>
+                        </div>
+                        <div class="opportunity-item">
+                            <span>→</span>
+                            <span>BI/Reporting — Empresa en crecimiento, necesitan visibilidad</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="move-section">
+                    <select>
+                        <option>Mover a: Por contactar</option>
+                        <option>Mover a: Contactado</option>
+                        <option>Mover a: Reunión</option>
+                        <option>Mover a: Piloto</option>
+                        <option>Mover a: Cliente</option>
+                    </select>
+                    <button class="btn btn-primary">Actualizar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // SISTEMA DE PERSISTENCIA - localStorage
+        // ============================================
+        const STORAGE_KEY = 'snaro_pipeline_data';
+
+        // Datos iniciales - Empresas Euskadi (350 empresas)
+        const initialProspects = [
+            // GRANDES DISTRIBUIDORAS
+            { id: 1, name: 'Grupo Eroski', sector: 'Gran Distribución', location: 'Elorrio, Bizkaia', priority: 'high', detail: 'Cooperativa. Supermercados, hipermercados y plataformas logísticas' },
+            { id: 2, name: 'Uvesco (BM Supermercados)', sector: 'Gran Distribución', location: 'Irun, Gipuzkoa', priority: 'high', detail: '280+ supermercados BM en el norte' },
+            { id: 3, name: 'Mercabilbao', sector: 'Mercado Central', location: 'Basauri, Bizkaia', priority: 'high', detail: '200+ empresas de frutas, verduras, pescado y carne' },
+            { id: 4, name: 'Mercadona Logística Norte', sector: 'Gran Distribución', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Bloque logístico norte, almacén Vitoria' },
+
+            // BIZKAIA - HORECA Y ALIMENTACIÓN
+            { id: 5, name: 'Paco Sánchez Hostelería', sector: 'Alimentación HORECA', location: 'Pol. Bekea, Galdakao', priority: 'high', detail: '40 años. Alimentación, bebidas, droguería para hostelería' },
+            { id: 6, name: 'Hermanos Basarrate', sector: 'Alimentación HORECA', location: 'Bizkaia', priority: 'high', detail: '40 años. Embutidos, lácteos, conservas, vinos' },
+            { id: 7, name: 'Menéndez y Cía', sector: 'Alimentación HORECA', location: 'Bizkaia', priority: 'medium', detail: '50+ años en distribución hostelería' },
+            { id: 8, name: 'Exclusivas Pasafama', sector: 'Hostelería', location: 'Bizkaia', priority: 'high', detail: '3.000 referencias en stock' },
+            { id: 9, name: 'Cash Basauri', sector: 'Cash & Carry', location: 'Basauri, Bizkaia', priority: 'medium', detail: 'Cash and carry para hostelería y comercios' },
+            { id: 10, name: 'Distribuciones Álvaro', sector: 'Alimentación', location: 'Derio, Bizkaia', priority: 'medium', detail: 'Mayorista alimentación seca y bebidas' },
+            { id: 11, name: 'Grupo Caternor', sector: 'Catering HORECA', location: 'Bizkaia', priority: 'medium', detail: 'Productos para catering y restauración colectiva' },
+            { id: 12, name: 'Distribuciones Urko', sector: 'Alimentación HORECA', location: 'Bizkaia', priority: 'medium', detail: 'Mayorista canal HORECA' },
+
+            // BIZKAIA - LÁCTEOS
+            { id: 13, name: 'Dislobiz S.L.', sector: 'Lácteos', location: 'Pol. Ugaldeguren, Zamudio', priority: 'high', detail: 'Distribuidor Danone y Reny Picot' },
+            { id: 14, name: 'KAIKU Km0', sector: 'Lácteos', location: 'Bizkaia', priority: 'medium', detail: 'Productos lácteos locales y proximidad' },
+            { id: 15, name: 'Productos Lácteos Miera', sector: 'Lácteos', location: 'Bizkaia', priority: 'low', detail: 'Quesos y mantequillas' },
+
+            // BIZKAIA - BEBIDAS Y CAFÉ
+            { id: 16, name: 'Norbega (Coca-Cola)', sector: 'Bebidas', location: 'Galdakao, Bizkaia', priority: 'high', detail: 'Fabricación y distribución Coca-Cola zona norte' },
+            { id: 17, name: 'Vinos Mendia', sector: 'Vinos y Licores', location: 'Pol. Ugaldeguren, Zamudio', priority: 'high', detail: 'Fundada en 1902. 120+ años' },
+            { id: 18, name: 'Café Baqué', sector: 'Café', location: 'Bilbao', priority: 'high', detail: 'Tostadero desde 1890. 130+ años' },
+            { id: 19, name: 'Café Fortaleza', sector: 'Café', location: 'Bizkaia', priority: 'medium', detail: 'Café y productos cafetería hostelería' },
+            { id: 20, name: 'Zuvillaga', sector: 'Bebidas', location: 'Bizkaia', priority: 'medium', detail: 'Especialistas bebidas Vizcaya' },
+            { id: 21, name: 'Begano Distribuciones', sector: 'Bebidas', location: 'Galdakao, Bizkaia', priority: 'medium', detail: 'Cervezas, refrescos, aguas' },
+            { id: 22, name: 'Distribuciones Bidasoa', sector: 'Bebidas', location: 'Bizkaia', priority: 'low', detail: 'Bebidas alcohólicas y refrescos' },
+            { id: 23, name: 'ALEYFA', sector: 'Vinos', location: 'Gallarta, Bizkaia', priority: 'low', detail: 'Distribución mayorista vinos' },
+
+            // BIZKAIA - FRESCOS
+            { id: 24, name: 'Cárnicas Bilbao', sector: 'Cárnicas', location: 'Mercabilbao, Basauri', priority: 'medium', detail: 'Mayorista cárnicos y embutidos' },
+            { id: 25, name: 'Pescados Lorena', sector: 'Pescado y Marisco', location: 'Mercabilbao, Basauri', priority: 'medium', detail: 'Pescado fresco, reparto diario restaurantes' },
+            { id: 26, name: 'Frutas Badiola', sector: 'Frutas y Verduras', location: 'Mercabilbao, Basauri', priority: 'medium', detail: 'Mayorista frutas y hortalizas' },
+            { id: 27, name: 'Verduras Etxebarria', sector: 'Frutas y Verduras', location: 'Bizkaia', priority: 'low', detail: 'Verduras de proximidad' },
+
+            // BIZKAIA - CONGELADOS
+            { id: 28, name: 'Congelados del Norte', sector: 'Congelados', location: 'Bizkaia', priority: 'high', detail: 'Pescados, carnes, verduras, precocinados congelados' },
+            { id: 29, name: 'La Sirena (Centro Distribución)', sector: 'Congelados', location: 'Bizkaia', priority: 'medium', detail: 'Centro distribución cadena La Sirena' },
+
+            // BIZKAIA - CASH & CARRY
+            { id: 30, name: 'Makro Bilbao', sector: 'Cash & Carry', location: 'Barakaldo, Bizkaia', priority: 'high', detail: 'Mayorista para profesionales' },
+            { id: 31, name: 'GM Food Ibérica', sector: 'Cash & Carry', location: 'Bizkaia', priority: 'medium', detail: 'Gros Mercat, Cash Diplo' },
+
+            // BIZKAIA - OTROS
+            { id: 32, name: 'Don Justo', sector: 'Alimentación Internacional', location: 'Bilbao', priority: 'low', detail: 'Productos latinoamericanos, import/export' },
+            { id: 33, name: 'Dispronat', sector: 'Dietética y Eco', location: 'Bizkaia', priority: 'low', detail: 'Desde 1987. Nutrición, dietética, eco' },
+            { id: 34, name: 'Oleaga S.A.', sector: 'Alimentación', location: 'Pol. Ugaldeguren II, Zamudio', priority: 'low', detail: 'Productos alimenticios variados' },
+
+            // BIZKAIA - LOGÍSTICA Y TRANSPORTE
+            { id: 35, name: 'Transportes Gallastegui', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: 'Mercancías carretera, flota propia, almacenaje' },
+            { id: 36, name: 'ALDINOR', sector: 'Logística', location: 'Arrigorriaga, Bizkaia', priority: 'high', detail: 'Fundada 1989. Operador logístico zona norte. Especialistas ADR' },
+            { id: 37, name: 'Transfloren', sector: 'Transporte', location: 'Bizkaia', priority: 'low', detail: 'Transporte y logística integral' },
+            { id: 38, name: 'Transportes Azkar', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: 'Transporte urgente y logística' },
+
+            // BIZKAIA - INDUSTRIAL
+            { id: 39, name: 'Gobesa', sector: 'Material Eléctrico', location: 'Zamudio', priority: 'high', detail: 'Desde 1981. Amplio stock eléctrico' },
+            { id: 40, name: 'Royme S.A.', sector: 'Suministros Industriales', location: 'Bilbao', priority: 'medium', detail: 'Rodamientos, transmisiones, componentes' },
+            { id: 41, name: 'Hierros Alfonso', sector: 'Siderurgia', location: 'Bilbao', priority: 'medium', detail: 'Almacén productos siderúrgicos' },
+            { id: 42, name: 'Saltoki Bizkaia', sector: 'Fontanería y Calefacción', location: 'Bizkaia', priority: 'medium', detail: 'Fontanería, calefacción, climatización' },
+            { id: 43, name: 'Tornillería Vizcaína', sector: 'Fijaciones', location: 'Bizkaia', priority: 'low', detail: 'Tornillería y fijación industrial' },
+            { id: 44, name: 'Bilbaína de Rodamientos', sector: 'Suministros Industriales', location: 'Bilbao', priority: 'low', detail: 'Rodamientos y componentes mecánicos' },
+
+            // GIPUZKOA - FERRETERÍA INDUSTRIAL
+            { id: 45, name: 'Suministros Industriales Txofre', sector: 'Ferretería Industrial', location: 'Donostia', priority: 'high', detail: '40+ años. Flota propia toda Gipuzkoa' },
+            { id: 46, name: 'C.L.C. Maquinaria y Servicios', sector: 'Ferretería Industrial', location: 'Pol. 27, Donostia', priority: 'medium', detail: '35+ años. Industria y construcción' },
+            { id: 47, name: 'Suministros Aguado', sector: 'Soldadura Industrial', location: 'Gipuzkoa', priority: 'high', detail: 'Desde 1957. Distribuidor oficial LINDE' },
+            { id: 48, name: 'Comercial Gama', sector: 'Suministros Industriales', location: 'Donostia', priority: 'medium', detail: '20+ años. Hernani, Rentería, Lasarte...' },
+            { id: 49, name: 'Comercial Urcelay', sector: 'Fijaciones', location: 'Bergara, Gipuzkoa', priority: 'medium', detail: 'Desde 1958. 500m² almacén. 65+ años' },
+            { id: 50, name: 'Ferretería Yarza C.B.', sector: 'Ferretería', location: 'Donostia', priority: 'low', detail: '33 años en centro Donostia' },
+            { id: 51, name: 'Suministros Mondragón', sector: 'Suministros Industriales', location: 'Arrasate, Gipuzkoa', priority: 'medium', detail: 'Ferretería industrial zona Mondragón' },
+            { id: 52, name: 'Herramientas Eibar', sector: 'Herramientas', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Herramientas precisión y maquinaria' },
+            { id: 53, name: 'Tornillería Urola', sector: 'Fijaciones', location: 'Alto Urola, Gipuzkoa', priority: 'low', detail: 'Fabricante tornillería especial' },
+
+            // GIPUZKOA - ALIMENTACIÓN
+            { id: 54, name: 'Galatea S.L.', sector: 'Congelados', location: 'Gipuzkoa', priority: 'high', detail: 'Congelados alta calidad hostelería' },
+            { id: 55, name: 'Almacenes Usabiaga', sector: 'Alimentación', location: 'Tolosa, Gipuzkoa', priority: 'medium', detail: 'Distribución comercio minorista' },
+            { id: 56, name: 'Distribuciones Oiartzun', sector: 'Alimentación', location: 'Oiartzun, Gipuzkoa', priority: 'medium', detail: 'Mayorista alimentación y bebidas hostelería' },
+            { id: 57, name: 'Makro Donostia', sector: 'Cash & Carry', location: 'Donostia', priority: 'high', detail: 'Cash and carry profesionales' },
+            { id: 58, name: 'Cash Echavarri', sector: 'Cash & Carry', location: 'Gipuzkoa', priority: 'medium', detail: 'Cash and carry alimentación hostelería' },
+            { id: 59, name: 'Gros Mercat Gipuzkoa', sector: 'Cash & Carry', location: 'Gipuzkoa', priority: 'medium', detail: 'Cash and carry profesionales' },
+
+            // GIPUZKOA - FRESCOS
+            { id: 60, name: 'Frutas Errasti', sector: 'Frutas y Verduras', location: 'Donostia', priority: 'medium', detail: 'Mayorista frutas, reparto diario' },
+            { id: 61, name: 'Pescados Aristegui', sector: 'Pescado y Marisco', location: 'Pasaia, Gipuzkoa', priority: 'high', detail: 'Pescados y mariscos Cantábrico' },
+            { id: 62, name: 'Lonja de Getaria', sector: 'Pescado', location: 'Getaria, Gipuzkoa', priority: 'medium', detail: 'Subasta y distribución pescado fresco' },
+            { id: 63, name: 'Lonja de Hondarribia', sector: 'Pescado', location: 'Hondarribia, Gipuzkoa', priority: 'medium', detail: 'Cofradía pescado artesanal' },
+            { id: 64, name: 'Cárnicas Iriarte', sector: 'Cárnicas', location: 'Gipuzkoa', priority: 'medium', detail: 'Carnes y embutidos calidad' },
+            { id: 65, name: 'Quesos Idiazabal Aranburu', sector: 'Lácteos', location: 'Idiazabal, Gipuzkoa', priority: 'medium', detail: 'Queso Idiazabal D.O., trazabilidad' },
+            { id: 66, name: 'Lácteos Ultzama', sector: 'Lácteos', location: 'Gipuzkoa', priority: 'low', detail: 'Lácteos de proximidad' },
+
+            // GIPUZKOA - CAFÉ Y BEBIDAS
+            { id: 67, name: 'Café Arostegui', sector: 'Café', location: 'Donostia', priority: 'medium', detail: 'Tostadero y distribución hostelería' },
+            { id: 68, name: 'Distribuciones Zabaleta', sector: 'Bebidas', location: 'Gipuzkoa', priority: 'low', detail: 'Bebidas y refrescos' },
+            { id: 69, name: 'Congelados Urbieta', sector: 'Congelados', location: 'Gipuzkoa', priority: 'low', detail: 'Mayorista congelados' },
+
+            // GIPUZKOA - LOGÍSTICA
+            { id: 70, name: 'Transportes Ochoa', sector: 'Transporte', location: 'Irun, Gipuzkoa', priority: 'high', detail: 'Mercancías y logística internacional' },
+            { id: 71, name: 'Dachser Irun', sector: 'Logística', location: 'Irun, Gipuzkoa', priority: 'high', detail: 'Hub logístico internacional' },
+            { id: 72, name: 'XPO Logistics Gipuzkoa', sector: 'Logística', location: 'Gipuzkoa', priority: 'medium', detail: 'Operador logístico global' },
+            { id: 73, name: 'Logística Bidasoa', sector: 'Logística', location: 'Irun, Gipuzkoa', priority: 'medium', detail: 'Almacenaje y distribución frontera' },
+
+            // GIPUZKOA - ELÉCTRICO
+            { id: 74, name: 'Electro Stocks Donostia', sector: 'Material Eléctrico', location: 'Donostia', priority: 'medium', detail: 'Almacén material eléctrico' },
+            { id: 75, name: 'Sonepar Gipuzkoa', sector: 'Material Eléctrico', location: 'Gipuzkoa', priority: 'medium', detail: 'Material eléctrico y automatización' },
+            { id: 76, name: 'Saltoki Gipuzkoa', sector: 'Fontanería', location: 'Gipuzkoa', priority: 'medium', detail: 'Fontanería y calefacción' },
+
+            // ARABA - JUNDIZ
+            { id: 77, name: 'Covirán S.C.A.', sector: 'Ultramarinos', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Cooperativa compras, red supermercados' },
+            { id: 78, name: 'Congelados Bedarona S.L.', sector: 'Congelados', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Comercialización productos congelados' },
+            { id: 79, name: 'Campovega', sector: 'Frío Industrial', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Almacén frigorífico y congelado' },
+            { id: 80, name: 'Udapa', sector: 'Alimentación', location: 'Jundiz, Vitoria', priority: 'low', detail: 'Distribución de patatas' },
+            { id: 81, name: 'Merkapack', sector: 'Hostelería', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Utillaje y consumibles alimentación' },
+            { id: 82, name: 'Makro Vitoria', sector: 'Cash & Carry', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Cash and carry profesionales' },
+            { id: 83, name: 'Gros Mercat Vitoria', sector: 'Cash & Carry', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Cash and carry alimentación' },
+
+            // ARABA - OTRAS DISTRIBUIDORAS
+            { id: 84, name: 'Comercial Numaga', sector: 'Café y Té', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Mayorista café, té, infusiones, galletas' },
+            { id: 85, name: 'Grandes Vinos Jaki', sector: 'Vinos', location: 'Vitoria-Gasteiz', priority: 'medium', detail: '30+ años en vino' },
+            { id: 86, name: 'Patatas Ascarza', sector: 'Agrícola', location: 'Vitoria-Gasteiz', priority: 'low', detail: 'Agricultores de patatas' },
+            { id: 87, name: 'Pescados Mariano Alonso', sector: 'Pescado y Marisco', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Pescado y marisco fresco' },
+            { id: 88, name: 'Cárnicas Arriola', sector: 'Cárnicas', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Cárnicos y embutidos alaveses' },
+            { id: 89, name: 'Frutas García', sector: 'Frutas y Verduras', location: 'Vitoria-Gasteiz', priority: 'low', detail: 'Mayorista frutas y hortalizas' },
+            { id: 90, name: 'Almacenes Ojuel', sector: 'Alimentación', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Mayorista comercio y hostelería' },
+            { id: 91, name: 'CEVISA (Castellanos y Echarria)', sector: 'Maquinaria', location: 'Vitoria-Gasteiz', priority: 'medium', detail: '50+ años maquinaria metalúrgica' },
+            { id: 92, name: 'Giraldo', sector: 'Distribución', location: 'Legutiano, Araba', priority: 'low', detail: '30+ años experiencia' },
+
+            // ARABA - BODEGAS RIOJA ALAVESA
+            { id: 93, name: 'Bodegas CVNE - Viña Real', sector: 'Vinos', location: 'Laguardia', priority: 'high', detail: 'Bodega histórica, export internacional' },
+            { id: 94, name: 'Bodegas Faustino', sector: 'Vinos', location: 'Oion', priority: 'high', detail: 'Grupo bodeguero, varias bodegas' },
+            { id: 95, name: 'Marqués de Riscal', sector: 'Vinos', location: 'Elciego', priority: 'high', detail: 'Bodega Gehry, alta exportación' },
+            { id: 96, name: 'Bodegas Ysios', sector: 'Vinos', location: 'Laguardia', priority: 'medium', detail: 'Bodega Calatrava, icónica' },
+            { id: 97, name: 'Bodegas Artadi', sector: 'Vinos', location: 'Laguardia', priority: 'high', detail: 'Vinos autor, demanda internacional' },
+            { id: 98, name: 'Bodegas Luis Cañas', sector: 'Vinos', location: 'Villabuena de Álava', priority: 'medium', detail: '90+ años historia familiar' },
+            { id: 99, name: 'Bodegas Ostatu', sector: 'Vinos', location: 'Samaniego', priority: 'medium', detail: 'Bodega familiar, venta directa' },
+            { id: 100, name: 'Bodegas Eguren Ugarte', sector: 'Vinos', location: 'Laguardia', priority: 'medium', detail: '5 generaciones, enoturismo' },
+            { id: 101, name: 'Bodegas Campillo', sector: 'Vinos', location: 'Laguardia', priority: 'low', detail: 'Grupo Faustino' },
+            { id: 102, name: 'Bodegas Murua', sector: 'Vinos', location: 'Elciego', priority: 'low', detail: 'Vinos alta gama' },
+
+            // ARABA - LOGÍSTICA
+            { id: 103, name: 'Centro Transportes Vitoria (CTV)', sector: 'Hub Logístico', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Centro intermodal, múltiples operadores' },
+            { id: 104, name: 'Transportes Azkar Vitoria', sector: 'Transporte', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Hub transporte urgente norte' },
+            { id: 105, name: 'DHL Vitoria', sector: 'Logística', location: 'Jundiz, Vitoria', priority: 'high', detail: 'Centro distribución internacional' },
+            { id: 106, name: 'DB Schenker Vitoria', sector: 'Logística', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Operador logístico internacional' },
+            { id: 107, name: 'GLS Vitoria', sector: 'Paquetería', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Paquetería y mensajería' },
+            { id: 108, name: 'Logística Alavesa', sector: 'Logística', location: 'Araba', priority: 'low', detail: 'Operador local con almacenaje' },
+
+            // ARABA - INDUSTRIAL
+            { id: 109, name: 'Mercedes-Benz Vitoria', sector: 'Automoción', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fábrica y distribución furgonetas' },
+            { id: 110, name: 'Michelin Vitoria', sector: 'Neumáticos', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fábrica y distribución neumáticos' },
+            { id: 111, name: 'Saltoki Araba', sector: 'Fontanería', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Fontanería y calefacción' },
+            { id: 112, name: 'Electro Stocks Vitoria', sector: 'Material Eléctrico', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Almacén material eléctrico' },
+            { id: 113, name: 'Suministros Industriales Álava', sector: 'Suministros', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Ferretería y suministros industriales' },
+            { id: 114, name: 'Aceros Bergara Vitoria', sector: 'Siderurgia', location: 'Jundiz, Vitoria', priority: 'low', detail: 'Almacén aceros y siderúrgicos' },
+            { id: 115, name: 'Materiales Larrinaga', sector: 'Construcción', location: 'Vitoria-Gasteiz', priority: 'low', detail: 'Materiales de construcción' },
+
+            // NUEVAS EMPRESAS - BIZKAIA TRANSPORTE Y LOGÍSTICA
+            { id: 116, name: 'IFA Retail', sector: 'Gran Distribución', location: 'Euskadi', priority: 'medium', detail: 'Central de compras que agrupa múltiples cadenas de distribución' },
+            { id: 117, name: 'Grupo Azkar', sector: 'Transporte', location: 'Bizkaia', priority: 'high', detail: 'Líder en Euskadi. 350M€ facturación. Transporte, almacenaje' },
+            { id: 118, name: 'Grupo Sparber', sector: 'Transporte', location: 'Bilbao', priority: 'high', detail: '62M€ facturación. Transporte aéreo, marítimo, terrestre' },
+            { id: 119, name: 'Grupo Erhardt', sector: 'Transporte', location: 'Puerto de Bilbao', priority: 'high', detail: '43M€. Agente de aduanas, transitario, logística' },
+            { id: 120, name: 'Transnatur Norte', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: '38M€ facturación. Transporte terrestre' },
+            { id: 121, name: 'Biladu', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: '32M€ facturación. Transporte de mercancías' },
+            { id: 122, name: 'Iru Trans', sector: 'Transporte', location: 'Bizkaia', priority: 'medium', detail: 'Transporte de mercancías y grupaje' },
+            { id: 123, name: 'Grupo Logi', sector: 'Logística', location: 'Pol. Martiartu, Arrigorriaga', priority: 'medium', detail: 'Oficinas en Bizkaia, Araba y Gipuzkoa' },
+            { id: 124, name: 'Hellmann Worldwide', sector: 'Logística', location: 'Amorebieta-Etxano', priority: 'medium', detail: '12.000 empleados mundial. Logística internacional' },
+            { id: 125, name: 'Rohlig Logistics', sector: 'Logística', location: 'Loiu, Bizkaia', priority: 'medium', detail: 'Fundada 1852. Transporte marítimo, aéreo' },
+            { id: 126, name: 'Transportes Villar', sector: 'Logística', location: 'Iurreta, Bizkaia', priority: 'medium', detail: 'Almacenaje, transporte y distribución' },
+            { id: 127, name: 'SEUR Bilbao', sector: 'Paquetería', location: 'Bizkaia', priority: 'medium', detail: 'Delegación paquetería y mensajería urgente' },
+            { id: 128, name: 'Tipsa Bizkaia', sector: 'Paquetería', location: 'Bizkaia', priority: 'medium', detail: 'Transporte urgente y paquetería para empresas' },
+
+            // NUEVAS EMPRESAS - BIZKAIA FABRICACIÓN
+            { id: 129, name: 'Gestamp Bizkaia', sector: 'Fabricación', location: 'Abadino, Bizkaia', priority: 'high', detail: 'Multinacional componentes metálicos. 115 plantas en 24 países' },
+            { id: 130, name: 'CIE Automotive', sector: 'Fabricación', location: 'Bilbao', priority: 'high', detail: 'Grupo industrial. Fundición, forja, mecanizado. 100+ plantas' },
+            { id: 131, name: 'CIE Berriz', sector: 'Fabricación', location: 'Berriz, Bizkaia', priority: 'medium', detail: 'Planta de componentes de automoción' },
+            { id: 132, name: 'Inyectametal', sector: 'Fabricación', location: 'Abadino, Bizkaia', priority: 'medium', detail: 'Especialistas en inyección de metal (MIM)' },
+            { id: 133, name: 'Metálicas Cadagua SL', sector: 'Fabricación', location: 'Arrigorriaga, Bizkaia', priority: 'medium', detail: 'Fabricación y montaje estructuras metálicas' },
+            { id: 134, name: 'Arcanor', sector: 'Calderería', location: 'Sondika, Bizkaia', priority: 'medium', detail: 'Calderería industrial e instalación tuberías' },
+            { id: 135, name: 'Urkasa', sector: 'Fundición', location: 'Arrigorriaga, Bizkaia', priority: 'medium', detail: 'Piezas de fundición y mecanizado' },
+            { id: 136, name: 'Fabricación Metales Duros SAL', sector: 'Fabricación', location: 'Basauri, Bizkaia', priority: 'medium', detail: 'Herramientas de metal duro' },
+            { id: 137, name: 'Pekos Fabricación', sector: 'Fabricación', location: 'Artea, Bizkaia', priority: 'medium', detail: 'Válvulas de bola' },
+            { id: 138, name: 'ITP Aero', sector: 'Aeronáutica', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Fabricación de turbinas y componentes aeronáuticos' },
+
+            // NUEVAS EMPRESAS - BIZKAIA SUMINISTROS
+            { id: 139, name: 'Suministros Agorreta', sector: 'Material Eléctrico', location: 'Bizkaia', priority: 'medium', detail: 'Distribuidor material eléctrico y automatización' },
+            { id: 140, name: 'Suministros Ortiz', sector: 'Suministros Industriales', location: 'Bizkaia', priority: 'medium', detail: 'Ferretería y suministros industriales 40+ años' },
+            { id: 141, name: 'Suminbao', sector: 'Suministros Industriales', location: 'Bilbao', priority: 'medium', detail: 'EPIs y vestuario laboral' },
+            { id: 142, name: 'Comercial Marpla', sector: 'Suministros Industriales', location: 'Bizkaia', priority: 'medium', detail: 'Plásticos técnicos y semiproductos' },
+            { id: 143, name: 'Aceros Uranga', sector: 'Siderurgia', location: 'Bizkaia', priority: 'medium', detail: 'Almacén aceros especiales y aleaciones' },
+
+            // NUEVAS EMPRESAS - GIPUZKOA TRANSPORTE Y LOGÍSTICA
+            { id: 144, name: 'Echemar', sector: 'Transporte', location: 'Gipuzkoa', priority: 'medium', detail: '28M€ facturación. Top 10 Euskadi' },
+            { id: 145, name: 'Transportes Legazpi', sector: 'Transporte', location: 'Legazpi, Gipuzkoa', priority: 'medium', detail: 'Transporte mercancías industria local' },
+            { id: 146, name: 'Transportes Zumarraga', sector: 'Transporte', location: 'Zumarraga, Gipuzkoa', priority: 'medium', detail: 'Transporte local y regional' },
+            { id: 147, name: 'Gexa Transportes', sector: 'Logística', location: 'Oiartzun, Gipuzkoa', priority: 'high', detail: 'Desde 1982. Parque Logístico Lanbarren' },
+            { id: 148, name: 'LGK Logística', sector: 'Logística', location: 'Gernika, Bizkaia', priority: 'medium', detail: 'Distribución diaria. Flota ecológica geolocalizada' },
+            { id: 149, name: 'Grupo Logi Gipuzkoa', sector: 'Logística', location: 'Astigarraga, Gipuzkoa', priority: 'medium', detail: 'Delegación Gipuzkoa. Cobertura regional' },
+
+            // NUEVAS EMPRESAS - GIPUZKOA MÁQUINA-HERRAMIENTA
+            { id: 150, name: 'Danobat S. Coop', sector: 'Máquina-herramienta', location: 'Elgoibar, Gipuzkoa', priority: 'high', detail: 'Fundada 1953. Líder rectificadoras y tornos CNC. Grupo Mondragon' },
+            { id: 151, name: 'Fagor Automation', sector: 'Máquina-herramienta', location: 'Eskoriatza, Gipuzkoa', priority: 'high', detail: 'Cooperativa Mondragón. Sistemas CNC y digitalización' },
+            { id: 152, name: 'Ibarmia', sector: 'Máquina-herramienta', location: 'Azkoitia, Gipuzkoa', priority: 'high', detail: 'Centros de mecanizado multieje. Exporta todo el mundo' },
+            { id: 153, name: 'Soraluce', sector: 'Máquina-herramienta', location: 'Bergara, Gipuzkoa', priority: 'high', detail: 'Parte Danobatgroup. Fresadoras de alta precisión' },
+            { id: 154, name: 'Mecanizados Kanter SA', sector: 'Mecanizado', location: 'Errenteria, Gipuzkoa', priority: 'medium', detail: 'Piezas sector aeronáutico. Alta precisión' },
+            { id: 155, name: 'Mecanizados Mather SL', sector: 'Mecanizado', location: 'Hernani, Gipuzkoa', priority: 'medium', detail: 'Mecanizado general. Maquinaria CNC' },
+            { id: 156, name: 'Mecanizados Osatu SL', sector: 'Mecanizado', location: 'Azkoitia, Gipuzkoa', priority: 'medium', detail: 'Piezas metálicas varios sectores' },
+            { id: 157, name: 'Mecanizados Baikor SL', sector: 'Mecanizado', location: 'Arrasate, Gipuzkoa', priority: 'medium', detail: 'Servicios mecanizado zona Mondragón' },
+
+            // NUEVAS EMPRESAS - GIPUZKOA SUMINISTROS
+            { id: 158, name: 'Recambios Altuna', sector: 'Suministros Industriales', location: 'Gipuzkoa', priority: 'medium', detail: 'Distribuidor recambios automoción' },
+            { id: 159, name: 'Ferretería Eroski', sector: 'Ferretería', location: 'Gipuzkoa', priority: 'low', detail: 'División ferretería y bricolaje del grupo' },
+
+            // NUEVAS EMPRESAS - ARABA
+            { id: 160, name: 'Ahorramas Plataforma Norte', sector: 'Gran Distribución', location: 'Araba', priority: 'medium', detail: 'Centro distribución región norte' },
+            { id: 161, name: 'Barquín y Otxoa', sector: 'Transporte', location: 'Laudio, Araba', priority: 'high', detail: '40+ años. 150 camiones. Especialistas frío' },
+            { id: 162, name: 'Trans Araba S. Coop.', sector: 'Transporte', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Cooperativa transporte basculante y excavación' },
+            { id: 163, name: 'Transportes Hijos de Salvador', sector: 'Transporte', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Transporte mercancías y mudanzas' },
+            { id: 164, name: 'Transportes Álava', sector: 'Transporte', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Transporte regional y nacional' },
+            { id: 165, name: 'Dachser Vitoria', sector: 'Logística', location: 'Jundiz, Vitoria', priority: 'medium', detail: 'Multinacional alemana. Logística integral' },
+            { id: 166, name: 'Aernnova', sector: 'Aeronáutica', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Diseño y fabricación aeroestructuras' },
+            { id: 167, name: 'Recambios Vitoria', sector: 'Suministros Industriales', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Distribuidor recambios automoción' },
+
+            // MÁQUINA-HERRAMIENTA (adicionales)
+            { id: 168, name: 'Bost Machine Tools', sector: 'Máquina-herramienta', location: 'Asteasu, Gipuzkoa', priority: 'high', detail: 'Tornos verticales y horizontales de gran tamaño' },
+            { id: 169, name: 'Etxe-Tar', sector: 'Máquina-herramienta', location: 'Elgoibar, Gipuzkoa', priority: 'high', detail: 'Máquinas especiales y líneas transfer' },
+            { id: 170, name: 'Zayer', sector: 'Máquina-herramienta', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fresadoras de bancada fija y pórtico' },
+            { id: 171, name: 'Goratu', sector: 'Máquina-herramienta', location: 'Elgoibar, Gipuzkoa', priority: 'high', detail: 'Rectificadoras de alta precisión' },
+            { id: 172, name: 'Juaristi', sector: 'Máquina-herramienta', location: 'Azkoitia, Gipuzkoa', priority: 'high', detail: 'Mandrinadoras y centros de mecanizado' },
+            { id: 173, name: 'Geminis Lathes', sector: 'Máquina-herramienta', location: 'Elgoibar, Gipuzkoa', priority: 'medium', detail: 'Tornos paralelos y CNC' },
+            { id: 174, name: 'CMZ', sector: 'Máquina-herramienta', location: 'Zaldibia, Gipuzkoa', priority: 'high', detail: 'Tornos CNC de alta producción' },
+            { id: 175, name: 'Kondia', sector: 'Máquina-herramienta', location: 'Elgoibar, Gipuzkoa', priority: 'medium', detail: 'Fresadoras y centros de mecanizado' },
+            { id: 176, name: 'Goialde', sector: 'Máquina-herramienta', location: 'Aretxabaleta, Gipuzkoa', priority: 'medium', detail: 'Máquinas especiales y automatización' },
+            { id: 177, name: 'Ona Electroerosión', sector: 'Máquina-herramienta', location: 'Durango, Bizkaia', priority: 'high', detail: 'Máquinas de electroerosión por penetración e hilo' },
+            { id: 178, name: 'Nicolás Correa', sector: 'Máquina-herramienta', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Fresadoras de grandes dimensiones' },
+            { id: 179, name: 'DYE', sector: 'Máquina-herramienta', location: 'Mendaro, Gipuzkoa', priority: 'medium', detail: 'Taladradoras y mandrinadoras' },
+            { id: 180, name: 'Overbeck', sector: 'Máquina-herramienta', location: 'Bilbao', priority: 'medium', detail: 'Rectificadoras de interiores' },
+            { id: 181, name: 'MTE Machine Tool', sector: 'Máquina-herramienta', location: 'Itziar, Gipuzkoa', priority: 'medium', detail: 'Fresadoras tipo puente y gantry' },
+            { id: 182, name: 'Latz', sector: 'Máquina-herramienta', location: 'Mondragón, Gipuzkoa', priority: 'medium', detail: 'Máquinas de corte por láser y plasma' },
+
+            // AUTOMOCIÓN Y FERROVIARIO
+            { id: 183, name: 'Fagor Ederlan', sector: 'Automoción', location: 'Eskoriatza, Gipuzkoa', priority: 'high', detail: 'Fundición y mecanizado para automoción. Grupo Mondragón' },
+            { id: 184, name: 'Batz', sector: 'Automoción', location: 'Igorre, Bizkaia', priority: 'high', detail: 'Estampación, utillaje y componentes. 2.500 empleados' },
+            { id: 185, name: 'Maier', sector: 'Automoción', location: 'Ajangiz, Bizkaia', priority: 'high', detail: 'Inyección plástico para automoción. Grupo Mondragón' },
+            { id: 186, name: 'Mondragón Assembly', sector: 'Automoción', location: 'Aretxabaleta, Gipuzkoa', priority: 'high', detail: 'Líneas de montaje automatizadas' },
+            { id: 187, name: 'Cikautxo', sector: 'Automoción', location: 'Beizama, Gipuzkoa', priority: 'medium', detail: 'Componentes de caucho-metal para automoción' },
+            { id: 188, name: 'CAF (Construcciones y Auxiliar de Ferrocarriles)', sector: 'Ferroviario', location: 'Beasain, Gipuzkoa', priority: 'high', detail: 'Fabricante de trenes y material rodante. 14.000 empleados' },
+            { id: 189, name: 'Irizar', sector: 'Automoción', location: 'Ormaiztegi, Gipuzkoa', priority: 'high', detail: 'Fabricante de autobuses de lujo. Grupo cooperativo' },
+            { id: 190, name: 'Egile', sector: 'Automoción', location: 'Mendaro, Gipuzkoa', priority: 'medium', detail: 'Componentes estampados para automoción' },
+            { id: 191, name: 'Estampaciones Mayo', sector: 'Automoción', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Estampación en frío piezas automoción' },
+            { id: 192, name: 'Industrias Alzuaran', sector: 'Automoción', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Mecanizado y montaje componentes' },
+            { id: 193, name: 'KH Vives', sector: 'Automoción', location: 'Durango, Bizkaia', priority: 'medium', detail: 'Sistemas de climatización vehículos' },
+            { id: 194, name: 'Epsilon Euskadi', sector: 'Automoción', location: 'Saratxo, Araba', priority: 'medium', detail: 'Composites y piezas ligeras automoción' },
+            { id: 195, name: 'Grupo Antolin Irausa', sector: 'Automoción', location: 'Eskoriatza, Gipuzkoa', priority: 'medium', detail: 'Techos y componentes interiores' },
+
+            // AERONÁUTICA
+            { id: 196, name: 'Sener Aeroespacial', sector: 'Aeronáutica', location: 'Getxo, Bizkaia', priority: 'high', detail: 'Ingeniería aeroespacial y energía. 3.000 empleados' },
+            { id: 197, name: 'Aciturri', sector: 'Aeronáutica', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Aeroestructuras y componentes aeronáuticos' },
+            { id: 198, name: 'Alfa Precision Casting', sector: 'Aeronáutica', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Fundición de precisión para aeronáutica' },
+            { id: 199, name: 'Novalti', sector: 'Aeronáutica', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Mecanizado aeronáutico de alta precisión' },
+            { id: 200, name: 'Burulan', sector: 'Aeronáutica', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Utillaje y mecanizado aeronáutico' },
+            { id: 201, name: 'Industria de Turbo Propulsores (ITP)', sector: 'Aeronáutica', location: 'Ajalvir', priority: 'high', detail: 'Motores aeronáuticos. Sede Zamudio' },
+            { id: 202, name: 'ACORDE Technologies', sector: 'Aeronáutica', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Electrónica para aviación' },
+
+            // SIDERURGIA Y FUNDICIÓN
+            { id: 203, name: 'Sidenor', sector: 'Siderurgia', location: 'Basauri, Bizkaia', priority: 'high', detail: 'Aceros especiales para automoción e industria' },
+            { id: 204, name: 'Tubacex', sector: 'Siderurgia', location: 'Llodio, Araba', priority: 'high', detail: 'Tubos de acero inoxidable. Cotiza en bolsa' },
+            { id: 205, name: 'Tubos Reunidos', sector: 'Siderurgia', location: 'Amurrio, Araba', priority: 'high', detail: 'Tubos sin soldadura para oil & gas' },
+            { id: 206, name: 'Acería de Álava', sector: 'Siderurgia', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Fundición de acero' },
+            { id: 207, name: 'Forjas de Álava', sector: 'Siderurgia', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Piezas forjadas para automoción' },
+            { id: 208, name: 'Fundiciones del Estanda', sector: 'Fundición', location: 'Lazkao, Gipuzkoa', priority: 'medium', detail: 'Fundición de hierro nodular' },
+            { id: 209, name: 'Victaulic Iberia', sector: 'Fundición', location: 'Iurreta, Bizkaia', priority: 'medium', detail: 'Accesorios de unión para tuberías' },
+            { id: 210, name: 'Fundición Inyectada Alavesa (FIALSA)', sector: 'Fundición', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Inyección de aluminio y zamak' },
+
+            // ENERGÍA
+            { id: 211, name: 'Gamesa Electric (Siemens Gamesa)', sector: 'Energía', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Fabricante aerogeneradores. 27.000 empleados' },
+            { id: 212, name: 'Iberdrola', sector: 'Energía', location: 'Bilbao', priority: 'high', detail: 'Sede en Torre Iberdrola. Utility global' },
+            { id: 213, name: 'Ingeteam', sector: 'Energía', location: 'Zamudio, Bizkaia', priority: 'high', detail: 'Electrónica de potencia y automatización. 4.000 empleados' },
+            { id: 214, name: 'Ormazabal', sector: 'Energía', location: 'Igorre, Bizkaia', priority: 'high', detail: 'Soluciones de media tensión eléctrica' },
+            { id: 215, name: 'Arteche Group', sector: 'Energía', location: 'Mungia, Bizkaia', priority: 'high', detail: 'Equipos eléctricos transformación y protección' },
+            { id: 216, name: 'Zigor', sector: 'Energía', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'SAIs y soluciones de energía' },
+            { id: 217, name: 'Solarpack', sector: 'Energía', location: 'Getxo, Bizkaia', priority: 'high', detail: 'Desarrollador energía solar fotovoltaica' },
+            { id: 218, name: 'Petronor', sector: 'Energía', location: 'Muskiz, Bizkaia', priority: 'high', detail: 'Refinería de petróleo. Grupo Repsol' },
+            { id: 219, name: 'Vidrala', sector: 'Envases', location: 'Llodio, Araba', priority: 'high', detail: 'Fabricante de envases de vidrio. Cotiza en bolsa' },
+
+            // CONSTRUCCIÓN E INGENIERÍA
+            { id: 220, name: 'Ulma', sector: 'Construcción', location: 'Oñati, Gipuzkoa', priority: 'high', detail: 'Encofrados, andamios, packaging. Grupo Mondragón' },
+            { id: 221, name: 'Orona', sector: 'Construcción', location: 'Hernani, Gipuzkoa', priority: 'high', detail: 'Ascensores y escaleras mecánicas. Grupo Mondragón' },
+            { id: 222, name: 'Jaso', sector: 'Construcción', location: 'Itsasondo, Gipuzkoa', priority: 'medium', detail: 'Grúas torre para construcción' },
+            { id: 223, name: 'Hormigones y Minas', sector: 'Construcción', location: 'Bilbao', priority: 'medium', detail: 'Producción de hormigón y áridos' },
+            { id: 224, name: 'Zitrón', sector: 'Construcción', location: 'Abadiño, Bizkaia', priority: 'medium', detail: 'Ventilación industrial y túneles' },
+            { id: 225, name: 'SAITEC', sector: 'Ingeniería', location: 'Derio, Bizkaia', priority: 'high', detail: 'Ingeniería civil y energías renovables' },
+            { id: 226, name: 'IDOM', sector: 'Ingeniería', location: 'Bilbao', priority: 'high', detail: 'Ingeniería multidisciplinar. 4.500 empleados' },
+            { id: 227, name: 'Tecnalia', sector: 'Tecnología', location: 'Derio, Bizkaia', priority: 'high', detail: 'Centro de investigación aplicada líder en España' },
+            { id: 228, name: 'Vicomtech', sector: 'Tecnología', location: 'Donostia', priority: 'high', detail: 'Investigación en IA y visión artificial' },
+
+            // BANCA Y SEGUROS
+            { id: 229, name: 'Laboral Kutxa', sector: 'Banca', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Banco cooperativo. Grupo Mondragón' },
+            { id: 230, name: 'Kutxabank', sector: 'Banca', location: 'Bilbao', priority: 'high', detail: 'Banco fusión de cajas vascas' },
+            { id: 231, name: 'Seguros Bilbao', sector: 'Seguros', location: 'Bilbao', priority: 'medium', detail: 'Compañía de seguros regional' },
+            { id: 232, name: 'Lagun Aro', sector: 'Seguros', location: 'Mondragón, Gipuzkoa', priority: 'medium', detail: 'Seguros y EPSV. Grupo Mondragón' },
+
+            // COOPERATIVAS Y RETAIL
+            { id: 233, name: 'Corporación Mondragón', sector: 'Cooperativas', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Mayor grupo cooperativo del mundo. 80.000 empleados' },
+            { id: 234, name: 'Eroski Center', sector: 'Retail', location: 'Elorrio, Bizkaia', priority: 'medium', detail: 'Red de supermercados de proximidad' },
+            { id: 235, name: 'Forum Sport', sector: 'Retail', location: 'Bilbao', priority: 'medium', detail: 'Cadena de tiendas deportivas' },
+            { id: 236, name: 'Optika', sector: 'Retail', location: 'Bilbao', priority: 'low', detail: 'Cadena de ópticas' },
+            { id: 237, name: 'Eroski Viajes', sector: 'Retail', location: 'Elorrio, Bizkaia', priority: 'low', detail: 'Agencia de viajes del grupo' },
+
+            // MÁS BODEGAS RIOJA ALAVESA
+            { id: 238, name: 'Bodegas Valdelana', sector: 'Vinos', location: 'Elciego, Araba', priority: 'medium', detail: 'Bodega familiar desde 1583' },
+            { id: 239, name: 'Bodegas Torre de Oña', sector: 'Vinos', location: 'Páganos, Araba', priority: 'medium', detail: 'Grupo La Rioja Alta' },
+            { id: 240, name: 'Bodegas Viña Salceda', sector: 'Vinos', location: 'Elciego, Araba', priority: 'medium', detail: 'Vinos de autor Rioja Alavesa' },
+            { id: 241, name: 'Bodegas Remelluri', sector: 'Vinos', location: 'Labastida, Araba', priority: 'high', detail: 'Vinos ecológicos premium' },
+            { id: 242, name: 'Bodegas Remirez de Ganuza', sector: 'Vinos', location: 'Samaniego, Araba', priority: 'high', detail: 'Vinos de alta gama, parcelas únicas' },
+            { id: 243, name: 'Bodegas Laukote', sector: 'Vinos', location: 'Laguardia, Araba', priority: 'medium', detail: 'Bodega familiar cuarta generación' },
+            { id: 244, name: 'Bodegas El Fabulista', sector: 'Vinos', location: 'Laguardia, Araba', priority: 'medium', detail: 'Bodega subterránea histórica' },
+            { id: 245, name: 'Bodegas Amaren', sector: 'Vinos', location: 'Villabuena de Álava', priority: 'medium', detail: 'Grupo Luis Cañas' },
+            { id: 246, name: 'Bodegas D. Mateos', sector: 'Vinos', location: 'Laguardia, Araba', priority: 'low', detail: 'Bodega tradicional' },
+            { id: 247, name: 'Bodegas Fernando Remírez de Ganuza', sector: 'Vinos', location: 'Samaniego, Araba', priority: 'high', detail: 'Vinos icónicos Rioja Alavesa' },
+            { id: 248, name: 'Bodegas Izadi', sector: 'Vinos', location: 'Villabuena de Álava', priority: 'medium', detail: 'Grupo Artevino' },
+            { id: 249, name: 'Bodegas Finca de los Arandinos', sector: 'Vinos', location: 'Entrena, Araba', priority: 'medium', detail: 'Bodega con hotel' },
+            { id: 250, name: 'Bodegas Baigorri', sector: 'Vinos', location: 'Samaniego, Araba', priority: 'high', detail: 'Arquitectura vanguardista, enoturismo' },
+
+            // ALIMENTACIÓN
+            { id: 251, name: 'Angulas Aguinaga', sector: 'Alimentación', location: 'Irura, Gipuzkoa', priority: 'high', detail: 'Fabricante de surimi y La Gula del Norte' },
+            { id: 252, name: 'Conservas Campos', sector: 'Alimentación', location: 'Bermeo, Bizkaia', priority: 'medium', detail: 'Conservas de pescado tradicionales' },
+            { id: 253, name: 'Conservas Zallo', sector: 'Alimentación', location: 'Bermeo, Bizkaia', priority: 'medium', detail: 'Anchoas y conservas del Cantábrico' },
+            { id: 254, name: 'Gestión Alday', sector: 'Alimentación', location: 'Lezama, Bizkaia', priority: 'medium', detail: 'Producción de pan y bollería' },
+            { id: 255, name: 'Harinas Ogi', sector: 'Alimentación', location: 'Bilbao', priority: 'medium', detail: 'Fabricante de harinas y derivados' },
+            { id: 256, name: 'Eroski Alimentación', sector: 'Alimentación', location: 'Elorrio, Bizkaia', priority: 'high', detail: 'División alimentaria del grupo Eroski' },
+            { id: 257, name: 'Iparlat', sector: 'Lácteos', location: 'Urnieta, Gipuzkoa', priority: 'high', detail: 'Fabricante de lácteos (Kaiku, Ohi)' },
+            { id: 258, name: 'Aceites Urzante', sector: 'Alimentación', location: 'Tudela', priority: 'medium', detail: 'Fabricante de aceites de oliva' },
+            { id: 259, name: 'Chocolates Zahor', sector: 'Alimentación', location: 'Tolosa, Gipuzkoa', priority: 'medium', detail: 'Chocolate artesano tradicional' },
+            { id: 260, name: 'Pastas Gallo (Planta Granollers)', sector: 'Alimentación', location: 'Bilbao', priority: 'medium', detail: 'Distribución norte de pastas' },
+
+            // CONSTRUCCIÓN (adicionales)
+            { id: 261, name: 'Construcciones Balzola', sector: 'Construcción', location: 'Balmaseda, Bizkaia', priority: 'high', detail: 'Constructora de obra civil y edificación' },
+            { id: 262, name: 'Ferrovial Construcción Euskadi', sector: 'Construcción', location: 'Bilbao', priority: 'high', detail: 'Delegación de Ferrovial en Euskadi' },
+            { id: 263, name: 'Construcciones ACR', sector: 'Construcción', location: 'Bilbao', priority: 'medium', detail: 'Constructora local edificación' },
+            { id: 264, name: 'Excavaciones Mugarra', sector: 'Construcción', location: 'Muxika, Bizkaia', priority: 'medium', detail: 'Movimiento de tierras y excavaciones' },
+            { id: 265, name: 'Construcciones Amenábar', sector: 'Construcción', location: 'Donostia', priority: 'medium', detail: 'Constructora de Gipuzkoa' },
+            { id: 266, name: 'AZVI Construcción Euskadi', sector: 'Construcción', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Obra civil y concesiones' },
+
+            // TELECOMUNICACIONES Y TECNOLOGÍA
+            { id: 267, name: 'Euskaltel', sector: 'Telecomunicaciones', location: 'Derio, Bizkaia', priority: 'high', detail: 'Operador de telecomunicaciones. Grupo MasMovil' },
+            { id: 268, name: 'Sarenet', sector: 'Telecomunicaciones', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Proveedor de servicios de internet empresas' },
+            { id: 269, name: 'Lantik', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Informática y sistemas para empresas' },
+            { id: 270, name: 'Ibermática', sector: 'Tecnología', location: 'Donostia', priority: 'high', detail: 'Servicios tecnológicos. 3.500 empleados' },
+            { id: 271, name: 'Informatica64 Euskadi', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Consultoría y desarrollo software' },
+            { id: 272, name: 'Semantic Systems', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Desarrollo de software a medida' },
+            { id: 273, name: 'Tecnologías Plexus', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Soluciones software para industria' },
+            { id: 274, name: 'Ulma Embedded Solutions', sector: 'Tecnología', location: 'Oñati, Gipuzkoa', priority: 'medium', detail: 'Sistemas embebidos industriales' },
+            { id: 275, name: 'Savvy Data Systems', sector: 'Tecnología', location: 'Bilbao', priority: 'medium', detail: 'Industria 4.0 y digitalización' },
+            { id: 276, name: 'Nexus Integra', sector: 'Tecnología', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Plataforma SCADA y gestión energética' },
+            { id: 277, name: 'Virtualware', sector: 'Tecnología', location: 'Basauri, Bizkaia', priority: 'medium', detail: 'Realidad virtual y simuladores' },
+            { id: 278, name: 'Sherpa.ai', sector: 'Tecnología', location: 'Bilbao', priority: 'high', detail: 'Inteligencia artificial conversacional' },
+            { id: 279, name: 'Lantek', sector: 'Tecnología', location: 'Vitoria-Gasteiz', priority: 'high', detail: 'Software CAD/CAM para chapa. Líder mundial' },
+            { id: 280, name: 'Ideko', sector: 'Tecnología', location: 'Elgoibar, Gipuzkoa', priority: 'medium', detail: 'Centro tecnológico de máquina-herramienta' },
+
+            // SANIDAD Y FARMACÉUTICA
+            { id: 281, name: 'Clínica IMQ', sector: 'Sanidad', location: 'Bilbao', priority: 'high', detail: 'Grupo hospitalario privado líder en Euskadi' },
+            { id: 282, name: 'Policlínica Gipuzkoa', sector: 'Sanidad', location: 'Donostia', priority: 'medium', detail: 'Hospital privado referencia Gipuzkoa' },
+            { id: 283, name: 'Quirónsalud Vitoria', sector: 'Sanidad', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Hospital privado Álava' },
+            { id: 284, name: 'Grupo Biofarmaceutico Faes Farma', sector: 'Farmacéutica', location: 'Leioa, Bizkaia', priority: 'high', detail: 'Farmacéutica española. Cotiza en bolsa' },
+            { id: 285, name: 'Bial Industrial', sector: 'Farmacéutica', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Fabricación farmacéutica' },
+
+            // MEDIOS DE COMUNICACIÓN
+            { id: 286, name: 'El Correo', sector: 'Medios', location: 'Bilbao', priority: 'medium', detail: 'Diario líder en Euskadi. Grupo Vocento' },
+            { id: 287, name: 'Diario Vasco', sector: 'Medios', location: 'Donostia', priority: 'medium', detail: 'Diario de referencia en Gipuzkoa' },
+            { id: 288, name: 'Deia', sector: 'Medios', location: 'Bilbao', priority: 'low', detail: 'Diario en euskera y castellano' },
+            { id: 289, name: 'EITB', sector: 'Medios', location: 'Bilbao', priority: 'high', detail: 'Radiotelevisión pública vasca' },
+
+            // DEPORTE
+            { id: 290, name: 'Athletic Club', sector: 'Deporte', location: 'Bilbao', priority: 'high', detail: 'Club de fútbol histórico. San Mamés' },
+            { id: 291, name: 'Real Sociedad', sector: 'Deporte', location: 'Donostia', priority: 'high', detail: 'Club de fútbol. Anoeta' },
+            { id: 292, name: 'Alavés', sector: 'Deporte', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Club de fútbol' },
+            { id: 293, name: 'Bilbao Basket', sector: 'Deporte', location: 'Bilbao', priority: 'medium', detail: 'Club de baloncesto ACB' },
+            { id: 294, name: 'Baskonia', sector: 'Deporte', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Club de baloncesto Euroliga' },
+
+            // EDUCACIÓN
+            { id: 295, name: 'Universidad de Deusto', sector: 'Educación', location: 'Bilbao', priority: 'high', detail: 'Universidad privada jesuita' },
+            { id: 296, name: 'Mondragon Unibertsitatea', sector: 'Educación', location: 'Mondragón, Gipuzkoa', priority: 'high', detail: 'Universidad cooperativa' },
+            { id: 297, name: 'UPV/EHU', sector: 'Educación', location: 'Leioa, Bizkaia', priority: 'high', detail: 'Universidad pública del País Vasco' },
+            { id: 298, name: 'IMH', sector: 'Educación', location: 'Elgoibar, Gipuzkoa', priority: 'medium', detail: 'Instituto Máquina Herramienta. FP especializada' },
+            { id: 299, name: 'CPES Nazaret', sector: 'Educación', location: 'Donostia', priority: 'low', detail: 'Centro de formación profesional' },
+            { id: 300, name: 'Centro San Viator', sector: 'Educación', location: 'Sopuerta, Bizkaia', priority: 'low', detail: 'FP industrial y mecánica' },
+
+            // INFRAESTRUCTURAS Y PUERTOS
+            { id: 301, name: 'Puerto de Bilbao', sector: 'Logística', location: 'Bilbao', priority: 'high', detail: 'Autoridad Portuaria. Puerto comercial líder' },
+            { id: 302, name: 'Puerto de Pasaia', sector: 'Logística', location: 'Pasaia, Gipuzkoa', priority: 'medium', detail: 'Puerto pesquero y comercial' },
+            { id: 303, name: 'Aeropuerto de Bilbao', sector: 'Logística', location: 'Loiu, Bizkaia', priority: 'high', detail: 'Aeropuerto internacional Loiu' },
+            { id: 304, name: 'Aeropuerto de Vitoria', sector: 'Logística', location: 'Foronda, Araba', priority: 'medium', detail: 'Hub de carga aérea' },
+            { id: 305, name: 'Noatum Terminal Bilbao', sector: 'Logística', location: 'Puerto de Bilbao', priority: 'high', detail: 'Terminal de contenedores' },
+
+            // ELECTRODOMÉSTICOS
+            { id: 306, name: 'Fagor Electrodomésticos (liquidada)', sector: 'Electrodomésticos', location: 'Mondragón, Gipuzkoa', priority: 'low', detail: 'Histórica de electrodomésticos' },
+            { id: 307, name: 'Cointra (Grupo Bosch)', sector: 'Electrodomésticos', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Calentadores y calderas' },
+            { id: 308, name: 'Electrolux Vitoria', sector: 'Electrodomésticos', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Planta de fabricación' },
+
+            // MECANIZADO Y FABRICACIÓN (adicionales)
+            { id: 309, name: 'Talleres Aratz', sector: 'Mecanizado', location: 'Mondragón, Gipuzkoa', priority: 'medium', detail: 'Mecanizado de precisión' },
+            { id: 310, name: 'Mecanizados Lazkano', sector: 'Mecanizado', location: 'Elgoibar, Gipuzkoa', priority: 'medium', detail: 'CNC y torneado' },
+            { id: 311, name: 'Laulagun Bearings', sector: 'Fabricación', location: 'Bergara, Gipuzkoa', priority: 'medium', detail: 'Rodamientos especiales gran tamaño' },
+            { id: 312, name: 'Alcorta Forging Group', sector: 'Fabricación', location: 'Elgoibar, Gipuzkoa', priority: 'high', detail: 'Forja de precisión para automoción' },
+            { id: 313, name: 'GSB Forja', sector: 'Fabricación', location: 'Legutiano, Araba', priority: 'medium', detail: 'Piezas forjadas' },
+            { id: 314, name: 'Bellota Herramientas', sector: 'Fabricación', location: 'Legazpi, Gipuzkoa', priority: 'high', detail: 'Herramientas manuales. Marca histórica' },
+            { id: 315, name: 'Irimo Tools', sector: 'Fabricación', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Herramientas manuales profesionales' },
+            { id: 316, name: 'Bahco (filial SNA Europe)', sector: 'Fabricación', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Herramientas de mano premium' },
+            { id: 317, name: 'Copreci', sector: 'Fabricación', location: 'Aretxabaleta, Gipuzkoa', priority: 'high', detail: 'Componentes para electrodomésticos. Mondragón' },
+            { id: 318, name: 'Orkli', sector: 'Fabricación', location: 'Ordizia, Gipuzkoa', priority: 'medium', detail: 'Componentes gas y calefacción' },
+            { id: 319, name: 'Embega', sector: 'Fabricación', location: 'Eskoriatza, Gipuzkoa', priority: 'medium', detail: 'Embalajes industriales' },
+            { id: 320, name: 'Lazpiur', sector: 'Fabricación', location: 'Bergara, Gipuzkoa', priority: 'medium', detail: 'Tornillería especial alta resistencia' },
+            { id: 321, name: 'ULMA Conveyor Components', sector: 'Fabricación', location: 'Oñati, Gipuzkoa', priority: 'medium', detail: 'Rodillos y componentes para cintas transportadoras' },
+            { id: 322, name: 'ULMA Forklift Trucks', sector: 'Fabricación', location: 'Oñati, Gipuzkoa', priority: 'medium', detail: 'Carretillas elevadoras' },
+
+            // EQUIPAMIENTO HOSTELERÍA
+            { id: 323, name: 'Fagor Industrial', sector: 'Equipamiento', location: 'Oñati, Gipuzkoa', priority: 'high', detail: 'Cocinas industriales para hostelería' },
+            { id: 324, name: 'Sammic', sector: 'Equipamiento', location: 'Azkoitia, Gipuzkoa', priority: 'high', detail: 'Maquinaria para hostelería y alimentación' },
+            { id: 325, name: 'Jata', sector: 'Equipamiento', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Pequeño electrodoméstico' },
+            { id: 326, name: 'Teka Vitoria', sector: 'Equipamiento', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Electrodomésticos de cocina' },
+
+            // ENERGÍA Y TECNOLOGÍA (adicionales)
+            { id: 327, name: 'Lointek', sector: 'Energía', location: 'Urduliz, Bizkaia', priority: 'high', detail: 'Equipos para energía termosolar' },
+            { id: 328, name: 'Ditrel', sector: 'Energía', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Instalaciones eléctricas industriales' },
+            { id: 329, name: 'Ikusi', sector: 'Tecnología', location: 'Donostia', priority: 'high', detail: 'Telecomunicaciones e integración tecnológica' },
+            { id: 330, name: 'Teltronic', sector: 'Tecnología', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Comunicaciones críticas TETRA' },
+
+            // SERVICIOS
+            { id: 331, name: 'Lur Paisajistak', sector: 'Servicios', location: 'Bilbao', priority: 'low', detail: 'Paisajismo y jardinería' },
+            { id: 332, name: 'ISS Facility Services Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Servicios de limpieza y mantenimiento' },
+            { id: 333, name: 'Eulen Euskadi', sector: 'Servicios', location: 'Bilbao', priority: 'medium', detail: 'Servicios integrales empresas' },
+            { id: 334, name: 'Bidafarma Euskadi', sector: 'Distribución Farmacéutica', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Distribución a farmacias' },
+            { id: 335, name: 'Alliance Healthcare Euskadi', sector: 'Distribución Farmacéutica', location: 'Zamudio, Bizkaia', priority: 'medium', detail: 'Mayorista farmacéutico' },
+
+            // FABRICACIÓN Y MADERA
+            { id: 336, name: 'Azkoyen Vitoria', sector: 'Fabricación', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Máquinas vending y sistemas de pago' },
+            { id: 337, name: 'Gámiz', sector: 'Fabricación', location: 'Igorre, Bizkaia', priority: 'medium', detail: 'Madera laminada estructural' },
+            { id: 338, name: 'Egoin', sector: 'Fabricación', location: 'Arakaldo, Bizkaia', priority: 'medium', detail: 'Estructuras de madera' },
+            { id: 339, name: 'Finsa Euskadi', sector: 'Fabricación', location: 'Bilbao', priority: 'medium', detail: 'Tableros de madera' },
+            { id: 340, name: 'Ondarlan', sector: 'Fabricación', location: 'Oñati, Gipuzkoa', priority: 'medium', detail: 'Puertas y cerramientos' },
+
+            // DISTRIBUCIÓN (adicionales)
+            { id: 341, name: 'Distribuciones JL', sector: 'Distribución', location: 'Bilbao', priority: 'medium', detail: 'Distribución productos de consumo' },
+            { id: 342, name: 'Almacenes Moyua', sector: 'Distribución', location: 'Bilbao', priority: 'medium', detail: 'Ferretería al por mayor' },
+            { id: 343, name: 'Ferretería del Norte', sector: 'Distribución', location: 'Bilbao', priority: 'medium', detail: 'Distribución ferretería industrial' },
+            { id: 344, name: 'Suministros Bikain', sector: 'Distribución', location: 'Eibar, Gipuzkoa', priority: 'medium', detail: 'Material de soldadura e industrial' },
+            { id: 345, name: 'Comercial Hostelera', sector: 'Distribución', location: 'Bilbao', priority: 'medium', detail: 'Equipamiento para hostelería' },
+            { id: 346, name: 'El Almacén Hostelero', sector: 'Distribución', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Menaje y equipamiento hostelería' },
+            { id: 347, name: 'Suministros Eléctricos de Álava', sector: 'Distribución', location: 'Vitoria-Gasteiz', priority: 'medium', detail: 'Material eléctrico mayorista' },
+            { id: 348, name: 'Rexel Euskadi', sector: 'Distribución', location: 'Bilbao', priority: 'medium', detail: 'Distribución material eléctrico' },
+            { id: 349, name: 'BricoMart Barakaldo', sector: 'Distribución', location: 'Barakaldo, Bizkaia', priority: 'medium', detail: 'Bricolaje y construcción profesional' },
+            { id: 350, name: 'Leroy Merlin Bilbao', sector: 'Distribución', location: 'Barakaldo, Bizkaia', priority: 'medium', detail: 'Bricolaje y decoración' },
+        ];
+
+        // Estado de la aplicación
+        let appData = {
+            prospects: [],
+            pipeline: {
+                contactado: [],
+                reunion: [],
+                piloto: [],
+                cliente: []
+            }
+        };
+
+        // Cargar datos desde localStorage o usar iniciales
+        function loadData() {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    // Si hay menos empresas que las nuevas, actualizar manteniendo el progreso
+                    if (parsed.prospects && parsed.prospects.length < initialProspects.length) {
+                        console.log('Nuevas empresas detectadas. Actualizando de ' + parsed.prospects.length + ' a ' + initialProspects.length);
+                        // Mantener el estado de las empresas existentes
+                        const existingStatus = {};
+                        parsed.prospects.forEach(p => { existingStatus[p.id] = p.status; });
+                        // Crear nueva lista con todas las empresas
+                        appData = {
+                            prospects: initialProspects.map(p => ({
+                                ...p,
+                                status: existingStatus[p.id] || 'porcontactar'
+                            })),
+                            pipeline: parsed.pipeline || { contactado: [], reunion: [], piloto: [], cliente: [] }
+                        };
+                        saveData();
+                    } else {
+                        appData = parsed;
+                    }
+                    console.log('Datos cargados: ' + appData.prospects.length + ' empresas');
+                } catch (e) {
+                    console.log('Error cargando datos, usando iniciales');
+                    resetToInitial();
+                }
+            } else {
+                resetToInitial();
+            }
+        }
+
+        // Resetear a datos iniciales
+        function resetToInitial() {
+            appData = {
+                prospects: initialProspects.map(p => ({...p, status: 'porcontactar'})),
+                pipeline: { contactado: [], reunion: [], piloto: [], cliente: [] }
+            };
+            saveData();
+        }
+
+        // Guardar datos en localStorage
+        function saveData() {
+            appData.lastUpdated = new Date().toISOString();
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        }
+
+        // Exportar datos como JSON
+        function exportData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'snaro_empresas_' + new Date().toISOString().split('T')[0] + '.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Datos exportados');
+        }
+
+        // Obtener empresas por estado
+        function getByStatus(status) {
+            return appData.prospects.filter(p => p.status === status);
+        }
+
+        // Mover empresa a otra etapa
+        function moveCompany(companyId, newStatus) {
+            const company = appData.prospects.find(p => p.id === companyId);
+            if (company) {
+                const oldStatus = company.status;
+                company.status = newStatus;
+                saveData();
+                renderAll();
+                showNotification(`${company.name} → ${getStatusLabel(newStatus)}`);
+            }
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'porcontactar': 'Por contactar',
+                'contactado': 'Contactado',
+                'reunion': 'Reunión',
+                'piloto': 'Piloto',
+                'cliente': 'Cliente'
+            };
+            return labels[status] || status;
+        }
+
+        // Render all views
+        function renderAll() {
+            renderProspects();
+            renderPipeline();
+        }
+
+        // Render prospects list
+        function renderProspects(filteredList = null) {
+            const list = document.getElementById('prospectList');
+            const count = document.getElementById('prospectCount');
+            const prospects = getByStatus('porcontactar');
+            const data = filteredList || prospects;
+
+            count.textContent = data.length;
+
+            if (data.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <p>Sin resultados</p>
+                        <p class="empty-hint">Prueba con otros filtros</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by priority
+            const sorted = [...data].sort((a, b) => {
+                const order = { high: 0, medium: 1, low: 2 };
+                return order[a.priority] - order[b.priority];
+            });
+
+            list.innerHTML = sorted.map(p => `
+                <div class="prospect-card priority-${p.priority}" onclick="openProspectDetail(${p.id})">
+                    <div class="priority-indicator"></div>
+                    <div class="prospect-info">
+                        <div class="name">${p.name}</div>
+                        <div class="meta">${p.sector} · ${p.location}</div>
+                        <div class="detail">${p.detail}</div>
+                    </div>
+                    <button class="btn-move" onclick="event.stopPropagation(); moveToContactado(${p.id})">→</button>
+                </div>
+            `).join('');
+        }
+
+        // Filter prospects
+        function filterProspects() {
+            const search = document.getElementById('searchProspects').value.toLowerCase();
+            const sector = document.getElementById('filterSector').value;
+            const location = document.getElementById('filterLocation').value;
+
+            let filtered = getByStatus('porcontactar');
+
+            // Text search
+            if (search) {
+                filtered = filtered.filter(p =>
+                    p.name.toLowerCase().includes(search) ||
+                    p.sector.toLowerCase().includes(search) ||
+                    p.detail.toLowerCase().includes(search) ||
+                    p.location.toLowerCase().includes(search)
+                );
+            }
+
+            // Sector filter
+            if (sector) {
+                filtered = filtered.filter(p =>
+                    p.sector.toLowerCase().includes(sector.toLowerCase())
+                );
+            }
+
+            // Location filter
+            if (location) {
+                filtered = filtered.filter(p =>
+                    p.location.toLowerCase().includes(location.toLowerCase())
+                );
+            }
+
+            renderProspects(filtered);
+        }
+
+        // Render pipeline columns
+        function renderPipeline() {
+            const stages = ['contactado', 'reunion', 'piloto', 'cliente'];
+            let totalPotencial = 0;
+            let totalActual = 0;
+            let clientesActivos = 0;
+
+            stages.forEach(stage => {
+                const companies = getByStatus(stage);
+                const col = document.getElementById('col-' + stage);
+                const header = col.querySelector('.column-header');
+                const countEl = header.querySelector('.column-count');
+
+                // Calcular MRR estimado (simulado)
+                const mrr = companies.length * 500; // 500€ estimado por empresa
+
+                if (stage === 'cliente') {
+                    totalActual = mrr;
+                    clientesActivos = companies.length;
+                    countEl.textContent = mrr.toLocaleString() + '€';
+                } else {
+                    totalPotencial += mrr;
+                    countEl.textContent = mrr.toLocaleString() + '€';
+                }
+
+                // Render cards
+                const cardsHtml = companies.length > 0
+                    ? companies.map(c => `
+                        <div class="client-card" onclick="openClientDetail(${c.id})">
+                            <div class="name">${c.name}</div>
+                            <div class="sector">${c.sector}</div>
+                            <div class="mrr ${stage === 'cliente' ? 'active' : ''}">500€/mes</div>
+                        </div>
+                    `).join('')
+                    : `<div class="empty-column">Sin empresas</div>`;
+
+                // Clear and re-render
+                const existingCards = col.querySelectorAll('.client-card, .empty-column');
+                existingCards.forEach(el => el.remove());
+                col.insertAdjacentHTML('beforeend', cardsHtml);
+            });
+
+            // Update summary
+            document.getElementById('mrrPotencial').textContent = totalPotencial.toLocaleString() + '€';
+            document.getElementById('mrrActual').textContent = totalActual.toLocaleString() + '€';
+            document.getElementById('empresasActivas').textContent = clientesActivos;
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadData();
+            renderAll();
+        });
+
+        // View switching
+        function showView(viewName) {
+            // Hide all views
+            document.querySelectorAll('.view').forEach(v => {
+                v.style.display = 'none';
+            });
+
+            // Show selected view
+            const view = document.getElementById('view-' + viewName);
+            if (view) {
+                view.style.display = 'block';
+            }
+
+            // Update sidebar active state
+            document.querySelectorAll('.sidebar-item[data-view]').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.view === viewName) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Move company to Contactado
+        function moveToContactado(companyId) {
+            moveCompany(companyId, 'contactado');
+        }
+
+        // Simple notification
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.style.cssText = `
+                position: fixed;
+                bottom: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #000;
+                color: #fff;
+                padding: 12px 24px;
+                font-size: 13px;
+                z-index: 2000;
+            `;
+            notif.textContent = message;
+            document.body.appendChild(notif);
+
+            setTimeout(() => {
+                notif.remove();
+            }, 2000);
+        }
+
+        // Open prospect detail
+        function openProspectDetail(companyId) {
+            document.getElementById('clientDetailModal').classList.add('active');
+        }
+
+        // Modal functions
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('active');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+            document.getElementById('investigationLoading').style.display = 'none';
+            document.getElementById('investigationResults').style.display = 'none';
+        }
+
+        function openClientDetail(clientId) {
+            document.getElementById('clientDetailModal').classList.add('active');
+        }
+
+        function closeClientDetail() {
+            document.getElementById('clientDetailModal').classList.remove('active');
+        }
+
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+        }
+
+        // Investigation simulation
+        function investigateCompany() {
+            const name = document.getElementById('companyName').value;
+            if (!name) {
+                alert('Introduce el nombre de la empresa');
+                return;
+            }
+
+            document.getElementById('investigationLoading').style.display = 'block';
+            document.getElementById('investigationResults').style.display = 'none';
+
+            setTimeout(() => {
+                document.getElementById('investigationLoading').style.display = 'none';
+                document.getElementById('investigationResults').style.display = 'block';
+
+                document.getElementById('resFacturacion').textContent = (Math.random() * 5 + 1).toFixed(1) + 'M€';
+                document.getElementById('resEmpleados').textContent = Math.floor(Math.random() * 80 + 10);
+                document.getElementById('resConstitucion').textContent = '12/05/' + (2000 + Math.floor(Math.random() * 20));
+
+                const auditorias = ['15/03/2025', '22/06/2024', 'No consta', '08/11/2023'];
+                document.getElementById('resAuditoria').textContent = auditorias[Math.floor(Math.random() * auditorias.length)];
+
+                const alerts = [
+                    { text: 'Retraso en depósito de cuentas anuales', date: 'BORME' },
+                    { text: 'Cambio en la dirección de la empresa', date: 'Expansión — Enero 2026' },
+                    { text: 'Sanción AEPD por incumplimiento RGPD', date: 'BOE — 2024' },
+                    { text: 'Caída de facturación del 15% vs año anterior', date: 'Registro Mercantil' }
+                ];
+
+                const alertsList = document.getElementById('alertsList');
+                alertsList.innerHTML = '';
+                const numAlerts = Math.floor(Math.random() * 3) + 1;
+                for (let i = 0; i < numAlerts; i++) {
+                    const alert = alerts[Math.floor(Math.random() * alerts.length)];
+                    alertsList.innerHTML += `
+                        <div class="alert-item">
+                            <span class="icon">—</span>
+                            <div>
+                                <div class="text">${alert.text}</div>
+                                <div class="date">${alert.date}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const opportunities = [
+                    'Automatización de facturas — Probable alto volumen',
+                    'Gestión de pedidos — Sector distribución',
+                    'Dashboard BI — Empresa en crecimiento',
+                    'Cumplimiento RGPD — Tuvieron sanción',
+                    'Gestión documental — Cuentas no al día'
+                ];
+
+                const oppList = document.getElementById('opportunitiesList');
+                oppList.innerHTML = '';
+                const numOpps = Math.floor(Math.random() * 2) + 2;
+                for (let i = 0; i < numOpps; i++) {
+                    const opp = opportunities[Math.floor(Math.random() * opportunities.length)];
+                    oppList.innerHTML += `<div class="opportunity-item"><span>→</span><span>${opp}</span></div>`;
+                }
+
+            }, 1500);
+        }
+
+        function saveCompany() {
+            alert('Empresa guardada en el pipeline');
+            closeAddModal();
+        }
+
+        // Close modals on outside click
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        // Calendar
+        let currentDate = new Date();
+        const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+        const monthNamesShort = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
+                                 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
+        // Auditorías - starts empty, se llenará cuando haya empresas
+        const audits = [];
+
+        function renderCalendar() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+
+            document.getElementById('calendarMonth').textContent = monthNames[month] + ' ' + year;
+
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+
+            let startDay = firstDay.getDay() - 1;
+            if (startDay < 0) startDay = 6;
+
+            const today = new Date();
+            const calendarDays = document.getElementById('calendarDays');
+            calendarDays.innerHTML = '';
+
+            // Empty cells before first day
+            for (let i = 0; i < startDay; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'mini-day empty';
+                calendarDays.appendChild(cell);
+            }
+
+            // Days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+
+                const isToday = today.getDate() === day &&
+                               today.getMonth() === month &&
+                               today.getFullYear() === year;
+
+                const hasAudit = audits.some(a => a.date === dateStr);
+
+                let classes = 'mini-day';
+                if (isToday) classes += ' today';
+                if (hasAudit) classes += ' has-audit';
+
+                cell.className = classes;
+                cell.textContent = day;
+
+                calendarDays.appendChild(cell);
+            }
+
+            // Fill remaining cells
+            const totalCells = startDay + daysInMonth;
+            const remaining = 7 - (totalCells % 7);
+            if (remaining < 7) {
+                for (let i = 0; i < remaining; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'mini-day empty';
+                    calendarDays.appendChild(cell);
+                }
+            }
+
+            renderAuditList();
+        }
+
+        function renderAuditList() {
+            const list = document.getElementById('auditList');
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Filtrar auditorías futuras y ordenar por fecha
+            const upcomingAudits = audits
+                .filter(a => new Date(a.date) >= today)
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (upcomingAudits.length === 0) {
+                list.innerHTML = `
+                    <div class="no-audits">
+                        <p>Sin auditorías programadas</p>
+                        <p class="no-audits-hint">Las auditorías aparecerán aquí cuando añadas empresas</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = upcomingAudits.map(a => {
+                const date = new Date(a.date);
+                return `
+                    <div class="audit-card">
+                        <div class="audit-date-box">
+                            <div class="audit-date-day">${date.getDate()}</div>
+                            <div class="audit-date-month">${monthNamesShort[date.getMonth()]}</div>
+                        </div>
+                        <div class="audit-details">
+                            <div class="audit-company">${a.company}</div>
+                            <div class="audit-type">${a.type}</div>
+                            <span class="audit-tag">${a.tag || 'Auditoría'}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+        }
+
+        // Initialize calendar when viewing
+        const origShowView = showView;
+        showView = function(viewName) {
+            origShowView(viewName);
+            if (viewName === 'calendario') {
+                renderCalendar();
+            }
+        };
+
+        // ============================================
+        // SUPABASE CLOUD SYNC
+        // ============================================
+
+        const SUPABASE_CONFIG_KEY = 'snaro_supabase_config';
+        let supabaseClient = null;
+        let isCloudConnected = false;
+
+        // Initialize on load
+        (function initSupabase() {
+            const config = localStorage.getItem(SUPABASE_CONFIG_KEY);
+            if (config) {
+                try {
+                    const { url, key } = JSON.parse(config);
+                    connectToSupabase(url, key);
+                } catch (e) {}
+            }
+        })();
+
+        async function connectToSupabase(url, key) {
+            try {
+                supabaseClient = window.supabase.createClient(url, key);
+                const { error } = await supabaseClient.from('prospects').select('count');
+                if (!error) {
+                    isCloudConnected = true;
+                    updateConnectionBadge(true);
+                    await syncFromCloud();
+                }
+            } catch (e) {
+                updateConnectionBadge(false);
+            }
+        }
+
+        function updateConnectionBadge(online) {
+            const badge = document.getElementById('connectionBadge');
+            const text = document.getElementById('connectionText');
+            badge.className = online ? 'connection-badge online' : 'connection-badge offline';
+            text.textContent = online ? 'Nube' : 'Local';
+        }
+
+        async function syncFromCloud() {
+            if (!supabaseClient) return;
+            try {
+                const { data, error } = await supabaseClient.from('prospects').select('*').order('id');
+                if (!error && data && data.length > 0) {
+                    const localStatuses = {};
+                    appData.prospects.forEach(p => { localStatuses[p.id] = { status: p.status, notes: p.notes }; });
+                    data.forEach(cp => {
+                        const local = localStatuses[cp.id];
+                        if (local && local.status !== 'porcontactar') {
+                            cp.status = local.status;
+                            cp.notes = local.notes || cp.notes;
+                        }
+                    });
+                    appData.prospects = data;
+                    saveData();
+                    renderAll();
+                    showNotification('Sincronizado');
+                }
+            } catch (e) {}
+        }
+
+        async function syncToCloud(prospect) {
+            if (!supabaseClient || !isCloudConnected) return;
+            try {
+                await supabaseClient.from('prospects')
+                    .update({ status: prospect.status, notes: prospect.notes, updated_at: new Date().toISOString() })
+                    .eq('id', prospect.id);
+            } catch (e) {}
+        }
+
+        // Override to sync
+        const _origMove = moveCompany;
+        moveCompany = function(id, status) {
+            _origMove(id, status);
+            const p = appData.prospects.find(x => x.id === id);
+            if (p) syncToCloud(p);
+        };
+
+        function showSupabaseConfig() {
+            const config = localStorage.getItem(SUPABASE_CONFIG_KEY);
+            const parsed = config ? JSON.parse(config) : { url: '', key: '' };
+            document.getElementById('supabaseModalContent').innerHTML = `
+                <div style="padding: 8px;">
+                    <p style="font-size: 13px; color: #666; margin-bottom: 20px;">
+                        Conecta con <a href="https://supabase.com" target="_blank" style="color:#000">Supabase</a> (gratis) para sincronizar.
+                    </p>
+                    <div style="margin-bottom: 12px;">
+                        <label style="font-size: 10px; color: #999;">PROJECT URL</label>
+                        <input type="text" id="supabaseUrl" value="${parsed.url}" placeholder="https://xxx.supabase.co"
+                            style="width:100%; padding:10px; border:1px solid #e0e0e0; border-radius:6px; font-size:12px; font-family:monospace; margin-top:4px;">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="font-size: 10px; color: #999;">ANON KEY</label>
+                        <input type="text" id="supabaseKey" value="${parsed.key}" placeholder="eyJhbGci..."
+                            style="width:100%; padding:10px; border:1px solid #e0e0e0; border-radius:6px; font-size:12px; font-family:monospace; margin-top:4px;">
+                    </div>
+                    <div style="display:flex; gap:12px;">
+                        <button onclick="saveSupabaseConfig()" style="flex:1; padding:12px; background:#000; color:#fff; border:none; border-radius:6px; cursor:pointer;">Conectar</button>
+                        <button onclick="disconnectSupabase()" style="padding:12px 16px; background:#fff; border:1px solid #e0e0e0; border-radius:6px; cursor:pointer;">Desconectar</button>
+                    </div>
+                    <p style="font-size:11px; color:#999; margin-top:16px; text-align:center;">
+                        ${isCloudConnected ? '✓ Conectado' : 'Modo local'} · ${appData.prospects.length} empresas
+                    </p>
+                </div>`;
+            document.getElementById('supabaseModal').classList.add('active');
+        }
+
+        async function saveSupabaseConfig() {
+            const url = document.getElementById('supabaseUrl').value.trim();
+            const key = document.getElementById('supabaseKey').value.trim();
+            if (!url || !key) { showNotification('Introduce URL y Key'); return; }
+            localStorage.setItem(SUPABASE_CONFIG_KEY, JSON.stringify({ url, key }));
+            await connectToSupabase(url, key);
+            if (isCloudConnected) {
+                document.getElementById('supabaseModal').classList.remove('active');
+                showNotification('Conectado a Supabase');
+            } else {
+                showNotification('Error de conexión');
+            }
+        }
+
+        function disconnectSupabase() {
+            localStorage.removeItem(SUPABASE_CONFIG_KEY);
+            supabaseClient = null;
+            isCloudConnected = false;
+            updateConnectionBadge(false);
+            document.getElementById('supabaseModal').classList.remove('active');
+            showNotification('Desconectado');
+        }
+    </script>
+</body>
+</html>
