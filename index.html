@@ -1471,6 +1471,12 @@
             .tag-location {
                 color: #888;
             }
+            .company-tags .tier-badge {
+                font-size: 9px;
+                padding: 2px 6px;
+                margin-left: 4px;
+                border-radius: 3px;
+            }
 
             .prospect-revenue-section {
                 display: flex;
@@ -1501,9 +1507,9 @@
             }
             .prospect-actions-inline .action-btn {
                 flex: 1;
-                padding: 14px;
-                font-size: 13px;
-                font-weight: 600;
+                padding: 10px;
+                font-size: 12px;
+                font-weight: 500;
                 text-align: center;
                 border-radius: 0;
                 border: none;
@@ -1515,8 +1521,8 @@
             .prospect-actions-inline .action-btn.secondary {
                 background: #fafafa;
                 color: #aaa;
-                flex: 0 0 56px;
-                font-size: 16px;
+                flex: 0 0 44px;
+                font-size: 14px;
                 border-left: 1px solid #f0f0f0;
             }
 
@@ -3757,11 +3763,11 @@
                             <div class="company-tags">
                                 <span class="tag-sector">${p.sector}</span>
                                 <span class="tag-location">${provincia}</span>
+                                <span class="tier-badge tier-${tier}">${getTierName(tier)}</span>
                             </div>
                         </div>
                         <div class="prospect-revenue-section">
                             <div class="revenue-amount">${formatRevenue(revenue)}</div>
-                            <span class="tier-badge tier-${tier}">${getTierName(tier)}</span>
                         </div>
                         <div class="prospect-actions-inline">
                             <button class="action-btn primary" onclick="event.stopPropagation(); moveToContactado(${p.id})" title="Contactar">Contactar</button>
