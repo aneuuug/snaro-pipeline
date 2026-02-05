@@ -2101,9 +2101,193 @@
             font-size: 12px;
             color: #ccc;
         }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        body.dark .login-screen {
+            background: #1a1a1a;
+        }
+        .login-container {
+            width: 100%;
+            max-width: 360px;
+            padding: 40px 24px;
+            text-align: center;
+        }
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+        }
+        .login-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a2e;
+        }
+        body.dark .login-title {
+            color: #fff;
+        }
+        .login-subtitle {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 32px;
+        }
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .login-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .login-input:focus {
+            border-color: #007AFF;
+        }
+        body.dark .login-input {
+            background: #2a2a2a;
+            border-color: #444;
+            color: #fff;
+        }
+        body.dark .login-input:focus {
+            border-color: #0A84FF;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 8px;
+        }
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+        .login-btn.primary {
+            background: #007AFF;
+            color: #fff;
+        }
+        .login-btn.secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+        body.dark .login-btn.secondary {
+            background: #333;
+            color: #fff;
+        }
+        .login-error {
+            color: #ff3b30;
+            font-size: 13px;
+            margin-top: 12px;
+            display: none;
+        }
+        .login-divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: #999;
+            font-size: 12px;
+        }
+        .login-divider::before,
+        .login-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+        body.dark .login-divider::before,
+        body.dark .login-divider::after {
+            background: #444;
+        }
+        .login-divider span {
+            padding: 0 12px;
+        }
+        .login-toggle {
+            margin-top: 24px;
+            font-size: 13px;
+            color: #888;
+        }
+        .login-toggle a {
+            color: #007AFF;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .login-screen.hidden {
+            display: none;
+        }
+        .app-container.hidden {
+            display: none;
+        }
+
+        /* Logout button */
+        .logout-btn {
+            display: none;
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            padding: 8px 14px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #666;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        body.dark .logout-btn {
+            background: #333;
+            color: #999;
+        }
+        .logout-btn:hover {
+            background: #eee;
+        }
+        body.dark .logout-btn:hover {
+            background: #444;
+        }
     </style>
 </head>
 <body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <img src="logo.png" alt="SNARO" class="login-logo">
+            <h1 class="login-title">SNARO</h1>
+            <p class="login-subtitle">Pipeline de ventas</p>
+
+            <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+                <input type="text" class="login-input" id="loginName" placeholder="Nombre y apellido" required>
+                <input type="password" class="login-input" id="loginPassword" placeholder="Contraseña" required>
+                <button type="submit" class="login-btn primary" id="loginBtn">Entrar</button>
+            </form>
+
+            <div class="login-error" id="loginError"></div>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div class="app-container hidden" id="appContainer">
+
     <!-- Theme Toggle -->
     <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">☀️</button>
 
@@ -4370,7 +4554,75 @@
                 });
             }
         })();
+
+        // ============================================
+        // AUTHENTICATION
+        // ============================================
+
+        const APP_PASSWORD = 'pipelinesnaro';
+        const AUTH_KEY = 'snaro_auth';
+
+        // Check session on load
+        function checkAuth() {
+            const auth = localStorage.getItem(AUTH_KEY);
+            if (auth) {
+                showApp();
+            } else {
+                showLogin();
+            }
+        }
+
+        function showApp() {
+            document.getElementById('loginScreen').classList.add('hidden');
+            document.getElementById('appContainer').classList.remove('hidden');
+            document.getElementById('logoutBtn').style.display = 'block';
+        }
+
+        function showLogin() {
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('appContainer').classList.add('hidden');
+            document.getElementById('logoutBtn').style.display = 'none';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('loginName').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            const errorEl = document.getElementById('loginError');
+            const btn = document.getElementById('loginBtn');
+
+            if (password === APP_PASSWORD) {
+                localStorage.setItem(AUTH_KEY, JSON.stringify({ name: name, loggedAt: Date.now() }));
+                showApp();
+            } else {
+                errorEl.style.color = '#ff3b30';
+                errorEl.textContent = 'Contraseña incorrecta';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem(AUTH_KEY);
+            showLogin();
+            document.getElementById('loginName').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').style.display = 'none';
+        }
+
+        function getCurrentUser() {
+            const auth = localStorage.getItem(AUTH_KEY);
+            return auth ? JSON.parse(auth).name : null;
+        }
+
+        // Initialize auth check
+        document.addEventListener('DOMContentLoaded', checkAuth);
     </script>
+
+    </div><!-- End app-container -->
+
+    <!-- Logout Button -->
+    <button class="logout-btn" id="logoutBtn" onclick="logout()">Cerrar sesión</button>
 
     <!-- Menú móvil hamburguesa -->
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><img src="logo.png" alt="Menu" class="mobile-menu-logo"></button>
@@ -4392,6 +4644,11 @@
             <button class="mobile-menu-item" onclick="showView('informes'); toggleMobileMenu();" data-view="informes">
                 <span>◧</span> Informes
             </button>
+            <div style="border-top: 1px solid #eee; margin-top: 16px; padding-top: 16px;">
+                <button class="mobile-menu-item" onclick="logout(); toggleMobileMenu();" style="color: #ff3b30;">
+                    <span>↪</span> Cerrar sesión
+                </button>
+            </div>
         </div>
     </nav>
 </body>
