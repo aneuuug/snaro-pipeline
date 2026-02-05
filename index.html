@@ -1517,22 +1517,23 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 4px;
+                gap: 2px;
                 background: none;
                 border: none;
-                padding: 8px 24px;
+                padding: 8px 12px;
                 cursor: pointer;
                 color: #888;
                 font-family: 'Inter', sans-serif;
+                flex: 1;
             }
             .mobile-nav-item.active {
                 color: #000;
             }
             .mobile-nav-icon {
-                font-size: 20px;
+                font-size: 18px;
             }
             .mobile-nav-label {
-                font-size: 11px;
+                font-size: 10px;
                 font-weight: 500;
             }
             body.dark .mobile-nav {
@@ -4140,8 +4141,16 @@
             <span class="mobile-nav-label">Pipeline</span>
         </button>
         <button class="mobile-nav-item" onclick="showView('porcontactar')" data-view="porcontactar">
-            <span class="mobile-nav-icon">☰</span>
+            <span class="mobile-nav-icon">▤</span>
             <span class="mobile-nav-label">Empresas</span>
+        </button>
+        <button class="mobile-nav-item" onclick="showView('calendario')" data-view="calendario">
+            <span class="mobile-nav-icon">▦</span>
+            <span class="mobile-nav-label">Calendario</span>
+        </button>
+        <button class="mobile-nav-item" onclick="showView('informes')" data-view="informes">
+            <span class="mobile-nav-icon">◧</span>
+            <span class="mobile-nav-label">Informes</span>
         </button>
     </nav>
 </body>
