@@ -897,11 +897,116 @@
             color: #999;
         }
 
+        /* Filters & Toolbar */
+        .filter-select {
+            padding: 12px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            min-width: 150px;
+            cursor: pointer;
+            background: #fff;
+        }
+        .filter-select-small {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            font-size: 12px;
+            cursor: pointer;
+            background: #fff;
+        }
+        .view-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e0e0e0;
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+        }
+        .view-btn:hover { background: #f5f5f5; }
+        .view-btn.active { background: #000; color: #fff; border-color: #000; }
+        body.dark .filter-select, body.dark .filter-select-small { background: #333; border-color: #444; color: #e0e0e0; }
+        body.dark .view-btn { background: #333; border-color: #444; color: #999; }
+        body.dark .view-btn.active { background: #fff; color: #000; }
+
         /* Prospect List */
         .prospect-list {
             display: flex;
             flex-direction: column;
         }
+        .prospect-list.table-view {
+            display: block;
+        }
+
+        /* Table View */
+        .prospect-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .prospect-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 500;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666;
+            border-bottom: 2px solid #e0e0e0;
+            background: #fafafa;
+        }
+        .prospect-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+        }
+        .prospect-table tr:hover td {
+            background: #f9f9f9;
+        }
+        .prospect-table .company-name {
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .prospect-table .company-name:hover {
+            text-decoration: underline;
+        }
+        .prospect-table .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+        .prospect-table .badge-high { background: #000; color: #fff; }
+        .prospect-table .badge-medium { background: #e0e0e0; color: #333; }
+        .prospect-table .badge-low { background: #f5f5f5; color: #999; }
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .quick-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .quick-btn:hover { background: #f0f0f0; }
+        .quick-btn.interested { color: #22c55e; border-color: #22c55e; }
+        .quick-btn.not-interested { color: #ef4444; border-color: #ef4444; }
+        body.dark .prospect-table th { background: #2a2a2a; border-color: #444; color: #999; }
+        body.dark .prospect-table td { border-color: #333; }
+        body.dark .prospect-table tr:hover td { background: #2a2a2a; }
+        body.dark .quick-btn { background: #333; border-color: #444; }
 
         .prospect-card {
             background: #fff;
@@ -1256,33 +1361,58 @@
                     <div class="summary-hint">Empresas de Euskadi · Los cambios se guardan automáticamente</div>
                 </div>
 
-                <!-- Filtros -->
-                <div class="filters-bar" style="display: flex; gap: 16px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid #f0f0f0;">
-                    <input type="text" id="searchProspects" placeholder="Buscar empresa..."
-                           style="flex: 1; padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px;"
+                <!-- Filtros principales -->
+                <div class="filters-bar" style="display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap;">
+                    <input type="text" id="searchProspects" placeholder="Buscar empresa, sector, localidad..."
+                           style="flex: 2; min-width: 250px; padding: 12px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px;"
                            oninput="filterProspects()">
-                    <select id="filterSector" style="padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px; min-width: 180px; cursor: pointer;" onchange="filterProspects()">
+                    <select id="filterSector" class="filter-select" onchange="filterProspects()">
                         <option value="">Todos los sectores</option>
                         <option value="Automoción">Automoción</option>
-                        <option value="Industria">Industria y Manufactura</option>
+                        <option value="Industria">Industria</option>
                         <option value="Tecnología">Tecnología</option>
-                        <option value="Alimentación">Alimentación</option>
-                        <option value="Logística">Logística y Transporte</option>
-                        <option value="Construcción">Construcción</option>
                         <option value="Energía">Energía</option>
+                        <option value="Construcción">Construcción</option>
                         <option value="Servicios">Servicios</option>
+                        <option value="Salud">Salud</option>
+                        <option value="Alimentación">Alimentación</option>
+                        <option value="Logística">Logística</option>
                         <option value="Distribución">Distribución</option>
-                        <option value="Salud">Salud y Farmacia</option>
                     </select>
-                    <select id="filterLocation" style="padding: 12px 16px; border: 1px solid #e0e0e0; font-family: 'Inter', sans-serif; font-size: 13px; min-width: 140px; cursor: pointer;" onchange="filterProspects()">
+                    <select id="filterLocation" class="filter-select" onchange="filterProspects()">
                         <option value="">Todas las zonas</option>
                         <option value="Bizkaia">Bizkaia</option>
                         <option value="Gipuzkoa">Gipuzkoa</option>
                         <option value="Araba">Araba</option>
-                        <option value="Vitoria">Vitoria / Jundiz</option>
-                        <option value="Donostia">Donostia</option>
                         <option value="Bilbao">Bilbao</option>
+                        <option value="Donostia">Donostia</option>
+                        <option value="Vitoria">Vitoria</option>
                     </select>
+                    <select id="filterPriority" class="filter-select" onchange="filterProspects()">
+                        <option value="">Todas prioridades</option>
+                        <option value="high">Alta prioridad</option>
+                        <option value="medium">Media prioridad</option>
+                        <option value="low">Baja prioridad</option>
+                    </select>
+                </div>
+
+                <!-- Barra de herramientas -->
+                <div class="toolbar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #f0f0f0;">
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span style="font-size: 12px; color: #666;">Ordenar:</span>
+                        <select id="sortBy" class="filter-select-small" onchange="filterProspects()">
+                            <option value="priority">Por prioridad</option>
+                            <option value="name">Alfabético (A-Z)</option>
+                            <option value="name-desc">Alfabético (Z-A)</option>
+                            <option value="sector">Por sector</option>
+                            <option value="location">Por zona</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <span style="font-size: 12px; color: #666;">Vista:</span>
+                        <button class="view-btn active" id="viewCards" onclick="setProspectView('cards')" title="Tarjetas">▦</button>
+                        <button class="view-btn" id="viewTable" onclick="setProspectView('table')" title="Tabla">☰</button>
+                    </div>
                 </div>
 
                 <div class="prospect-list" id="prospectList">
@@ -2645,6 +2775,16 @@
             renderPipeline();
         }
 
+        // Vista actual (cards o table)
+        let currentView = 'cards';
+
+        function setProspectView(view) {
+            currentView = view;
+            document.getElementById('viewCards')?.classList.toggle('active', view === 'cards');
+            document.getElementById('viewTable')?.classList.toggle('active', view === 'table');
+            filterProspects();
+        }
+
         // Render prospects list
         function renderProspects(filteredList = null) {
             const list = document.getElementById('prospectList');
@@ -2664,23 +2804,99 @@
                 return;
             }
 
-            // Sort by priority
+            // Sorting
+            const sortBy = document.getElementById('sortBy')?.value || 'priority';
             const sorted = [...data].sort((a, b) => {
-                const order = { high: 0, medium: 1, low: 2 };
-                return order[a.priority] - order[b.priority];
+                if (sortBy === 'priority') {
+                    const order = { high: 0, medium: 1, low: 2 };
+                    return order[a.priority] - order[b.priority];
+                } else if (sortBy === 'name') {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 'name-desc') {
+                    return b.name.localeCompare(a.name);
+                } else if (sortBy === 'sector') {
+                    return a.sector.localeCompare(b.sector);
+                } else if (sortBy === 'location') {
+                    return a.location.localeCompare(b.location);
+                }
+                return 0;
             });
 
-            list.innerHTML = sorted.map(p => `
-                <div class="prospect-card priority-${p.priority}" onclick="openProspectDetail(${p.id})">
-                    <div class="priority-indicator"></div>
-                    <div class="prospect-info">
-                        <div class="name">${p.name}</div>
-                        <div class="meta">${p.sector} · ${p.location}</div>
-                        <div class="detail">${p.detail}</div>
+            // Render based on view
+            if (currentView === 'table') {
+                list.innerHTML = `
+                    <table class="prospect-table">
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Sector</th>
+                                <th>Localidad</th>
+                                <th>Prioridad</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sorted.map(p => `
+                                <tr>
+                                    <td>
+                                        <span class="company-name" onclick="openProspectDetail(${p.id})">${p.name}</span>
+                                        <div style="font-size: 11px; color: #999; margin-top: 2px;">${p.detail.substring(0, 60)}${p.detail.length > 60 ? '...' : ''}</div>
+                                    </td>
+                                    <td>${p.sector}</td>
+                                    <td>${p.location}</td>
+                                    <td><span class="badge badge-${p.priority}">${p.priority === 'high' ? 'Alta' : p.priority === 'medium' ? 'Media' : 'Baja'}</span></td>
+                                    <td>
+                                        <div class="quick-actions">
+                                            <button class="quick-btn" onclick="moveToContactado(${p.id})" title="Mover a Contactado">→</button>
+                                            <button class="quick-btn" onclick="markInterested(${p.id})" title="Alta prioridad">★</button>
+                                            <button class="quick-btn" onclick="markNotInterested(${p.id})" title="Descartar">✕</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else {
+                list.innerHTML = sorted.map(p => `
+                    <div class="prospect-card priority-${p.priority}" onclick="openProspectDetail(${p.id})">
+                        <div class="priority-indicator"></div>
+                        <div class="prospect-info">
+                            <div class="name">${p.name}</div>
+                            <div class="meta">${p.sector} · ${p.location}</div>
+                            <div class="detail">${p.detail}</div>
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button class="quick-btn" onclick="event.stopPropagation(); markInterested(${p.id})" title="Alta prioridad">★</button>
+                            <button class="btn-move" onclick="event.stopPropagation(); moveToContactado(${p.id})">→</button>
+                        </div>
                     </div>
-                    <button class="btn-move" onclick="event.stopPropagation(); moveToContactado(${p.id})">→</button>
-                </div>
-            `).join('');
+                `).join('');
+            }
+        }
+
+        // Marcar como interesante (subir prioridad)
+        function markInterested(id) {
+            event.stopPropagation();
+            const company = appData.prospects.find(p => p.id === id);
+            if (company) {
+                company.priority = 'high';
+                saveData();
+                filterProspects();
+                showNotification(`${company.name} → Alta prioridad`);
+            }
+        }
+
+        // Marcar como no interesa
+        function markNotInterested(id) {
+            event.stopPropagation();
+            const company = appData.prospects.find(p => p.id === id);
+            if (company && confirm(`¿Descartar "${company.name}"?`)) {
+                company.status = 'descartado';
+                saveData();
+                filterProspects();
+                showNotification(`${company.name} descartada`);
+            }
         }
 
         // Filter prospects
@@ -2688,8 +2904,14 @@
             const search = document.getElementById('searchProspects').value.toLowerCase();
             const sector = document.getElementById('filterSector').value;
             const location = document.getElementById('filterLocation').value;
+            const priority = document.getElementById('filterPriority')?.value || '';
 
             let filtered = getByStatus('porcontactar');
+
+            // Priority filter
+            if (priority) {
+                filtered = filtered.filter(p => p.priority === priority);
+            }
 
             // Text search
             if (search) {
