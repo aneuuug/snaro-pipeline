@@ -1150,6 +1150,7 @@
 
         /* Enhanced Prospect Card */
         .prospect-card-enhanced {
+            position: relative;
             background: #fff;
             padding: 20px 24px;
             border-radius: 12px;
@@ -1238,6 +1239,43 @@
             padding: 10px 12px;
         }
         .action-btn.secondary:hover { background: #eee; color: #333; }
+
+        .card-dismiss-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 22px;
+            height: 22px;
+            border: none;
+            background: transparent;
+            border-radius: 50%;
+            font-size: 10px;
+            color: #ccc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+        .prospect-card-enhanced:hover .card-dismiss-btn {
+            opacity: 1;
+        }
+        .card-dismiss-btn:hover {
+            background: #f0f0f0;
+            color: #888;
+        }
+        body.dark .card-dismiss-btn {
+            color: #555;
+        }
+        body.dark .prospect-card-enhanced:hover .card-dismiss-btn {
+            opacity: 1;
+        }
+        body.dark .card-dismiss-btn:hover {
+            background: #333;
+            color: #999;
+        }
 
         body.dark .prospect-card-enhanced { background: #222; border-color: #333; }
         body.dark .prospect-card-enhanced:hover { background: #2a2a2a; border-color: #444; }
@@ -1459,6 +1497,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                opacity: 1;
                 z-index: 2;
                 transition: all 0.2s ease;
             }
