@@ -1774,6 +1774,35 @@
                 padding-left: 60px !important;
                 padding-right: 60px !important;
             }
+            .mobile-logout-btn {
+                display: block;
+                width: auto;
+                margin: 24px 16px 16px;
+                padding: 10px 16px;
+                background: transparent;
+                border: 1px solid #ddd;
+                border-radius: 0;
+                font-size: 9px;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                color: #888;
+                cursor: pointer;
+                font-family: 'Inter', sans-serif;
+                transition: all 0.3s ease;
+                text-align: center;
+            }
+            .mobile-logout-btn:hover {
+                border-color: #999;
+                color: #555;
+            }
+            body.dark .mobile-logout-btn {
+                border-color: #333;
+                color: #555;
+            }
+            body.dark .mobile-logout-btn:hover {
+                border-color: #555;
+                color: #888;
+            }
         }
 
         /* Móvil pequeño */
@@ -4641,11 +4670,9 @@
             <button class="mobile-menu-item" onclick="showView('informes'); toggleMobileMenu();" data-view="informes">
                 <span>◧</span> Informes
             </button>
-            <div style="border-top: 1px solid #eee; margin-top: 16px; padding-top: 16px;">
-                <button class="mobile-menu-item" onclick="logout(); toggleMobileMenu();" style="color: #ff3b30;">
-                    <span>↪</span> Cerrar sesión
-                </button>
-            </div>
+            <button class="mobile-logout-btn" onclick="logout(); toggleMobileMenu();">
+                Cerrar sesión
+            </button>
         </div>
     </nav>
 </body>
