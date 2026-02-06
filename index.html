@@ -493,6 +493,33 @@
             padding: 32px;
         }
 
+        .detail-contact-btn {
+            display: inline-block;
+            background: transparent;
+            border: 1px solid #ddd;
+            border-radius: 0;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #888;
+            padding: 10px 32px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .detail-contact-btn:hover {
+            border-color: #999;
+            color: #555;
+        }
+        body.dark .detail-contact-btn {
+            border-color: #333;
+            color: #555;
+        }
+        body.dark .detail-contact-btn:hover {
+            border-color: #555;
+            color: #888;
+        }
+
         /* Form */
         .form-group {
             margin-bottom: 24px;
@@ -4072,9 +4099,6 @@
                         </div>
                         <div class="prospect-revenue-section">
                             <div class="revenue-amount">${formatRevenue(revenue)}</div>
-                            <div class="prospect-actions-inline">
-                                <button class="action-btn primary" onclick="event.stopPropagation(); moveToContactado(${p.id})" title="Contactar">Contactar</button>
-                            </div>
                         </div>
                     </div>
                 `}).join('') + (sorted.length > 100 ? `<div style="text-align: center; padding: 20px; color: #666; font-size: 13px;">Mostrando 100 de ${sorted.length.toLocaleString()} empresas. Usa filtros para refinar.</div>` : '');
@@ -4337,6 +4361,9 @@
                         </div>
                     </div>
                     ${company.notes ? `<div style="margin-top: 32px;"><div class="sidebar-title" style="margin-bottom: 12px;">Notas</div><div class="notes-box">${company.notes}</div></div>` : ''}
+                    <div style="margin-top: 32px; text-align: center;">
+                        <button class="detail-contact-btn" onclick="moveToContactado(${company.id}); closeClientDetail();">Contactar</button>
+                    </div>
                 `;
             }
         }
