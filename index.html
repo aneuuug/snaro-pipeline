@@ -1198,15 +1198,17 @@
         .tag-location { background: #f0f7ff; color: #0066cc; }
 
         .prospect-revenue-section {
-            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
             min-width: 100px;
             flex-shrink: 0;
+            gap: 8px;
         }
         .prospect-revenue-section .revenue-amount {
             font-size: 22px;
             font-weight: 600;
             color: #1a1a2e;
-            margin-bottom: 4px;
         }
         .prospect-revenue-section .tier-badge {
             font-size: 9px;
@@ -1228,10 +1230,20 @@
             font-family: 'Inter', sans-serif;
         }
         .action-btn.primary {
-            background: #1a1a2e;
-            color: #fff;
+            background: transparent;
+            color: #888;
+            border: 1px solid #ddd;
+            border-radius: 0;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 6px 14px;
+            font-weight: 400;
         }
-        .action-btn.primary:hover { background: #2a2a4e; }
+        .action-btn.primary:hover {
+            border-color: #999;
+            color: #555;
+        }
         .action-btn.secondary {
             background: #f5f5f5;
             color: #666;
@@ -1282,7 +1294,8 @@
         body.dark .tag-sector { background: #333; color: #aaa; }
         body.dark .tag-location { background: #1a2a3a; color: #6ab0f3; }
         body.dark .prospect-revenue-section .revenue-amount { color: #fff; }
-        body.dark .action-btn.primary { background: #3a3a5e; }
+        body.dark .action-btn.primary { background: transparent; border-color: #333; color: #555; }
+        body.dark .action-btn.primary:hover { border-color: #555; color: #888; }
         body.dark .action-btn.secondary { background: #333; color: #aaa; }
 
         /* Charts Section */
