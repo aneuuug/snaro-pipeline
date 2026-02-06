@@ -1591,18 +1591,16 @@
                 justify-content: flex-end;
                 align-items: center;
             }
-            .prospect-actions-inline .action-btn {
-                padding: 6px 14px;
-                font-size: 13px;
-                font-weight: 500;
-                text-align: center;
-                border-radius: 16px;
-                border: none;
-                letter-spacing: -0.2px;
-            }
             .prospect-actions-inline .action-btn.primary {
-                background: #14919b;
-                color: #fff;
+                background: transparent;
+                border: 1px solid #ddd;
+                border-radius: 0;
+                font-size: 9px;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+                padding: 6px 14px;
+                font-weight: 400;
+                color: #888;
             }
 
             /* Dark mode móvil */
@@ -1626,7 +1624,9 @@
                 color: #fff;
             }
             body.dark .prospect-actions-inline .action-btn.primary {
-                background: #0d7377;
+                background: transparent;
+                border-color: #333;
+                color: #555;
             }
             body.dark .card-dismiss-btn {
                 background: rgba(255,255,255,0.08);
