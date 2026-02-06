@@ -4203,6 +4203,9 @@
 
         // Open prospect detail
         function openProspectDetail(companyId) {
+            const company = appData.prospects.find(p => p.id === companyId);
+            if (!company) return;
+            populateDetailModal(company);
             document.getElementById('clientDetailModal').classList.add('active');
         }
 
@@ -4218,7 +4221,52 @@
         }
 
         function openClientDetail(clientId) {
+            const company = appData.prospects.find(p => p.id === clientId);
+            if (!company) return;
+            populateDetailModal(company);
             document.getElementById('clientDetailModal').classList.add('active');
+        }
+
+        function populateDetailModal(company) {
+            document.getElementById('detailName').textContent = company.name;
+            document.getElementById('detailSector').textContent = company.sector || '';
+            document.getElementById('detailStatus').textContent = getStatusLabel(company.status || 'porcontactar');
+
+            // Parse detail field for revenue and employees
+            const revenue = parseRevenue(company.detail);
+            const detail = company.detail || '';
+            const employeesMatch = detail.match(/([\d.,]+)\s*empleados/i);
+            const employees = employeesMatch ? employeesMatch[1] : '-';
+
+            // Update info tab
+            const infoTab = document.getElementById('tab-info');
+            if (infoTab) {
+                infoTab.innerHTML = `
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="label">Ubicación</div>
+                            <div class="value">${company.location || '-'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Sector</div>
+                            <div class="value">${company.sector || '-'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Facturación</div>
+                            <div class="value">${revenue > 0 ? formatRevenue(revenue) : '-'}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Empleados</div>
+                            <div class="value">${employees}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="label">Prioridad</div>
+                            <div class="value">${company.priority || '-'}</div>
+                        </div>
+                    </div>
+                    ${company.notes ? `<div style="margin-top: 32px;"><div class="sidebar-title" style="margin-bottom: 12px;">Notas</div><div class="notes-box">${company.notes}</div></div>` : ''}
+                `;
+            }
         }
 
         function closeClientDetail() {
