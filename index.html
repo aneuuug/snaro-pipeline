@@ -1433,6 +1433,7 @@
             /* ====== TARJETAS MÓVIL - DISEÑO PROFESIONAL ====== */
 
             .prospect-card-enhanced {
+                position: relative;
                 padding: 0;
                 margin-bottom: 8px;
                 border-radius: 10px;
@@ -1442,6 +1443,28 @@
                 box-shadow: 0 1px 3px rgba(0,0,0,0.08);
                 background: #fff;
                 overflow: hidden;
+            }
+            .card-dismiss-btn {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 24px;
+                height: 24px;
+                border: none;
+                background: rgba(0,0,0,0.06);
+                border-radius: 50%;
+                font-size: 11px;
+                color: #999;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 2;
+                transition: all 0.2s ease;
+            }
+            .card-dismiss-btn:hover {
+                background: rgba(0,0,0,0.12);
+                color: #666;
             }
 
             .prospect-card-enhanced .tier-indicator {
@@ -1527,14 +1550,8 @@
                 letter-spacing: -0.2px;
             }
             .prospect-actions-inline .action-btn.primary {
-                background: #007AFF;
+                background: #14919b;
                 color: #fff;
-            }
-            .prospect-actions-inline .action-btn.secondary {
-                background: #f2f2f7;
-                color: #8e8e93;
-                padding: 6px 10px;
-                font-size: 14px;
             }
 
             /* Dark mode móvil */
@@ -1558,11 +1575,15 @@
                 color: #fff;
             }
             body.dark .prospect-actions-inline .action-btn.primary {
-                background: #0A84FF;
+                background: #0d7377;
             }
-            body.dark .prospect-actions-inline .action-btn.secondary {
-                background: #2c2c2e;
-                color: #636366;
+            body.dark .card-dismiss-btn {
+                background: rgba(255,255,255,0.08);
+                color: #666;
+            }
+            body.dark .card-dismiss-btn:hover {
+                background: rgba(255,255,255,0.15);
+                color: #999;
             }
 
             /* ====== PIPELINE MÓVIL ====== */
@@ -3989,6 +4010,7 @@
                     const provincia = p.location.split(',')[1]?.trim() || p.location;
                     return `
                     <div class="prospect-card-enhanced" onclick="openProspectDetail(${p.id})">
+                        <button class="card-dismiss-btn" onclick="event.stopPropagation(); markNotInterested(${p.id})" title="Descartar">✕</button>
                         <div class="tier-indicator ${tier}"></div>
                         <div class="prospect-main-info">
                             <div class="company-name">${p.name}</div>
@@ -4001,7 +4023,6 @@
                         <div class="prospect-revenue-section">
                             <div class="revenue-amount">${formatRevenue(revenue)}</div>
                             <div class="prospect-actions-inline">
-                                <button class="action-btn secondary" onclick="event.stopPropagation(); markNotInterested(${p.id})" title="Descartar">✕</button>
                                 <button class="action-btn primary" onclick="event.stopPropagation(); moveToContactado(${p.id})" title="Contactar">Contactar</button>
                             </div>
                         </div>
