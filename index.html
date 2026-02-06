@@ -1512,7 +1512,7 @@
             .prospect-actions-inline {
                 display: flex;
                 gap: 8px;
-                padding: 12px 14px;
+                padding: 0;
                 border-top: none;
                 justify-content: flex-end;
                 align-items: center;
@@ -4000,10 +4000,10 @@
                         </div>
                         <div class="prospect-revenue-section">
                             <div class="revenue-amount">${formatRevenue(revenue)}</div>
-                        </div>
-                        <div class="prospect-actions-inline">
-                            <button class="action-btn primary" onclick="event.stopPropagation(); moveToContactado(${p.id})" title="Contactar">Contactar</button>
-                            <button class="action-btn secondary" onclick="event.stopPropagation(); markNotInterested(${p.id})" title="Descartar">✕</button>
+                            <div class="prospect-actions-inline">
+                                <button class="action-btn secondary" onclick="event.stopPropagation(); markNotInterested(${p.id})" title="Descartar">✕</button>
+                                <button class="action-btn primary" onclick="event.stopPropagation(); moveToContactado(${p.id})" title="Contactar">Contactar</button>
+                            </div>
                         </div>
                     </div>
                 `}).join('') + (sorted.length > 100 ? `<div style="text-align: center; padding: 20px; color: #666; font-size: 13px;">Mostrando 100 de ${sorted.length.toLocaleString()} empresas. Usa filtros para refinar.</div>` : '');
