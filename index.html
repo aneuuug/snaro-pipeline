@@ -1628,7 +1628,7 @@
             /* Contenido principal */
             .content {
                 padding: 12px;
-                padding-top: 75px; /* Espacio para el botón logo */
+                padding-top: 60px;
             }
 
             /* Stats dashboard 2x2 compacto */
@@ -1858,16 +1858,30 @@
             .pipeline-summary {
                 flex-direction: row;
                 flex-wrap: wrap;
-                gap: 8px;
-                padding: 12px;
+                gap: 6px;
+                padding: 0 4px;
+                margin-bottom: 12px;
+                padding-bottom: 12px;
             }
             .pipeline-metric {
                 flex: 1;
-                min-width: calc(50% - 4px);
+                min-width: calc(33% - 4px);
                 text-align: center;
-                padding: 12px 8px;
+                padding: 10px 6px;
                 background: #f5f5f5;
-                border-radius: 12px;
+                border-radius: 10px;
+            }
+            .pipeline-metric .metric-value {
+                font-size: 22px;
+            }
+            .pipeline-metric .metric-value.small {
+                font-size: 18px;
+            }
+            .pipeline-metric .metric-label {
+                font-size: 9px;
+            }
+            .main-metric .metric-value {
+                font-size: 22px;
             }
             body.dark .pipeline-metric {
                 background: #222;
