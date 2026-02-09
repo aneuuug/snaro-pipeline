@@ -4211,7 +4211,6 @@
                     const provincia = p.location.split(',')[1]?.trim() || p.location;
                     return `
                     <div class="prospect-card-enhanced" onclick="openProspectDetail(${p.id})">
-                        <button class="card-dismiss-btn" onclick="event.stopPropagation(); markNotInterested(${p.id})" title="Descartar">✕</button>
                         <div class="tier-indicator ${tier}"></div>
                         <div class="prospect-main-info">
                             <div class="company-name">${p.name}</div>
