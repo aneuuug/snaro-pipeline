@@ -12,13 +12,9 @@
     <style>
         /* Connection Status Badge */
         .connection-badge {
-            position: fixed;
-            top: 12px;
-            right: 12px;
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 11px;
-            z-index: 1000;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -223,6 +219,7 @@
         body.dark .theme-toggle:hover { background: #444; }
         body.dark .connection-badge.online { background: #142a14; color: #6fcf97; border: 1px solid #1a3a1a; }
         body.dark .connection-badge.offline { background: #2a2210; color: #f2c94c; border: 1px solid #3d3520; }
+        body.dark #syncBtn { background: #1e1e1e; color: #ccc; border-color: #444; }
 
         /* Estados vacíos */
         body.dark .empty-state { color: #999; }
@@ -2572,9 +2569,12 @@
     <button class="theme-toggle" onclick="toggleTheme()" title="Cambiar tema">☀️</button>
 
     <!-- Connection Badge -->
-    <div id="connectionBadge" class="connection-badge offline" onclick="showSupabaseConfig()">
-        <span class="dot"></span>
-        <span id="connectionText">Local</span>
+    <div style="position:fixed;top:12px;right:12px;display:flex;gap:8px;z-index:1000;align-items:center">
+        <div id="connectionBadge" class="connection-badge offline" onclick="showSupabaseConfig()">
+            <span class="dot"></span>
+            <span id="connectionText">Local</span>
+        </div>
+        <button id="syncBtn" onclick="syncAllToCloud().then(()=>showNotification('Sincronizado con la nube'))" style="padding:6px 12px;border-radius:20px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;display:none">Sincronizar</button>
     </div>
 
     <!-- Modal: Supabase Config -->
@@ -4965,8 +4965,10 @@
         function updateConnectionBadge(online) {
             const badge = document.getElementById('connectionBadge');
             const text = document.getElementById('connectionText');
+            const syncBtn = document.getElementById('syncBtn');
             badge.className = online ? 'connection-badge online' : 'connection-badge offline';
             text.textContent = online ? 'Nube' : 'Local';
+            if (syncBtn) syncBtn.style.display = online ? 'block' : 'none';
         }
 
         async function syncFromCloud() {
