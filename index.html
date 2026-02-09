@@ -4904,27 +4904,12 @@
             if (!supabaseClient || !isCloudConnected) return;
             try {
                 await supabaseClient.from('prospects')
-                    .upsert({
-                        id: prospect.id,
-                        name: prospect.name,
-                        sector: prospect.sector,
-                        location: prospect.location,
-                        detail: prospect.detail,
-                        priority: prospect.priority,
+                    .update({
                         status: prospect.status || 'porcontactar',
                         notes: prospect.notes || '',
-                        mrr: prospect.mrr || 0,
-                        contacto: prospect.contacto || '',
-                        cargo: prospect.cargo || '',
-                        telefono: prospect.telefono || '',
-                        email: prospect.email || '',
-                        cif: prospect.cif || '',
-                        web: prospect.web || '',
-                        necesidad: prospect.necesidad || '',
-                        notasInv: prospect.notasInv || '',
-                        oportunidades: prospect.oportunidades || '',
                         updated_at: new Date().toISOString()
-                    });
+                    })
+                    .eq('id', prospect.id);
             } catch (e) {}
         }
 
