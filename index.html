@@ -4470,52 +4470,106 @@
                 `;
             }
 
-            // Update investigation tab - editable
+            // Update investigation tab - datos auto-generados + editable
             const invTab = document.getElementById('tab-investigation');
             if (invTab) {
+                const rev = parseRevenue(company.detail);
+                const detailStr = company.detail || '';
+                const empMatch = detailStr.match(/([\d.,]+)\s*empleados/i);
+                const empNum = empMatch ? empMatch[1] : '-';
+                const facText = rev > 0 ? rev.toFixed(1) + 'M€' : '-';
+
+                // Generate alerts based on company data
+                const autoAlerts = [];
+                if (rev > 50) autoAlerts.push({ text: 'Facturación superior a 50M€ — Alto potencial', source: 'SABI' });
+                if (rev > 0 && rev < 2) autoAlerts.push({ text: 'Facturación baja — Posible empresa en crecimiento o dificultad', source: 'SABI' });
+                const sector = (company.sector || '').toLowerCase();
+                if (sector.includes('energía') || sector.includes('energia')) autoAlerts.push({ text: 'Sector regulado — Verificar cumplimiento normativo', source: 'CNMC' });
+                if (sector.includes('construc')) autoAlerts.push({ text: 'Sector construcción — Revisar certificaciones y licitaciones', source: 'Registro Mercantil' });
+                if (autoAlerts.length === 0) autoAlerts.push({ text: 'Sin alertas destacadas', source: 'Análisis automático' });
+
+                const alertsHtml = autoAlerts.map(a => `
+                    <div class="alert-item">
+                        <span class="icon">—</span>
+                        <div>
+                            <div class="text">${a.text}</div>
+                            <div class="date">${a.source}</div>
+                        </div>
+                    </div>
+                `).join('');
+
+                const oppsHtml = generateOpportunitiesHtml(company);
+
                 invTab.innerHTML = `
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Contacto</label>
-                            <input type="text" id="editContacto" value="${company.contacto || ''}" placeholder="Nombre del contacto">
+                    <div class="info-grid" style="margin-bottom: 24px;">
+                        <div class="info-item">
+                            <div class="label">Facturación</div>
+                            <div class="value">${facText}</div>
                         </div>
-                        <div class="form-group">
-                            <label>Cargo</label>
-                            <input type="text" id="editCargo" value="${company.cargo || ''}" placeholder="Director, Gerente...">
+                        <div class="info-item">
+                            <div class="label">Empleados</div>
+                            <div class="value">${empNum}</div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Teléfono</label>
-                            <input type="text" id="editTelefono" value="${company.telefono || ''}" placeholder="944 123 456">
+                        <div class="info-item">
+                            <div class="label">Sector</div>
+                            <div class="value">${company.sector || '-'}</div>
                         </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" id="editEmail" value="${company.email || ''}" placeholder="contacto@empresa.com">
+                        <div class="info-item">
+                            <div class="label">Ubicación</div>
+                            <div class="value">${company.location || '-'}</div>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>CIF</label>
-                            <input type="text" id="editCif" value="${company.cif || ''}" placeholder="B12345678">
-                        </div>
-                        <div class="form-group">
-                            <label>Web</label>
-                            <input type="text" id="editWeb" value="${company.web || ''}" placeholder="www.empresa.com">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Necesidad detectada</label>
-                        <textarea id="editNecesidad" rows="2" placeholder="¿Qué problema tienen? ¿Qué buscan?">${company.necesidad || ''}</textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Notas de investigación</label>
-                        <textarea id="editNotasInv" rows="3" placeholder="Datos del registro mercantil, noticias, LinkedIn...">${company.notasInv || ''}</textarea>
                     </div>
 
-                    <div class="form-group" style="margin-top: 24px;">
-                        <label>Oportunidades SNARO</label>
-                        <textarea id="editOportunidades" rows="4" placeholder="Automatización de pedidos, gestión documental, reporting...">${company.oportunidades || generateOpportunitiesText(company)}</textarea>
+                    <div class="alerts-section" style="margin-bottom: 24px;">
+                        <h5>Alertas</h5>
+                        ${alertsHtml}
+                    </div>
+
+                    <div class="opportunities-section" style="margin-bottom: 24px;">
+                        <h5>Oportunidades SNARO</h5>
+                        ${oppsHtml}
+                    </div>
+
+                    <div style="border-top: 1px solid #e0e0e0; padding-top: 24px; margin-top: 24px;">
+                        <h5 style="margin-bottom: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #999;">Datos de contacto</h5>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Contacto</label>
+                                <input type="text" id="editContacto" value="${company.contacto || ''}" placeholder="Nombre del contacto">
+                            </div>
+                            <div class="form-group">
+                                <label>Cargo</label>
+                                <input type="text" id="editCargo" value="${company.cargo || ''}" placeholder="Director, Gerente...">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Teléfono</label>
+                                <input type="text" id="editTelefono" value="${company.telefono || ''}" placeholder="944 123 456">
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" id="editEmail" value="${company.email || ''}" placeholder="contacto@empresa.com">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>CIF</label>
+                                <input type="text" id="editCif" value="${company.cif || ''}" placeholder="B12345678">
+                            </div>
+                            <div class="form-group">
+                                <label>Web</label>
+                                <input type="text" id="editWeb" value="${company.web || ''}" placeholder="www.empresa.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Necesidad detectada</label>
+                            <textarea id="editNecesidad" rows="2" placeholder="¿Qué problema tienen? ¿Qué buscan?">${company.necesidad || ''}</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Notas de investigación</label>
+                            <textarea id="editNotasInv" rows="3" placeholder="Datos del registro mercantil, noticias, LinkedIn...">${company.notasInv || ''}</textarea>
+                        </div>
                     </div>
 
                     <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="saveInvestigation()">Guardar investigación</button>
