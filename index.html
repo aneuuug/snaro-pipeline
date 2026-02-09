@@ -4324,22 +4324,16 @@
                 // Render cards
                 const stageColor = { contactado: '#ef4444', reunion: '#f59e0b', piloto: '#facc15', cliente: '#22c55e' };
                 const cardsHtml = companies.length > 0
-                    ? companies.map(c => {
-                        const prov = c.location ? c.location.split('/').pop().trim() : '';
-                        return `
+                    ? companies.map(c => `
                         <div class="client-card" onclick="openClientDetail(${c.id})" style="display:flex;align-items:flex-start">
                             <span class="semaforo" style="background:${stageColor[stage]};margin-top:5px"></span>
                             <div style="flex:1;min-width:0">
                                 <div class="name">${c.name}</div>
-                                <div class="card-tags">
-                                    <span class="card-tag tag-sec">${c.sector}</span>
-                                    ${prov ? `<span class="card-tag tag-loc">${prov}</span>` : ''}
-                                    <span class="card-tag tag-pri">${c.priority || 'medium'}</span>
-                                </div>
+                                <div class="card-tags"><span class="card-tag tag-sec">${c.sector}</span></div>
                                 <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
                             </div>
-                        </div>`;
-                    }).join('')
+                        </div>
+                    `).join('')
                     : `<div class="empty-column">Sin empresas</div>`;
 
                 // Clear and re-render
