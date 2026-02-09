@@ -3898,7 +3898,7 @@
             const container = document.getElementById('informesContent');
             if (!container) return;
 
-            const pipelineStages = ['porcontactar', 'contactado', 'reunion', 'piloto', 'cliente'];
+            const pipelineStages = ['contactado', 'reunion', 'piloto', 'cliente'];
             let html = '';
             let totalEmpresas = 0;
 
@@ -3958,7 +3958,7 @@
             });
 
             if (totalEmpresas === 0) {
-                html = '<div class="informe-empty">No hay empresas registradas.</div>';
+                html = '<div class="informe-empty">No hay empresas en el pipeline.<br>Mueve empresas desde "Por contactar" para ver sus informes aquí.</div>';
             }
 
             container.innerHTML = html;
