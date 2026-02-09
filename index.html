@@ -83,8 +83,8 @@
         /* Tarjetas pipeline */
         body.dark .pipeline-card { background: #262626; border-color: #333; }
         body.dark .pipeline-card:hover { background: #333; }
-        body.dark .client-card { border-color: #333 !important; }
-        body.dark .client-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        body.dark .client-card { background: #262626; border: 1px solid #333; }
+        body.dark .client-card:hover { background: #303030; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
         body.dark .client-card .name { color: #fff; font-weight: 400; }
         body.dark .client-card .sector { color: #aaa; }
         body.dark .client-card .mrr { color: #ccc; }
@@ -526,6 +526,16 @@
             font-size: 11px;
             font-weight: 400;
             color: #666;
+        }
+
+        /* Semáforo */
+        .semaforo {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
         }
 
         /* Client Cards */
@@ -4300,17 +4310,11 @@
                 }
 
                 // Render cards
-                const isDark = document.body.classList.contains('dark');
-                const stageBg = isDark
-                    ? { contactado: '#2a1a1a', reunion: '#2a2210', piloto: '#2a2810', cliente: '#1a2a1a' }
-                    : { contactado: '#fef2f2', reunion: '#fffbeb', piloto: '#fefce8', cliente: '#f0fdf4' };
-                const stageBorder = isDark
-                    ? { contactado: '#4a2020', reunion: '#4a3a10', piloto: '#4a4010', cliente: '#204a20' }
-                    : { contactado: '#fecaca', reunion: '#fed7aa', piloto: '#fef08a', cliente: '#bbf7d0' };
+                const stageColor = { contactado: '#ef4444', reunion: '#f59e0b', piloto: '#facc15', cliente: '#22c55e' };
                 const cardsHtml = companies.length > 0
                     ? companies.map(c => `
-                        <div class="client-card" style="background:${stageBg[stage]};border:1px solid ${stageBorder[stage]}" onclick="openClientDetail(${c.id})">
-                            <div class="name">${c.name}</div>
+                        <div class="client-card" onclick="openClientDetail(${c.id})">
+                            <div style="display:flex;align-items:center"><span class="semaforo" style="background:${stageColor[stage]}"></span><div class="name">${c.name}</div></div>
                             <div class="sector">${c.sector}</div>
                             <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
                         </div>
