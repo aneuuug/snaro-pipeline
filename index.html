@@ -167,6 +167,8 @@
             width: 200px;
             padding: 40px 24px;
             border-right: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
         }
 
         .sidebar-section {
@@ -2394,40 +2396,19 @@
             display: none;
         }
 
-        /* Logout button */
-        .logout-btn {
-            display: none;
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            padding: 10px 16px;
-            background: transparent;
-            border: 1px solid #ddd;
-            border-radius: 0;
-            font-size: 9px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #888;
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s ease;
+        /* Logout in sidebar */
+        #sidebarLogout .sidebar-item {
+            font-size: 11px;
+            color: #999;
         }
-        body.dark .logout-btn {
-            border-color: #333;
+        #sidebarLogout .sidebar-item:hover {
+            color: #666;
+        }
+        body.dark #sidebarLogout .sidebar-item {
             color: #555;
         }
-        .logout-btn:hover {
-            border-color: #999;
-            color: #555;
-        }
-        body.dark .logout-btn:hover {
-            border-color: #555;
+        body.dark #sidebarLogout .sidebar-item:hover {
             color: #888;
-        }
-        @media (max-width: 768px) {
-            .logout-btn {
-                display: none !important;
-            }
         }
     </style>
 </head>
@@ -2493,6 +2474,9 @@
                 <div class="sidebar-title">Gestión</div>
                 <div class="sidebar-item" data-view="calendario" onclick="showView('calendario')">Calendario</div>
                 <div class="sidebar-item" data-view="informes" onclick="showView('informes')">Informes</div>
+            </div>
+            <div class="sidebar-section" id="sidebarLogout" style="display: none; margin-top: auto; padding-top: 20px;">
+                <div class="sidebar-item" onclick="logout()" style="color: #999;">Cerrar sesión</div>
             </div>
         </nav>
 
@@ -5009,13 +4993,13 @@
         function showApp() {
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('appContainer').classList.remove('hidden');
-            document.getElementById('logoutBtn').style.display = 'block';
+            document.getElementById('sidebarLogout').style.display = 'block';
         }
 
         function showLogin() {
             document.getElementById('loginScreen').classList.remove('hidden');
             document.getElementById('appContainer').classList.add('hidden');
-            document.getElementById('logoutBtn').style.display = 'none';
+            document.getElementById('sidebarLogout').style.display = 'none';
         }
 
         function handleLogin(event) {
@@ -5055,8 +5039,7 @@
 
     </div><!-- End app-container -->
 
-    <!-- Logout Button -->
-    <button class="logout-btn" id="logoutBtn" onclick="logout()">Cerrar sesión</button>
+    <!-- Logout button removed - now in sidebar -->
 
     <!-- Menú móvil hamburguesa -->
     <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><img src="logo.png" alt="Menu" class="mobile-menu-logo"></button>
