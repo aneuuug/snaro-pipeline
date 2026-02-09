@@ -4467,27 +4467,6 @@
                 const empNum = empMatch ? empMatch[1] : '-';
                 const facText = rev > 0 ? rev.toFixed(1) + 'M€' : '-';
 
-                // Generate alerts based on company data
-                const autoAlerts = [];
-                if (rev > 50) autoAlerts.push({ text: 'Facturación superior a 50M€ — Alto potencial', source: 'SABI' });
-                if (rev > 0 && rev < 2) autoAlerts.push({ text: 'Facturación baja — Posible empresa en crecimiento o dificultad', source: 'SABI' });
-                const sector = (company.sector || '').toLowerCase();
-                if (sector.includes('energía') || sector.includes('energia')) autoAlerts.push({ text: 'Sector regulado — Verificar cumplimiento normativo', source: 'CNMC' });
-                if (sector.includes('construc')) autoAlerts.push({ text: 'Sector construcción — Revisar certificaciones y licitaciones', source: 'Registro Mercantil' });
-                if (autoAlerts.length === 0) autoAlerts.push({ text: 'Sin alertas destacadas', source: 'Análisis automático' });
-
-                const alertsHtml = autoAlerts.map(a => `
-                    <div class="alert-item">
-                        <span class="icon">—</span>
-                        <div>
-                            <div class="text">${a.text}</div>
-                            <div class="date">${a.source}</div>
-                        </div>
-                    </div>
-                `).join('');
-
-                const oppsHtml = generateOpportunitiesHtml(company);
-
                 invTab.innerHTML = `
                     <div class="info-grid" style="margin-bottom: 24px;">
                         <div class="info-item">
@@ -4508,17 +4487,7 @@
                         </div>
                     </div>
 
-                    <div class="alerts-section" style="margin-bottom: 24px;">
-                        <h5>Alertas</h5>
-                        ${alertsHtml}
-                    </div>
-
-                    <div class="opportunities-section" style="margin-bottom: 24px;">
-                        <h5>Oportunidades SNARO</h5>
-                        ${oppsHtml}
-                    </div>
-
-                    <div style="border-top: 1px solid #e0e0e0; padding-top: 24px; margin-top: 24px;">
+                    <div>
                         <h5 style="margin-bottom: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #999;">Datos de contacto</h5>
                         <div class="form-row">
                             <div class="form-group">
