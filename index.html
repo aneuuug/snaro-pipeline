@@ -843,6 +843,44 @@
         }
 
         /* Move selector */
+        /* Informes */
+        .informe-stage { margin-bottom: 40px; }
+        .informe-stage-title {
+            font-size: 10px; font-weight: 500; letter-spacing: 0.15em;
+            text-transform: uppercase; color: #999; margin-bottom: 16px;
+            padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;
+        }
+        .informe-card {
+            background: #fafafa; border-radius: 8px; padding: 24px;
+            margin-bottom: 12px; cursor: pointer; transition: all 0.2s;
+            border-left: 4px solid #e0e0e0;
+        }
+        .informe-card:hover { background: #f0f0f0; }
+        .informe-card.stage-contactado { border-left-color: #3b82f6; }
+        .informe-card.stage-reunion { border-left-color: #f59e0b; }
+        .informe-card.stage-piloto { border-left-color: #8b5cf6; }
+        .informe-card.stage-cliente { border-left-color: #22c55e; }
+        .informe-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .informe-name { font-size: 16px; font-weight: 400; }
+        .informe-badge {
+            font-size: 10px; font-weight: 500; letter-spacing: 0.05em;
+            padding: 4px 10px; border-radius: 12px; text-transform: uppercase;
+        }
+        .informe-badge.contactado { background: #dbeafe; color: #1e40af; }
+        .informe-badge.reunion { background: #fef3c7; color: #92400e; }
+        .informe-badge.piloto { background: #ede9fe; color: #5b21b6; }
+        .informe-badge.cliente { background: #d1fae5; color: #065f46; }
+        .informe-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+        }
+        .informe-dato-label { font-size: 10px; color: #999; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 2px; }
+        .informe-dato-value { font-size: 14px; font-weight: 300; }
+        .informe-notes { margin-top: 12px; font-size: 12px; color: #666; font-style: italic; }
+        .informe-empty { text-align: center; padding: 60px 20px; color: #999; font-size: 13px; }
+        body.dark .informe-card { background: #222; }
+        body.dark .informe-card:hover { background: #2a2a2a; }
+        body.dark .informe-stage-title { border-bottom-color: #333; color: #666; }
+
         .move-section {
             margin-top: 40px;
             padding-top: 32px;
@@ -2651,12 +2689,12 @@
                 </div>
             </div>
 
-            <!-- View: Informes (placeholder) -->
+            <!-- View: Informes -->
             <div class="view" id="view-informes" style="display: none;">
                 <div class="top-actions">
                     <h1 class="page-title">Informes</h1>
                 </div>
-                <p style="color: #999; font-size: 13px;">Métricas y análisis. Próximamente.</p>
+                <div id="informesContent"></div>
             </div>
         </main>
     </div>
@@ -2779,140 +2817,23 @@
                 </div>
 
                 <div class="tab-content active" id="tab-info">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="label">CIF</div>
-                            <div class="value">B48123456</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Empleados</div>
-                            <div class="value">45</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Facturación</div>
-                            <div class="value">3.2M€</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Contacto</div>
-                            <div class="value">Juan García</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Teléfono</div>
-                            <div class="value">944 123 456</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Email</div>
-                            <div class="value">jgarcia@gastronort.com</div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 32px;">
-                        <div class="sidebar-title" style="margin-bottom: 12px;">Notas</div>
-                        <div class="notes-box">
-                            Contacto inicial por email. Interesados en automatizar la gestión de pedidos de sus clientes (restaurantes). Actualmente lo hacen todo manual con Excel. Tienen 3 personas dedicadas a esto.
-                        </div>
-                    </div>
                 </div>
 
                 <div class="tab-content" id="tab-activity">
-                    <ul class="activity-log">
-                        <li class="activity-item">
-                            <div class="activity-icon">→</div>
-                            <div class="activity-content">
-                                <strong>Email enviado</strong>
-                                <p>Presentación de SNARO y propuesta de valor</p>
-                            </div>
-                            <div class="activity-date">04/02/2026</div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon">·</div>
-                            <div class="activity-content">
-                                <strong>Nota añadida</strong>
-                                <p>Encontrado en LinkedIn. El director publicó sobre problemas de gestión.</p>
-                            </div>
-                            <div class="activity-date">03/02/2026</div>
-                        </li>
-                        <li class="activity-item">
-                            <div class="activity-icon">○</div>
-                            <div class="activity-content">
-                                <strong>Empresa investigada</strong>
-                                <p>Datos obtenidos del Registro Mercantil</p>
-                            </div>
-                            <div class="activity-date">03/02/2026</div>
-                        </li>
-                    </ul>
-
-                    <div class="action-buttons">
-                        <button class="btn">Registrar llamada</button>
-                        <button class="btn">Registrar email</button>
-                        <button class="btn">Añadir nota</button>
-                    </div>
                 </div>
 
                 <div class="tab-content" id="tab-investigation">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="label">Razón Social</div>
-                            <div class="value">Gastronort Distribuciones S.L.</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Constitución</div>
-                            <div class="value">15/03/2008</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Capital Social</div>
-                            <div class="value">150.000€</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Administrador</div>
-                            <div class="value">María López Etxebarria</div>
-                        </div>
-                    </div>
-
-                    <div class="alerts-section" style="margin-top: 32px;">
-                        <h5>Alertas</h5>
-                        <div class="alert-item">
-                            <span class="icon">—</span>
-                            <div>
-                                <div class="text">No han depositado cuentas anuales en 2 años</div>
-                                <div class="date">Última presentación: 2023</div>
-                            </div>
-                        </div>
-                        <div class="alert-item">
-                            <span class="icon">—</span>
-                            <div>
-                                <div class="text">Noticia: Gastronort amplía plantilla ante aumento de demanda</div>
-                                <div class="date">El Correo — Octubre 2025</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="opportunities-section" style="margin-top: 32px;">
-                        <h5>Oportunidades</h5>
-                        <div class="opportunity-item">
-                            <span>→</span>
-                            <span>Automatización de pedidos — Tienen muchos clientes HORECA</span>
-                        </div>
-                        <div class="opportunity-item">
-                            <span>→</span>
-                            <span>Gestión documental — No tienen cuentas al día, posible caos admin</span>
-                        </div>
-                        <div class="opportunity-item">
-                            <span>→</span>
-                            <span>BI/Reporting — Empresa en crecimiento, necesitan visibilidad</span>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="move-section">
-                    <select>
-                        <option>Mover a: Por contactar</option>
-                        <option>Mover a: Contactado</option>
-                        <option>Mover a: Reunión</option>
-                        <option>Mover a: Piloto</option>
-                        <option>Mover a: Cliente</option>
+                    <select id="moveStatusSelect">
+                        <option value="porcontactar">Mover a: Por contactar</option>
+                        <option value="contactado">Mover a: Contactado</option>
+                        <option value="reunion">Mover a: Reunión</option>
+                        <option value="piloto">Mover a: Piloto</option>
+                        <option value="cliente">Mover a: Cliente</option>
                     </select>
-                    <button class="btn btn-primary">Actualizar</button>
+                    <button class="btn btn-primary" onclick="updateCompanyStatus()">Actualizar</button>
                 </div>
             </div>
         </div>
@@ -3982,6 +3903,77 @@
             updateStatsDashboard();
             renderProspects();
             renderPipeline();
+            renderInformes();
+        }
+
+        function renderInformes() {
+            const container = document.getElementById('informesContent');
+            if (!container) return;
+
+            const pipelineStages = ['contactado', 'reunion', 'piloto', 'cliente'];
+            let html = '';
+            let totalEmpresas = 0;
+
+            pipelineStages.forEach(stage => {
+                const companies = getByStatus(stage);
+                if (companies.length === 0) return;
+                totalEmpresas += companies.length;
+
+                html += `<div class="informe-stage">
+                    <div class="informe-stage-title">${getStatusLabel(stage)} — ${companies.length} empresa${companies.length > 1 ? 's' : ''}</div>`;
+
+                companies.forEach(c => {
+                    const revenue = parseRevenue(c.detail);
+                    const detail = c.detail || '';
+                    const employeesMatch = detail.match(/([\d.,]+)\s*empleados/i);
+                    const employees = employeesMatch ? employeesMatch[1] : '-';
+
+                    html += `
+                    <div class="informe-card stage-${stage}" onclick="openClientDetail(${c.id})">
+                        <div class="informe-header">
+                            <div class="informe-name">${c.name}</div>
+                            <span class="informe-badge ${stage}">${getStatusLabel(stage)}</span>
+                        </div>
+                        <div class="informe-grid">
+                            <div>
+                                <div class="informe-dato-label">Sector</div>
+                                <div class="informe-dato-value">${c.sector || '-'}</div>
+                            </div>
+                            <div>
+                                <div class="informe-dato-label">Ubicación</div>
+                                <div class="informe-dato-value">${c.location || '-'}</div>
+                            </div>
+                            <div>
+                                <div class="informe-dato-label">Facturación</div>
+                                <div class="informe-dato-value">${revenue > 0 ? formatRevenue(revenue) : '-'}</div>
+                            </div>
+                            <div>
+                                <div class="informe-dato-label">MRR</div>
+                                <div class="informe-dato-value">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
+                            </div>
+                        </div>
+                        <div class="informe-grid" style="margin-top: 8px;">
+                            <div>
+                                <div class="informe-dato-label">Empleados</div>
+                                <div class="informe-dato-value">${employees}</div>
+                            </div>
+                            <div>
+                                <div class="informe-dato-label">Prioridad</div>
+                                <div class="informe-dato-value">${c.priority || '-'}</div>
+                            </div>
+                        </div>
+                        ${c.notes ? `<div class="informe-notes">${c.notes}</div>` : ''}
+                    </div>`;
+                });
+
+                html += `</div>`;
+            });
+
+            if (totalEmpresas === 0) {
+                html = '<div class="informe-empty">No hay empresas en el pipeline.<br>Mueve empresas desde "Por contactar" para ver sus informes aquí.</div>';
+            }
+
+            container.innerHTML = html;
         }
 
         // Vista actual (cards o table)
@@ -4185,8 +4177,8 @@
                 const header = col.querySelector('.column-header');
                 const countEl = header.querySelector('.column-count');
 
-                // Calcular MRR estimado (simulado)
-                const mrr = companies.length * 500; // 500€ estimado por empresa
+                // Calcular MRR real por empresa
+                const mrr = companies.reduce((sum, c) => sum + (c.mrr || 0), 0);
 
                 if (stage === 'cliente') {
                     totalActual = mrr;
@@ -4203,7 +4195,7 @@
                         <div class="client-card" onclick="openClientDetail(${c.id})">
                             <div class="name">${c.name}</div>
                             <div class="sector">${c.sector}</div>
-                            <div class="mrr ${stage === 'cliente' ? 'active' : ''}">500€/mes</div>
+                            <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
                         </div>
                     `).join('')
                     : `<div class="empty-column">Sin empresas</div>`;
@@ -4323,10 +4315,71 @@
             document.getElementById('clientDetailModal').classList.add('active');
         }
 
+        let currentDetailCompanyId = null;
+
+        function saveCompanyDetails() {
+            if (!currentDetailCompanyId) return;
+            const company = appData.prospects.find(p => p.id === currentDetailCompanyId);
+            if (!company) return;
+
+            company.name = document.getElementById('editName').value.trim() || company.name;
+            company.sector = document.getElementById('editSector').value.trim();
+            company.location = document.getElementById('editLocation').value.trim();
+            company.priority = document.getElementById('editPriority').value;
+            company.mrr = parseInt(document.getElementById('editMrr').value) || 0;
+            company.notes = document.getElementById('editNotes').value.trim();
+
+            const facVal = document.getElementById('editFacturacion').value.trim();
+            const empVal = document.getElementById('editEmpleados').value.trim();
+            company.detail = `Facturación: ${facVal || '0'}M€ · ${empVal || '0'} empleados`;
+
+            // Update header in modal
+            document.getElementById('detailName').textContent = company.name;
+            document.getElementById('detailSector').textContent = company.sector;
+
+            saveData();
+            renderAll();
+            syncToCloud(company);
+            showNotification(company.name + ' guardado');
+        }
+
+        function saveInvestigation() {
+            if (!currentDetailCompanyId) return;
+            const company = appData.prospects.find(p => p.id === currentDetailCompanyId);
+            if (!company) return;
+
+            company.contacto = document.getElementById('editContacto').value.trim();
+            company.cargo = document.getElementById('editCargo').value.trim();
+            company.telefono = document.getElementById('editTelefono').value.trim();
+            company.email = document.getElementById('editEmail').value.trim();
+            company.cif = document.getElementById('editCif').value.trim();
+            company.web = document.getElementById('editWeb').value.trim();
+            company.necesidad = document.getElementById('editNecesidad').value.trim();
+            company.notasInv = document.getElementById('editNotasInv').value.trim();
+            company.oportunidades = document.getElementById('editOportunidades').value.trim();
+
+            saveData();
+            renderAll();
+            syncToCloud(company);
+            showNotification(company.name + ' — investigación guardada');
+        }
+
+        function updateCompanyStatus() {
+            if (!currentDetailCompanyId) return;
+            const newStatus = document.getElementById('moveStatusSelect').value;
+            moveCompany(currentDetailCompanyId, newStatus);
+            closeClientDetail();
+        }
+
         function populateDetailModal(company) {
+            currentDetailCompanyId = company.id;
             document.getElementById('detailName').textContent = company.name;
             document.getElementById('detailSector').textContent = company.sector || '';
             document.getElementById('detailStatus').textContent = getStatusLabel(company.status || 'porcontactar');
+
+            // Pre-seleccionar estado actual en el select de "Mover a"
+            const moveSelect = document.getElementById('moveStatusSelect');
+            if (moveSelect) moveSelect.value = company.status || 'porcontactar';
 
             // Parse detail field for revenue and employees
             const revenue = parseRevenue(company.detail);
@@ -4334,38 +4387,192 @@
             const employeesMatch = detail.match(/([\d.,]+)\s*empleados/i);
             const employees = employeesMatch ? employeesMatch[1] : '-';
 
-            // Update info tab
+            // Update info tab - all editable
             const infoTab = document.getElementById('tab-info');
             if (infoTab) {
+                const facMatch = (company.detail || '').match(/([\d.,]+)M€/);
+                const facValue = facMatch ? facMatch[1] : '';
+
                 infoTab.innerHTML = `
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="label">Ubicación</div>
-                            <div class="value">${company.location || '-'}</div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" id="editName" value="${company.name || ''}">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Sector</label>
+                            <input type="text" id="editSector" value="${company.sector || ''}">
                         </div>
-                        <div class="info-item">
-                            <div class="label">Sector</div>
-                            <div class="value">${company.sector || '-'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Facturación</div>
-                            <div class="value">${revenue > 0 ? formatRevenue(revenue) : '-'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Empleados</div>
-                            <div class="value">${employees}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Prioridad</div>
-                            <div class="value">${company.priority || '-'}</div>
+                        <div class="form-group">
+                            <label>Ubicación</label>
+                            <input type="text" id="editLocation" value="${company.location || ''}">
                         </div>
                     </div>
-                    ${company.notes ? `<div style="margin-top: 32px;"><div class="sidebar-title" style="margin-bottom: 12px;">Notas</div><div class="notes-box">${company.notes}</div></div>` : ''}
-                    <div style="margin-top: 32px; text-align: center;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Facturación (M€)</label>
+                            <input type="text" id="editFacturacion" value="${facValue}" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Empleados</label>
+                            <input type="text" id="editEmpleados" value="${employees !== '-' ? employees : ''}" placeholder="0">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Prioridad</label>
+                            <select id="editPriority">
+                                <option value="low" ${company.priority === 'low' ? 'selected' : ''}>Baja</option>
+                                <option value="medium" ${company.priority === 'medium' ? 'selected' : ''}>Media</option>
+                                <option value="high" ${company.priority === 'high' ? 'selected' : ''}>Alta</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>MRR (€/mes)</label>
+                            <input type="number" id="editMrr" value="${company.mrr || ''}" placeholder="0" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Notas</label>
+                        <textarea id="editNotes" rows="3" placeholder="Añade notas sobre esta empresa...">${company.notes || ''}</textarea>
+                    </div>
+                    <div style="display: flex; gap: 12px; margin-top: 24px;">
+                        <button class="btn btn-primary" style="flex: 1;" onclick="saveCompanyDetails()">Guardar cambios</button>
                         <button class="detail-contact-btn" onclick="moveToContactado(${company.id}); closeClientDetail();">Contactar</button>
                     </div>
                 `;
             }
+
+            // Update activity tab
+            const actTab = document.getElementById('tab-activity');
+            if (actTab) {
+                const status = company.status || 'porcontactar';
+                const actItems = [];
+                if (status === 'cliente') actItems.push({ icon: '✓', text: 'Cliente activo', desc: 'Empresa convertida a cliente' });
+                if (status === 'piloto') actItems.push({ icon: '◉', text: 'Piloto en curso', desc: 'Prueba de servicio iniciada' });
+                if (status === 'reunion') actItems.push({ icon: '→', text: 'Reunión programada', desc: 'Pendiente de reunión comercial' });
+                if (status === 'contactado') actItems.push({ icon: '·', text: 'Primer contacto realizado', desc: 'Empresa contactada' });
+                if (status !== 'porcontactar') actItems.push({ icon: '○', text: 'Añadida al pipeline', desc: 'Empresa identificada como oportunidad' });
+
+                actTab.innerHTML = `
+                    <ul class="activity-log">
+                        ${actItems.map(a => `
+                            <li class="activity-item">
+                                <div class="activity-icon">${a.icon}</div>
+                                <div class="activity-content">
+                                    <strong>${a.text}</strong>
+                                    <p>${a.desc}</p>
+                                </div>
+                            </li>
+                        `).join('')}
+                        ${actItems.length === 0 ? '<li class="activity-item"><div class="activity-content"><p style="color:#999;">Sin actividad registrada</p></div></li>' : ''}
+                    </ul>
+                `;
+            }
+
+            // Update investigation tab - editable
+            const invTab = document.getElementById('tab-investigation');
+            if (invTab) {
+                invTab.innerHTML = `
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Contacto</label>
+                            <input type="text" id="editContacto" value="${company.contacto || ''}" placeholder="Nombre del contacto">
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo</label>
+                            <input type="text" id="editCargo" value="${company.cargo || ''}" placeholder="Director, Gerente...">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" id="editTelefono" value="${company.telefono || ''}" placeholder="944 123 456">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="editEmail" value="${company.email || ''}" placeholder="contacto@empresa.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CIF</label>
+                            <input type="text" id="editCif" value="${company.cif || ''}" placeholder="B12345678">
+                        </div>
+                        <div class="form-group">
+                            <label>Web</label>
+                            <input type="text" id="editWeb" value="${company.web || ''}" placeholder="www.empresa.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Necesidad detectada</label>
+                        <textarea id="editNecesidad" rows="2" placeholder="¿Qué problema tienen? ¿Qué buscan?">${company.necesidad || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Notas de investigación</label>
+                        <textarea id="editNotasInv" rows="3" placeholder="Datos del registro mercantil, noticias, LinkedIn...">${company.notasInv || ''}</textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 24px;">
+                        <label>Oportunidades SNARO</label>
+                        <textarea id="editOportunidades" rows="4" placeholder="Automatización de pedidos, gestión documental, reporting...">${company.oportunidades || generateOpportunitiesText(company)}</textarea>
+                    </div>
+
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="saveInvestigation()">Guardar investigación</button>
+                `;
+            }
+        }
+
+        function generateOpportunities(company) {
+            const opps = [];
+            const rev = parseRevenue(company.detail);
+            const detail = company.detail || '';
+            const employeesMatch = detail.match(/([\d.,]+)\s*empleados/i);
+            const empCount = employeesMatch ? parseInt(employeesMatch[1].replace(/\./g, '')) : 0;
+            const sector = (company.sector || '').toLowerCase();
+
+            if (rev > 50) {
+                opps.push('Facturación alta — Mayor capacidad de inversión en automatización');
+            }
+            if (empCount > 20) {
+                opps.push('Plantilla amplia — Potencial ahorro en costes de personal con automatización');
+            }
+            if (sector.includes('distribu') || sector.includes('logist') || sector.includes('transporte')) {
+                opps.push('Automatización de pedidos y rutas — Sector con muchos procesos repetitivos');
+            }
+            if (sector.includes('fabric') || sector.includes('industri')) {
+                opps.push('Control de producción e inventario — Sector con alta complejidad operativa');
+            }
+            if (sector.includes('comercio') || sector.includes('alimenta')) {
+                opps.push('Gestión de stock y proveedores — Sector con alto volumen transaccional');
+            }
+            if (sector.includes('servicio')) {
+                opps.push('Gestión documental y facturación — Sector con mucha carga administrativa');
+            }
+            if (sector.includes('energía') || sector.includes('energia')) {
+                opps.push('Reporting y cumplimiento normativo — Sector altamente regulado');
+            }
+            if (sector.includes('construc')) {
+                opps.push('Control de obra y certificaciones — Sector con documentación intensiva');
+            }
+            if (opps.length === 0) {
+                opps.push('Automatización de procesos administrativos — Aplicable a cualquier empresa');
+            }
+
+            return opps;
+        }
+
+        function generateOpportunitiesText(company) {
+            return generateOpportunities(company).map(o => '→ ' + o).join('\n');
+        }
+
+        function generateOpportunitiesHtml(company) {
+            return generateOpportunities(company).map(o => `
+                <div class="opportunity-item">
+                    <span>→</span>
+                    <span>${o}</span>
+                </div>
+            `).join('');
         }
 
         function closeClientDetail() {
@@ -4641,7 +4848,7 @@
             if (!supabaseClient || !isCloudConnected) return;
             try {
                 await supabaseClient.from('prospects')
-                    .update({ status: prospect.status, notes: prospect.notes, updated_at: new Date().toISOString() })
+                    .update({ status: prospect.status, notes: prospect.notes, mrr: prospect.mrr || 0, updated_at: new Date().toISOString() })
                     .eq('id', prospect.id);
             } catch (e) {}
         }
