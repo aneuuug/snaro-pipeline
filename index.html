@@ -54,34 +54,142 @@
             background: #1a1a1a;
             color: #e0e0e0;
         }
+        /* Layout */
         body.dark .header { background: #1a1a1a; border-bottom-color: #333; }
         body.dark .sidebar { background: #1a1a1a; border-right-color: #333; }
         body.dark .main-content { background: #111; }
+        body.dark .logo-text { color: #fff; }
+        body.dark .user-name { color: #aaa; }
+        body.dark .sidebar-title { color: #666; }
+        body.dark .sidebar-item { color: #999; }
+        body.dark .sidebar-item:hover, body.dark .sidebar-item.active { color: #fff; background: transparent; }
+        body.dark .page-title { color: #ccc; }
+        /* Pipeline columns & cards */
         body.dark .pipeline-column { background: #222; }
         body.dark .pipeline-card { background: #2a2a2a; border-color: #333; }
         body.dark .pipeline-card:hover { background: #333; }
+        body.dark .column-header { border-bottom-color: #333; }
+        body.dark .column-header h3 { color: #ccc; }
+        body.dark .column-count { color: #aaa; }
+        body.dark .col-cliente { background: #1a2e1a; }
+        body.dark .col-cliente .column-count { color: #22c55e; }
+        body.dark .col-piloto { background: #1f1a2e; }
         body.dark .client-card { background: #2a2a2a; }
         body.dark .client-card:hover { background: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
         body.dark .client-card .name { color: #fff; }
-        body.dark .client-card .sector { color: #777; }
-        body.dark .client-card .mrr { color: #aaa; }
+        body.dark .client-card .sector { color: #999; }
+        body.dark .client-card .mrr { color: #bbb; }
+        body.dark .client-card .mrr.active { color: #22c55e; }
+        body.dark .card-date { color: #f97316; }
+        body.dark .empty-column { color: #555; }
+        /* Prospect cards */
         body.dark .prospect-card { background: #222; }
         body.dark .prospect-card:hover { background: #2a2a2a; }
-        body.dark .sidebar-item { color: #999; }
-        body.dark .sidebar-item:hover, body.dark .sidebar-item.active { color: #fff; background: transparent; }
+        body.dark .prospect-card-enhanced { background: #222; border-color: #333; }
+        body.dark .prospect-card-enhanced:hover { background: #2a2a2a; border-color: #444; }
+        body.dark .prospect-main-info .company-name { color: #fff; }
+        body.dark .tag-sector { background: #333; color: #ccc; }
+        body.dark .tag-location { background: #1a2a3a; color: #6ab0f3; }
+        body.dark .prospect-revenue-section .revenue-amount { color: #fff; }
+        body.dark .revenue-amount { color: #fff; }
+        /* Buttons */
+        body.dark .btn { background: #2a2a2a; color: #ddd; border-color: #444; }
+        body.dark .btn:hover { background: #fff; color: #000; }
+        body.dark .btn-primary { background: #fff; color: #000; }
+        body.dark .btn-primary:hover { background: #ddd; }
+        body.dark .btn-add { background: rgba(255,255,255,0.1); color: #ccc; }
+        body.dark .btn-add:hover { background: rgba(255,255,255,0.2); }
+        body.dark .action-btn.primary { background: transparent; border-color: #444; color: #999; }
+        body.dark .action-btn.primary:hover { border-color: #666; color: #ccc; }
+        body.dark .action-btn.secondary { background: #333; color: #bbb; }
+        body.dark .action-btn.secondary:hover { background: #444; color: #ddd; }
+        body.dark .card-dismiss-btn { color: #555; }
+        body.dark .card-dismiss-btn:hover { background: #333; color: #999; }
+        body.dark .prospect-card-enhanced:hover .card-dismiss-btn { opacity: 1; }
+        /* Modals */
+        body.dark .modal-overlay { background: rgba(0,0,0,0.85); }
         body.dark .modal { background: #222; }
         body.dark .modal-header { border-bottom-color: #333; }
+        body.dark .modal-header h2 { color: #ccc; }
+        body.dark .modal-close { color: #666; }
+        body.dark .modal-close:hover { color: #fff; }
+        /* Forms */
         body.dark input, body.dark select, body.dark textarea { background: #333; border-color: #444; color: #e0e0e0; }
+        body.dark .form-group label { color: #aaa; }
+        body.dark input::placeholder, body.dark textarea::placeholder { color: #666; }
+        /* Tabs */
+        body.dark .tabs .tab { color: #777; }
+        body.dark .tabs .tab:hover { color: #ccc; }
+        body.dark .tabs .tab.active { color: #fff; border-bottom-color: #fff; }
+        /* Detail view */
+        body.dark .detail-grid, body.dark .info-section { background: #2a2a2a; }
+        body.dark .client-detail-header .sector { color: #999; }
+        body.dark .status-badge { background: #333; color: #aaa; }
+        body.dark .status-badge.active { background: #fff; color: #000; }
+        body.dark .info-item { border-bottom-color: #333; }
+        body.dark .info-item .label { color: #888; }
+        body.dark .info-item .value { color: #ddd; }
+        body.dark .notes-box { background: #2a2a2a; color: #bbb; }
+        body.dark .move-section { border-top-color: #333; }
+        body.dark .move-section select { background: #333; border-color: #444; color: #ddd; }
+        /* Activity */
+        body.dark .activity-icon { background: #333; color: #aaa; }
+        body.dark .activity-content p { color: #999; }
+        body.dark .activity-date { color: #666; }
+        /* Investigation */
+        body.dark .investigation-box { background: #2a2a2a; }
+        body.dark .investigation-box h4 { color: #ccc; }
+        body.dark .investigation-box .spinner { border-color: #444; border-top-color: #fff; }
+        body.dark .investigation-box .loading-text { color: #999; }
+        body.dark .alert-item .icon { color: #777; }
+        body.dark .alert-item .text { color: #ddd; }
+        body.dark .alert-item .date { color: #888; }
+        body.dark .opportunity-item { color: #bbb; }
+        /* Table */
+        body.dark .prospect-table th { background: #2a2a2a; border-color: #444; color: #aaa; }
+        body.dark .prospect-table td { border-color: #333; color: #ddd; }
+        body.dark .prospect-table tr:hover td { background: #2a2a2a; }
+        body.dark .prospect-table .badge-high { background: #fff; color: #000; }
+        body.dark .prospect-table .badge-medium { background: #444; color: #ddd; }
+        body.dark .prospect-table .badge-low { background: #333; color: #999; }
+        body.dark .quick-btn { background: #333; border-color: #444; color: #aaa; }
+        body.dark .quick-btn:hover { background: #444; }
+        /* Tier badges */
+        body.dark .tier-enterprise { background: #2a2a4e; color: #a0a0d0; }
+        body.dark .tier-midmarket { background: #1a3050; color: #7db8f0; }
+        body.dark .tier-pyme { background: #1a3a3a; color: #6fcfcf; }
+        body.dark .tier-micro { background: #3a2a1a; color: #d4a06a; }
+        /* Revenue bar */
+        body.dark .revenue-bar-container { background: #333; }
+        /* Stats */
+        body.dark .stats-dashboard { background: linear-gradient(135deg, #1a1a1a 0%, #111 100%); }
+        body.dark .metric-label { color: #999; }
+        body.dark .main-metric .metric-label { color: #888; }
+        /* Filters */
+        body.dark .filter-select, body.dark .filter-select-small { background: #333; border-color: #444; color: #e0e0e0; }
+        body.dark .view-btn { background: #333; border-color: #444; color: #999; }
+        body.dark .view-btn.active { background: #fff; color: #000; }
+        body.dark .filter-pill { background: #333; border-color: #444; color: #ccc; }
+        body.dark .filter-pill.active { background: #fff; color: #000; }
+        /* Charts */
+        body.dark .chart-card { background: #222; border-color: #333; }
+        body.dark .chart-card h3 { color: #fff; }
+        body.dark .chart-bar-label { color: #bbb; }
+        body.dark .chart-bar-container { background: #333; }
+        body.dark .chart-bar-value { color: #ddd; }
+        /* Connection & theme */
         body.dark .theme-toggle { background: #333; border-color: #444; }
         body.dark .connection-badge.online { background: #1e3a29; color: #6fcf97; }
         body.dark .connection-badge.offline { background: #3d3520; color: #f2c94c; }
-        body.dark .column-header { border-bottom-color: #333; }
-        body.dark .logo-text { color: #fff; }
-        body.dark .detail-grid, body.dark .info-section { background: #2a2a2a; }
-        body.dark .tabs .tab { color: #999; }
-        body.dark .tabs .tab.active { color: #fff; border-bottom-color: #fff; }
-        body.dark .col-cliente { background: #1a2e1a; }
-        body.dark .col-cliente .column-count { color: #22c55e; }
+        /* Empty states */
+        body.dark .empty-state { color: #888; }
+        body.dark .empty-state .empty-hint { color: #666; }
+        /* Summary */
+        body.dark .summary-label { color: #999; }
+        body.dark .summary-hint { color: #777; }
+        /* Contact button */
+        body.dark .detail-contact-btn { border-color: #444; color: #999; }
+        body.dark .detail-contact-btn:hover { border-color: #666; color: #ccc; }
 
         * {
             margin: 0;
@@ -521,15 +629,6 @@
             border-color: #999;
             color: #555;
         }
-        body.dark .detail-contact-btn {
-            border-color: #333;
-            color: #555;
-        }
-        body.dark .detail-contact-btn:hover {
-            border-color: #555;
-            color: #888;
-        }
-
         /* Form */
         .form-group {
             margin-bottom: 24px;
@@ -1017,9 +1116,6 @@
         }
         .view-btn:hover { background: #f5f5f5; }
         .view-btn.active { background: #000; color: #fff; border-color: #000; }
-        body.dark .filter-select, body.dark .filter-select-small { background: #333; border-color: #444; color: #e0e0e0; }
-        body.dark .view-btn { background: #333; border-color: #444; color: #999; }
-        body.dark .view-btn.active { background: #fff; color: #000; }
 
         /* Prospect List */
         .prospect-list {
@@ -1091,10 +1187,6 @@
         .quick-btn:hover { background: #f0f0f0; }
         .quick-btn.interested { color: #22c55e; border-color: #22c55e; }
         .quick-btn.not-interested { color: #ef4444; border-color: #ef4444; }
-        body.dark .prospect-table th { background: #2a2a2a; border-color: #444; color: #999; }
-        body.dark .prospect-table td { border-color: #333; }
-        body.dark .prospect-table tr:hover td { background: #2a2a2a; }
-        body.dark .quick-btn { background: #333; border-color: #444; }
 
         /* Revenue Tiers System */
         .tier-badge {
@@ -1212,8 +1304,6 @@
         .stat-card.micro .stat-label { color: rgba(255,255,255,0.9); }
         .stat-card.micro .stat-revenue { color: rgba(255,255,255,0.6); }
 
-        body.dark .stats-dashboard { background: linear-gradient(135deg, #1a1a1a 0%, #111 100%); }
-
         /* Revenue Display in Card */
         .revenue-display {
             display: flex;
@@ -1230,8 +1320,6 @@
             font-size: 12px;
             color: #666;
         }
-        body.dark .revenue-amount { color: #fff; }
-
         /* Enhanced Prospect Card */
         .prospect-card-enhanced {
             position: relative;
@@ -1362,27 +1450,6 @@
             background: #f0f0f0;
             color: #888;
         }
-        body.dark .card-dismiss-btn {
-            color: #555;
-        }
-        body.dark .prospect-card-enhanced:hover .card-dismiss-btn {
-            opacity: 1;
-        }
-        body.dark .card-dismiss-btn:hover {
-            background: #333;
-            color: #999;
-        }
-
-        body.dark .prospect-card-enhanced { background: #222; border-color: #333; }
-        body.dark .prospect-card-enhanced:hover { background: #2a2a2a; border-color: #444; }
-        body.dark .prospect-main-info .company-name { color: #fff; }
-        body.dark .tag-sector { background: #333; color: #aaa; }
-        body.dark .tag-location { background: #1a2a3a; color: #6ab0f3; }
-        body.dark .prospect-revenue-section .revenue-amount { color: #fff; }
-        body.dark .action-btn.primary { background: transparent; border-color: #333; color: #555; }
-        body.dark .action-btn.primary:hover { border-color: #555; color: #888; }
-        body.dark .action-btn.secondary { background: #333; color: #aaa; }
-
         /* Charts Section */
         .charts-section {
             display: grid;
@@ -1455,11 +1522,6 @@
         .bar-euskadi { background: linear-gradient(90deg, #c2703a, #e09556); }
 
         body.dark .chart-card { background: #222; border-color: #333; }
-        body.dark .chart-card h3 { color: #fff; }
-        body.dark .chart-bar-label { color: #aaa; }
-        body.dark .chart-bar-container { background: #333; }
-        body.dark .chart-bar-value { color: #ddd; }
-
         /* ============================================ */
         /* ESTILOS MÓVIL - DISEÑO PROFESIONAL */
         /* ============================================ */
@@ -1994,8 +2056,6 @@
         }
         .filter-pill:hover { border-color: #000; }
         .filter-pill.active { background: #000; color: #fff; border-color: #000; }
-        body.dark .filter-pill { background: #333; border-color: #444; color: #ccc; }
-        body.dark .filter-pill.active { background: #fff; color: #000; }
 
         .prospect-card {
             background: #fff;
