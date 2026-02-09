@@ -86,7 +86,9 @@
         body.dark .client-card { background: #262626; border: 1px solid #333; }
         body.dark .client-card:hover { background: #303030; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
         body.dark .client-card .name { color: #fff; font-weight: 400; }
-        body.dark .client-card .sector { color: #aaa; }
+        body.dark .card-tag.tag-sec { background: #2a2a2a; color: #ddd; }
+        body.dark .card-tag.tag-loc { background: #162030; color: #7dc4ff; }
+        body.dark .card-tag.tag-pri { background: #2a2a4e; color: #b8b8e8; }
         body.dark .client-card .mrr { color: #ccc; }
         body.dark .client-card .mrr.active { color: #4ade80; }
         body.dark .card-date { color: #fb923c; }
@@ -564,11 +566,23 @@
             margin-bottom: 4px;
         }
 
-        .client-card .sector {
-            font-size: 11px;
-            color: #999;
-            margin-bottom: 8px;
+        .client-card .card-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 6px;
         }
+
+        .client-card .card-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        .card-tag.tag-sec { background: #f5f5f5; color: #555; }
+        .card-tag.tag-loc { background: #f0f7ff; color: #0066cc; }
+        .card-tag.tag-pri { background: #e3e3f0; color: #2a2a4e; }
 
         .client-card .mrr {
             font-size: 13px;
@@ -4311,15 +4325,22 @@
                 // Render cards
                 const stageColor = { contactado: '#ef4444', reunion: '#f59e0b', piloto: '#facc15', cliente: '#22c55e' };
                 const cardsHtml = companies.length > 0
-                    ? companies.map(c => `
+                    ? companies.map(c => {
+                        const prov = c.location ? c.location.split('/').pop().trim() : '';
+                        return `
                         <div class="client-card" onclick="openClientDetail(${c.id})" style="display:flex;align-items:flex-start">
                             <span class="semaforo" style="background:${stageColor[stage]};margin-top:5px"></span>
                             <div style="flex:1;min-width:0">
                                 <div class="name">${c.name}</div>
-                                <div class="sector">${c.sector}</div>
+                                <div class="card-tags">
+                                    <span class="card-tag tag-sec">${c.sector}</span>
+                                    ${prov ? `<span class="card-tag tag-loc">${prov}</span>` : ''}
+                                    <span class="card-tag tag-pri">${c.priority || 'medium'}</span>
+                                </div>
                                 <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
                             </div>
-                        </div>
+                        </div>`;
+                    }
                     `).join('')
                     : `<div class="empty-column">Sin empresas</div>`;
 
