@@ -4951,8 +4951,37 @@
 
             appData.prospects.push(newCompany);
             saveData();
+
+            // Sincronizar con Supabase si está conectado
+            if (supabaseClient && isCloudConnected) {
+                try {
+                    supabaseClient.from('prospects').upsert({
+                        id: newId,
+                        name: name,
+                        sector: newCompany.sector,
+                        location: '',
+                        priority: 'medium',
+                        detail: newCompany.detail,
+                        status: 'porcontactar',
+                        notes: notes,
+                        updated_at: new Date().toISOString()
+                    }).then(() => {
+                        console.log('Empresa sincronizada con Supabase');
+                    });
+                } catch (e) {
+                    console.log('Error sync nueva empresa:', e);
+                }
+            }
+
             renderAll();
             closeAddModal();
+
+            // Mostrar la empresa recién añadida en la búsqueda
+            const searchInput = document.getElementById('searchProspects');
+            if (searchInput) {
+                searchInput.value = name;
+                filterProspects();
+            }
 
             // Limpiar formulario
             document.getElementById('companyName').value = '';
