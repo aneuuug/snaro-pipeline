@@ -50,146 +50,188 @@
         .theme-toggle.header-theme { display: none; }
 
         /* Dark mode styles */
-        body.dark {
-            background: #1a1a1a;
-            color: #e0e0e0;
-        }
-        /* Layout */
-        body.dark .header { background: #1a1a1a; border-bottom-color: #333; }
-        body.dark .sidebar { background: #1a1a1a; border-right-color: #333; }
-        body.dark .main-content { background: #111; }
+        /* ============================================ */
+        /* MODO OSCURO COMPLETO                         */
+        /* ============================================ */
+        body.dark { background: #141414; color: #e8e8e8; }
+
+        /* Layout principal */
+        body.dark .header { background: #141414; border-bottom-color: #2a2a2a; }
+        body.dark .sidebar { background: #141414; border-right-color: #2a2a2a; }
+        body.dark .main-content { background: #1a1a1a; }
         body.dark .logo-text { color: #fff; }
-        body.dark .user-name { color: #aaa; }
-        body.dark .sidebar-title { color: #666; }
-        body.dark .sidebar-item { color: #999; }
+        body.dark .user-name { color: #bbb; }
+        body.dark .sidebar-title { color: #888; }
+        body.dark .sidebar-item { color: #aaa; }
         body.dark .sidebar-item:hover, body.dark .sidebar-item.active { color: #fff; background: transparent; }
-        body.dark .page-title { color: #ccc; }
-        /* Pipeline columns & cards */
-        body.dark .pipeline-column { background: #222; }
-        body.dark .pipeline-card { background: #2a2a2a; border-color: #333; }
-        body.dark .pipeline-card:hover { background: #333; }
+        body.dark .page-title { color: #ddd; }
+
+        /* Pipeline columnas — cada etapa con su color */
+        body.dark .pipeline-column { background: #1e1e1e; }
         body.dark .column-header { border-bottom-color: #333; }
-        body.dark .column-header h3 { color: #ccc; }
-        body.dark .column-count { color: #aaa; }
-        body.dark .col-cliente { background: #1a2e1a; }
-        body.dark .col-cliente .column-count { color: #22c55e; }
-        body.dark .col-piloto { background: #1f1a2e; }
-        body.dark .client-card { background: #2a2a2a; }
-        body.dark .client-card:hover { background: #333; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
-        body.dark .client-card .name { color: #fff; }
-        body.dark .client-card .sector { color: #999; }
-        body.dark .client-card .mrr { color: #bbb; }
-        body.dark .client-card .mrr.active { color: #22c55e; }
-        body.dark .card-date { color: #f97316; }
-        body.dark .empty-column { color: #555; }
-        /* Prospect cards */
-        body.dark .prospect-card { background: #222; }
+        body.dark .column-header h3 { color: #ddd; }
+        body.dark .column-count { color: #bbb; }
+        body.dark .col-contactado { background: #161d2a; }
+        body.dark .col-contactado .column-count { color: #60a5fa; }
+        body.dark .col-reunion { background: #231c10; }
+        body.dark .col-reunion .column-count { color: #fbbf24; }
+        body.dark .col-piloto { background: #1d162a; }
+        body.dark .col-piloto .column-count { color: #a78bfa; }
+        body.dark .col-cliente { background: #142214; }
+        body.dark .col-cliente .column-count { color: #4ade80; }
+
+        /* Tarjetas pipeline */
+        body.dark .pipeline-card { background: #262626; border-color: #333; }
+        body.dark .pipeline-card:hover { background: #333; }
+        body.dark .client-card { background: #262626; border: 1px solid #333; }
+        body.dark .client-card:hover { background: #303030; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+        body.dark .client-card .name { color: #fff; font-weight: 400; }
+        body.dark .client-card .sector { color: #aaa; }
+        body.dark .client-card .mrr { color: #ccc; }
+        body.dark .client-card .mrr.active { color: #4ade80; }
+        body.dark .card-date { color: #fb923c; }
+        body.dark .empty-column { color: #666; }
+
+        /* Prospect cards (vista lista) */
+        body.dark .prospect-card { background: #222; border-color: #333; }
         body.dark .prospect-card:hover { background: #2a2a2a; }
         body.dark .prospect-card-enhanced { background: #222; border-color: #333; }
         body.dark .prospect-card-enhanced:hover { background: #2a2a2a; border-color: #444; }
         body.dark .prospect-main-info .company-name { color: #fff; }
-        body.dark .tag-sector { background: #333; color: #ccc; }
-        body.dark .tag-location { background: #1a2a3a; color: #6ab0f3; }
+        body.dark .tag-sector { background: #2a2a2a; color: #ddd; border: 1px solid #444; }
+        body.dark .tag-location { background: #162030; color: #7dc4ff; border: 1px solid #1a3050; }
+        body.dark .prospect-revenue-section { background: transparent; }
         body.dark .prospect-revenue-section .revenue-amount { color: #fff; }
         body.dark .revenue-amount { color: #fff; }
-        /* Buttons */
-        body.dark .btn { background: #2a2a2a; color: #ddd; border-color: #444; }
+        body.dark .revenue-unit { color: #999; }
+
+        /* Botones */
+        body.dark .btn { background: #2a2a2a; color: #e0e0e0; border: 1px solid #444; }
         body.dark .btn:hover { background: #fff; color: #000; }
-        body.dark .btn-primary { background: #fff; color: #000; }
-        body.dark .btn-primary:hover { background: #ddd; }
-        body.dark .btn-add { background: rgba(255,255,255,0.1); color: #ccc; }
+        body.dark .btn-primary { background: #fff; color: #000; border-color: #fff; }
+        body.dark .btn-primary:hover { background: #e0e0e0; }
+        body.dark .btn-add { background: rgba(255,255,255,0.1); color: #ddd; }
         body.dark .btn-add:hover { background: rgba(255,255,255,0.2); }
-        body.dark .action-btn.primary { background: transparent; border-color: #444; color: #999; }
-        body.dark .action-btn.primary:hover { border-color: #666; color: #ccc; }
-        body.dark .action-btn.secondary { background: #333; color: #bbb; }
-        body.dark .action-btn.secondary:hover { background: #444; color: #ddd; }
-        body.dark .card-dismiss-btn { color: #555; }
-        body.dark .card-dismiss-btn:hover { background: #333; color: #999; }
+        body.dark .action-btn.primary { background: transparent; border-color: #555; color: #bbb; }
+        body.dark .action-btn.primary:hover { border-color: #888; color: #fff; }
+        body.dark .action-btn.secondary { background: #333; color: #ccc; }
+        body.dark .action-btn.secondary:hover { background: #444; color: #fff; }
+        body.dark .card-dismiss-btn { color: #666; }
+        body.dark .card-dismiss-btn:hover { background: #333; color: #bbb; }
         body.dark .prospect-card-enhanced:hover .card-dismiss-btn { opacity: 1; }
-        /* Modals */
-        body.dark .modal-overlay { background: rgba(0,0,0,0.85); }
-        body.dark .modal { background: #222; }
+        body.dark .detail-contact-btn { border-color: #555; color: #bbb; }
+        body.dark .detail-contact-btn:hover { border-color: #888; color: #fff; }
+
+        /* Modales */
+        body.dark .modal-overlay { background: rgba(0,0,0,0.88); }
+        body.dark .modal { background: #1e1e1e; border: 1px solid #333; }
         body.dark .modal-header { border-bottom-color: #333; }
-        body.dark .modal-header h2 { color: #ccc; }
-        body.dark .modal-close { color: #666; }
+        body.dark .modal-header h2 { color: #ddd; }
+        body.dark .modal-close { color: #888; }
         body.dark .modal-close:hover { color: #fff; }
-        /* Forms */
-        body.dark input, body.dark select, body.dark textarea { background: #333; border-color: #444; color: #e0e0e0; }
-        body.dark .form-group label { color: #aaa; }
+
+        /* Formularios */
+        body.dark input, body.dark select, body.dark textarea { background: #2a2a2a; border-color: #444; color: #e8e8e8; }
+        body.dark input:focus, body.dark select:focus, body.dark textarea:focus { border-color: #666; }
+        body.dark .form-group label { color: #bbb; }
         body.dark input::placeholder, body.dark textarea::placeholder { color: #666; }
+        body.dark .form-buttons .btn { border-color: #444; }
+
         /* Tabs */
-        body.dark .tabs .tab { color: #777; }
-        body.dark .tabs .tab:hover { color: #ccc; }
+        body.dark .tabs { border-bottom-color: #333; }
+        body.dark .tabs .tab { color: #888; }
+        body.dark .tabs .tab:hover { color: #ddd; }
         body.dark .tabs .tab.active { color: #fff; border-bottom-color: #fff; }
+
         /* Detail view */
-        body.dark .detail-grid, body.dark .info-section { background: #2a2a2a; }
-        body.dark .client-detail-header .sector { color: #999; }
-        body.dark .status-badge { background: #333; color: #aaa; }
+        body.dark .client-detail-header h2 { color: #fff; }
+        body.dark .client-detail-header .sector { color: #aaa; }
+        body.dark .status-badge { background: #333; color: #ccc; border: 1px solid #444; }
         body.dark .status-badge.active { background: #fff; color: #000; }
-        body.dark .info-item { border-bottom-color: #333; }
-        body.dark .info-item .label { color: #888; }
-        body.dark .info-item .value { color: #ddd; }
-        body.dark .notes-box { background: #2a2a2a; color: #bbb; }
+        body.dark .detail-grid, body.dark .info-section { background: #222; }
+        body.dark .info-grid { background: transparent; }
+        body.dark .info-item { border-bottom-color: #2a2a2a; }
+        body.dark .info-item .label { color: #999; }
+        body.dark .info-item .value { color: #eee; }
+        body.dark .notes-box { background: #262626; color: #ccc; }
         body.dark .move-section { border-top-color: #333; }
-        body.dark .move-section select { background: #333; border-color: #444; color: #ddd; }
-        /* Activity */
-        body.dark .activity-icon { background: #333; color: #aaa; }
-        body.dark .activity-content p { color: #999; }
-        body.dark .activity-date { color: #666; }
-        /* Investigation */
-        body.dark .investigation-box { background: #2a2a2a; }
-        body.dark .investigation-box h4 { color: #ccc; }
+        body.dark .move-section select { background: #2a2a2a; border-color: #444; color: #e0e0e0; }
+
+        /* Actividad */
+        body.dark .activity-icon { background: #2a2a2a; color: #ccc; }
+        body.dark .activity-content strong { color: #eee; }
+        body.dark .activity-content p { color: #aaa; }
+        body.dark .activity-date { color: #777; }
+
+        /* Investigación */
+        body.dark .investigation-box { background: #222; }
+        body.dark .investigation-box h4 { color: #ddd; }
         body.dark .investigation-box .spinner { border-color: #444; border-top-color: #fff; }
-        body.dark .investigation-box .loading-text { color: #999; }
-        body.dark .alert-item .icon { color: #777; }
-        body.dark .alert-item .text { color: #ddd; }
-        body.dark .alert-item .date { color: #888; }
-        body.dark .opportunity-item { color: #bbb; }
-        /* Table */
-        body.dark .prospect-table th { background: #2a2a2a; border-color: #444; color: #aaa; }
-        body.dark .prospect-table td { border-color: #333; color: #ddd; }
-        body.dark .prospect-table tr:hover td { background: #2a2a2a; }
+        body.dark .investigation-box .loading-text { color: #aaa; }
+        body.dark .alert-item .icon { color: #888; }
+        body.dark .alert-item .text { color: #eee; }
+        body.dark .alert-item .date { color: #999; }
+        body.dark .opportunity-item { color: #ccc; }
+
+        /* Tabla */
+        body.dark .prospect-table { border-color: #333; }
+        body.dark .prospect-table th { background: #222; border-color: #333; color: #bbb; }
+        body.dark .prospect-table td { border-color: #2a2a2a; color: #ddd; }
+        body.dark .prospect-table tr:hover td { background: #262626; }
+        body.dark .prospect-table .company-name { color: #fff; }
         body.dark .prospect-table .badge-high { background: #fff; color: #000; }
-        body.dark .prospect-table .badge-medium { background: #444; color: #ddd; }
-        body.dark .prospect-table .badge-low { background: #333; color: #999; }
-        body.dark .quick-btn { background: #333; border-color: #444; color: #aaa; }
-        body.dark .quick-btn:hover { background: #444; }
+        body.dark .prospect-table .badge-medium { background: #444; color: #eee; }
+        body.dark .prospect-table .badge-low { background: #333; color: #aaa; }
+        body.dark .quick-btn { background: #2a2a2a; border-color: #444; color: #bbb; }
+        body.dark .quick-btn:hover { background: #444; color: #fff; }
+        body.dark .quick-btn.interested { color: #4ade80; border-color: #4ade80; }
+        body.dark .quick-btn.not-interested { color: #f87171; border-color: #f87171; }
+
         /* Tier badges */
-        body.dark .tier-enterprise { background: #2a2a4e; color: #a0a0d0; }
-        body.dark .tier-midmarket { background: #1a3050; color: #7db8f0; }
-        body.dark .tier-pyme { background: #1a3a3a; color: #6fcfcf; }
-        body.dark .tier-micro { background: #3a2a1a; color: #d4a06a; }
+        body.dark .tier-enterprise { background: #2a2a4e; color: #b8b8e8; }
+        body.dark .tier-midmarket { background: #1a3050; color: #8cc8ff; }
+        body.dark .tier-pyme { background: #1a3a3a; color: #7ee0e0; }
+        body.dark .tier-micro { background: #3a2a1a; color: #e8b878; }
+
         /* Revenue bar */
-        body.dark .revenue-bar-container { background: #333; }
-        /* Stats */
-        body.dark .stats-dashboard { background: linear-gradient(135deg, #1a1a1a 0%, #111 100%); }
-        body.dark .metric-label { color: #999; }
-        body.dark .main-metric .metric-label { color: #888; }
-        /* Filters */
-        body.dark .filter-select, body.dark .filter-select-small { background: #333; border-color: #444; color: #e0e0e0; }
-        body.dark .view-btn { background: #333; border-color: #444; color: #999; }
+        body.dark .revenue-bar-container { background: #2a2a2a; }
+
+        /* Stats dashboard */
+        body.dark .stats-dashboard { background: linear-gradient(135deg, #181818 0%, #111 100%); }
+        body.dark .metric-label { color: #aaa; }
+        body.dark .metric-value { color: #fff; }
+        body.dark .main-metric .metric-label { color: #999; }
+
+        /* Filtros */
+        body.dark .filter-select, body.dark .filter-select-small { background: #2a2a2a; border-color: #444; color: #e0e0e0; }
+        body.dark .view-btn { background: #2a2a2a; border-color: #444; color: #bbb; }
+        body.dark .view-btn:hover { background: #333; }
         body.dark .view-btn.active { background: #fff; color: #000; }
-        body.dark .filter-pill { background: #333; border-color: #444; color: #ccc; }
-        body.dark .filter-pill.active { background: #fff; color: #000; }
+        body.dark .filter-pill { background: #2a2a2a; border-color: #444; color: #ddd; }
+        body.dark .filter-pill:hover { border-color: #888; }
+        body.dark .filter-pill.active { background: #fff; color: #000; border-color: #fff; }
+
         /* Charts */
-        body.dark .chart-card { background: #222; border-color: #333; }
+        body.dark .chart-card { background: #1e1e1e; border-color: #333; }
         body.dark .chart-card h3 { color: #fff; }
-        body.dark .chart-bar-label { color: #bbb; }
-        body.dark .chart-bar-container { background: #333; }
-        body.dark .chart-bar-value { color: #ddd; }
-        /* Connection & theme */
-        body.dark .theme-toggle { background: #333; border-color: #444; }
-        body.dark .connection-badge.online { background: #1e3a29; color: #6fcf97; }
-        body.dark .connection-badge.offline { background: #3d3520; color: #f2c94c; }
-        /* Empty states */
-        body.dark .empty-state { color: #888; }
-        body.dark .empty-state .empty-hint { color: #666; }
-        /* Summary */
-        body.dark .summary-label { color: #999; }
-        body.dark .summary-hint { color: #777; }
-        /* Contact button */
-        body.dark .detail-contact-btn { border-color: #444; color: #999; }
-        body.dark .detail-contact-btn:hover { border-color: #666; color: #ccc; }
+        body.dark .chart-bar-label { color: #ccc; }
+        body.dark .chart-bar-container { background: #2a2a2a; }
+        body.dark .chart-bar-value { color: #eee; }
+
+        /* Conexión & theme toggle */
+        body.dark .theme-toggle { background: #2a2a2a; border-color: #444; }
+        body.dark .theme-toggle:hover { background: #444; }
+        body.dark .connection-badge.online { background: #142a14; color: #6fcf97; border: 1px solid #1a3a1a; }
+        body.dark .connection-badge.offline { background: #2a2210; color: #f2c94c; border: 1px solid #3d3520; }
+
+        /* Estados vacíos */
+        body.dark .empty-state { color: #999; }
+        body.dark .empty-state .empty-hint { color: #777; }
+
+        /* Resumen */
+        body.dark .summary-label { color: #aaa; }
+        body.dark .summary-hint { color: #888; }
+        body.dark h5 { color: #ddd; }
 
         * {
             margin: 0;
@@ -987,18 +1029,22 @@
         .informe-dato-value { font-size: 14px; font-weight: 300; }
         .informe-notes { margin-top: 12px; font-size: 12px; color: #666; font-style: italic; }
         .informe-empty { text-align: center; padding: 60px 20px; color: #999; font-size: 13px; }
-        body.dark .informe-card { background: #222; border-left-color: #555; }
+        body.dark .informe-card { background: #222; border-left-color: #666; }
         body.dark .informe-card:hover { background: #2a2a2a; }
-        body.dark .informe-stage-title { border-bottom-color: #333; color: #777; }
-        body.dark .informe-name { color: #fff; }
-        body.dark .informe-dato-label { color: #777; }
-        body.dark .informe-dato-value { color: #ddd; }
-        body.dark .informe-notes { color: #aaa; }
-        body.dark .informe-badge.porcontactar { background: #333; color: #aaa; }
-        body.dark .informe-badge.contactado { background: #1e3a5f; color: #7db8f0; }
-        body.dark .informe-badge.reunion { background: #3d2e10; color: #f5c842; }
+        body.dark .informe-card.stage-contactado { border-left-color: #60a5fa; }
+        body.dark .informe-card.stage-reunion { border-left-color: #fbbf24; }
+        body.dark .informe-card.stage-piloto { border-left-color: #a78bfa; }
+        body.dark .informe-card.stage-cliente { border-left-color: #4ade80; }
+        body.dark .informe-stage-title { border-bottom-color: #333; color: #aaa; }
+        body.dark .informe-name { color: #fff; font-weight: 400; }
+        body.dark .informe-dato-label { color: #999; }
+        body.dark .informe-dato-value { color: #eee; }
+        body.dark .informe-notes { color: #bbb; }
+        body.dark .informe-badge.porcontactar { background: #333; color: #ccc; }
+        body.dark .informe-badge.contactado { background: #1a2e4e; color: #7db8f0; }
+        body.dark .informe-badge.reunion { background: #3d2e10; color: #fbbf24; }
         body.dark .informe-badge.piloto { background: #2d1f5e; color: #b09cf5; }
-        body.dark .informe-badge.cliente { background: #1a3a2a; color: #6fcf97; }
+        body.dark .informe-badge.cliente { background: #143a20; color: #6fcf97; }
 
         .move-section {
             margin-top: 40px;
