@@ -4905,6 +4905,11 @@
             try {
                 await supabaseClient.from('prospects')
                     .update({
+                        name: prospect.name,
+                        sector: prospect.sector,
+                        location: prospect.location,
+                        priority: prospect.priority,
+                        detail: prospect.detail,
                         status: prospect.status || 'porcontactar',
                         notes: prospect.notes || '',
                         updated_at: new Date().toISOString()
