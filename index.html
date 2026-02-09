@@ -4313,10 +4313,13 @@
                 const stageColor = { contactado: '#ef4444', reunion: '#f59e0b', piloto: '#facc15', cliente: '#22c55e' };
                 const cardsHtml = companies.length > 0
                     ? companies.map(c => `
-                        <div class="client-card" onclick="openClientDetail(${c.id})">
-                            <div style="display:flex;align-items:center"><span class="semaforo" style="background:${stageColor[stage]}"></span><div class="name">${c.name}</div></div>
-                            <div class="sector">${c.sector}</div>
-                            <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
+                        <div class="client-card" onclick="openClientDetail(${c.id})" style="display:flex;align-items:flex-start">
+                            <span class="semaforo" style="background:${stageColor[stage]};margin-top:5px"></span>
+                            <div style="flex:1;min-width:0">
+                                <div class="name">${c.name}</div>
+                                <div class="sector">${c.sector}</div>
+                                <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
+                            </div>
                         </div>
                     `).join('')
                     : `<div class="empty-column">Sin empresas</div>`;
