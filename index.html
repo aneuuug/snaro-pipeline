@@ -4340,8 +4340,7 @@
                                 <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
                             </div>
                         </div>`;
-                    }
-                    `).join('')
+                    }).join('')
                     : `<div class="empty-column">Sin empresas</div>`;
 
                 // Clear and re-render
