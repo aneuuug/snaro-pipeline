@@ -4972,29 +4972,21 @@
         async function syncFromCloud() {
             if (!supabaseClient) return;
             try {
-                const { data, error } = await supabaseClient.from('prospects').select('*').order('id');
-                if (!error && data && data.length > 0) {
-                    // Merge: cloud wins unless local has newer changes
-                    const localMap = {};
-                    appData.prospects.forEach(p => { localMap[p.id] = p; });
+                // Solo descargar empresas modificadas (no porcontactar)
+                const { data, error } = await supabaseClient.from('prospects')
+                    .select('*')
+                    .neq('status', 'porcontactar');
+                if (!error && data) {
+                    // Aplicar cambios de la nube al estado local
+                    const cloudMap = {};
+                    data.forEach(d => { cloudMap[d.id] = d; });
 
-                    const merged = initialProspects.map(ip => {
-                        const cloud = data.find(d => d.id === ip.id);
-                        const local = localMap[ip.id];
-
-                        // Cloud has modifications → use cloud
-                        if (cloud && (cloud.status !== 'porcontactar' || cloud.notes || cloud.contacto || cloud.notasInv)) {
-                            return { ...ip, ...cloud };
+                    appData.prospects.forEach((p, i) => {
+                        if (cloudMap[p.id]) {
+                            appData.prospects[i] = { ...p, ...cloudMap[p.id] };
                         }
-                        // Local has modifications → use local
-                        if (local && (local.status !== 'porcontactar' || local.notes || local.contacto || local.notasInv)) {
-                            return { ...ip, ...local };
-                        }
-                        // Neither modified → use initial + cloud data
-                        return cloud ? { ...ip, ...cloud } : { ...ip, status: 'porcontactar' };
                     });
 
-                    appData.prospects = merged;
                     saveData();
                     renderAll();
 
