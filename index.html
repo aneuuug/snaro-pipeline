@@ -1755,30 +1755,29 @@
             }
             .company-tags {
                 display: flex;
-                gap: 0;
+                gap: 6px;
                 flex-wrap: wrap;
                 align-items: center;
             }
             .tag-sector, .tag-location {
-                font-size: 12px;
-                padding: 0;
-                border-radius: 0;
-                background: none;
-                color: #888;
-                font-weight: 400;
+                font-size: 11px;
+                padding: 3px 9px;
+                border-radius: 12px;
+                font-weight: 500;
             }
-            .tag-sector::after {
-                content: "  ·  ";
-                color: #ccc;
+            .tag-sector {
+                background: #f5f5f5;
+                color: #555;
             }
             .tag-location {
-                color: #888;
+                background: #f0f7ff;
+                color: #0066cc;
             }
             .company-tags .tier-badge {
                 font-size: 9px;
                 padding: 2px 6px;
-                margin-left: 6px;
-                border-radius: 3px;
+                margin-left: 0;
+                border-radius: 10px;
             }
 
             .prospect-revenue-section {
