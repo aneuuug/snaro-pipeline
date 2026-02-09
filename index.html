@@ -1875,17 +1875,42 @@
 
             .pipeline-board {
                 display: flex;
-                overflow-x: auto;
+                flex-direction: column;
                 gap: 12px;
-                padding: 0 12px;
-                -webkit-overflow-scrolling: touch;
-                scroll-snap-type: x mandatory;
+                padding: 0 4px;
+                overflow-x: visible;
             }
             .pipeline-column {
-                min-width: 85vw;
-                flex-shrink: 0;
-                scroll-snap-align: center;
-                border-radius: 16px;
+                min-width: unset;
+                width: 100%;
+                flex-shrink: 1;
+                border-radius: 12px;
+                min-height: unset;
+                padding: 14px;
+            }
+            .pipeline-column .column-header {
+                padding-bottom: 10px;
+                margin-bottom: 8px;
+            }
+            .pipeline-column .column-header h3 {
+                font-size: 12px;
+            }
+            .pipeline-column .empty-column {
+                padding: 12px 0;
+                font-size: 12px;
+            }
+            .pipeline-column .client-card {
+                padding: 12px;
+                margin-bottom: 6px;
+            }
+            .pipeline-column .client-card .name {
+                font-size: 13px;
+            }
+            .pipeline-column .client-card .mrr {
+                font-size: 12px;
+            }
+            .pipeline-column .card-tag {
+                font-size: 9px;
             }
 
             /* Modal móvil */
