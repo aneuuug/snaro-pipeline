@@ -109,8 +109,8 @@
         /* Botones */
         body.dark .btn { background: #2a2a2a; color: #e0e0e0; border: 1px solid #444; }
         body.dark .btn:hover { background: #fff; color: #000; }
-        body.dark .btn-primary { background: #fff; color: #000; border-color: #fff; }
-        body.dark .btn-primary:hover { background: #e0e0e0; }
+        body.dark .btn-primary { background: rgba(38, 188, 171, 0.2); color: #fff; border-color: rgba(38, 188, 171, 0.3); }
+        body.dark .btn-primary:hover { background: rgba(38, 188, 171, 0.85); border-color: rgba(38, 188, 171, 0.9); color: #fff; }
         body.dark .btn-add { background: rgba(255,255,255,0.1); color: #ddd; }
         body.dark .btn-add:hover { background: rgba(255,255,255,0.2); }
         body.dark .action-btn.primary { background: transparent; border-color: #555; color: #bbb; }
@@ -124,30 +124,30 @@
         body.dark .detail-contact-btn:hover { border-color: #888; color: #fff; }
 
         /* Modales */
-        body.dark .modal-overlay { background: rgba(0,0,0,0.88); }
-        body.dark .modal { background: #1e1e1e; border: 1px solid #333; }
+        body.dark .modal-overlay { background: rgba(0,0,0,0.5); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        body.dark .modal { background: #1c1c1e; border: none; box-shadow: 0 24px 80px rgba(0,0,0,0.4); }
         body.dark .modal-header { border-bottom-color: #333; }
         body.dark .modal-header h2 { color: #ddd; }
         body.dark .modal-close { color: #888; }
         body.dark .modal-close:hover { color: #fff; }
 
         /* Formularios */
-        body.dark input, body.dark select, body.dark textarea { background: #2a2a2a; border-color: #444; color: #e8e8e8; }
-        body.dark input:focus, body.dark select:focus, body.dark textarea:focus { border-color: #666; }
-        body.dark .form-group label { color: #bbb; }
-        body.dark input::placeholder, body.dark textarea::placeholder { color: #666; }
+        body.dark .form-group input, body.dark .form-group select, body.dark .form-group textarea { background: #2c2c2e; border-color: transparent; color: #e5e5ea; }
+        body.dark .form-group input:focus, body.dark .form-group select:focus, body.dark .form-group textarea:focus { background: #1c1c1e; border-color: #0a84ff; box-shadow: 0 0 0 3px rgba(10,132,255,0.2); }
+        body.dark .form-group label { color: #98989d; }
+        body.dark input::placeholder, body.dark textarea::placeholder { color: #48484a; }
         body.dark .form-buttons .btn { border-color: #444; }
 
         /* Tabs */
-        body.dark .tabs { border-bottom-color: #333; }
-        body.dark .tabs .tab { color: #888; }
-        body.dark .tabs .tab:hover { color: #ddd; }
-        body.dark .tabs .tab.active { color: #fff; border-bottom-color: #fff; }
+        body.dark .tabs { background: #2c2c2e; }
+        body.dark .tabs .tab { color: #98989d; }
+        body.dark .tabs .tab:hover { color: #e5e5ea; }
+        body.dark .tabs .tab.active { color: #fff; background: #3a3a3c; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
 
         /* Detail view */
         body.dark .client-detail-header h2 { color: #fff; }
-        body.dark .client-detail-header .sector { color: #aaa; }
-        body.dark .status-badge { background: #333; color: #ccc; border: 1px solid #444; }
+        body.dark .client-detail-header .sector { color: #98989d; }
+        body.dark .status-badge { background: #2c2c2e; color: #98989d; border: none; }
         body.dark .status-badge.active { background: #fff; color: #000; }
         body.dark .detail-grid, body.dark .info-section { background: #222; }
         body.dark .info-grid { background: transparent; }
@@ -155,8 +155,8 @@
         body.dark .info-item .label { color: #999; }
         body.dark .info-item .value { color: #eee; }
         body.dark .notes-box { background: #262626; color: #ccc; }
-        body.dark .move-section { border-top-color: #333; }
-        body.dark .move-section select { background: #2a2a2a; border-color: #444; color: #e0e0e0; }
+        body.dark .move-section { border-top-color: #2c2c2e; }
+        body.dark .move-section select { background: #2c2c2e; border-color: transparent; color: #e5e5ea; }
 
         /* Actividad */
         body.dark .activity-icon { background: #2a2a2a; color: #ccc; }
@@ -456,12 +456,18 @@
         }
 
         .btn-primary {
-            background: #000;
-            color: #fff;
+            background: rgba(38, 188, 171, 0.15);
+            color: #000;
+            border: 1px solid rgba(38, 188, 171, 0.25);
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
 
         .btn-primary:hover {
-            background: #333;
+            background: rgba(38, 188, 171, 0.85);
+            border-color: rgba(38, 188, 171, 0.9);
+            color: #000;
         }
 
         .btn-add {
@@ -625,11 +631,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255,255,255,0.95);
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             z-index: 1000;
             justify-content: center;
-            align-items: flex-start;
-            padding: 60px 40px;
+            align-items: center;
+            padding: 24px;
             overflow-y: auto;
         }
 
@@ -640,12 +648,16 @@
         .modal {
             background: #fff;
             width: 100%;
-            max-width: 640px;
-            border: 1px solid #e0e0e0;
+            max-width: 720px;
+            border-radius: 16px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05);
+            border: none;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
         }
 
         .modal-header {
-            padding: 24px 32px;
+            padding: 16px 24px;
             border-bottom: 1px solid #f0f0f0;
             display: flex;
             justify-content: space-between;
@@ -668,14 +680,22 @@
             cursor: pointer;
             padding: 0;
             line-height: 1;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
         }
 
         .modal-close:hover {
             color: #000;
+            background: #f5f5f5;
         }
 
         .modal-body {
-            padding: 32px;
+            padding: 20px 24px;
         }
 
         .detail-contact-btn {
@@ -698,50 +718,52 @@
         }
         /* Form */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 12px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             font-size: 10px;
             font-weight: 500;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            color: #999;
+            color: #86868b;
         }
 
         .form-group input,
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 12px 0;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #e0e0e0;
-            color: #000;
+            padding: 8px 12px;
+            background: #f5f5f7;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            color: #1d1d1f;
             font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            font-weight: 300;
-            transition: border-color 0.2s;
+            font-size: 13px;
+            font-weight: 400;
+            transition: all 0.2s;
         }
 
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #000;
+            background: #fff;
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
         }
 
         .form-group input::placeholder,
         .form-group textarea::placeholder {
-            color: #ccc;
+            color: #aeaeb2;
         }
 
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 32px;
+            gap: 16px;
         }
 
         /* Investigation Results */
@@ -884,30 +906,31 @@
         .client-detail-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 40px;
+            align-items: center;
+            margin-bottom: 16px;
         }
 
         .client-detail-header h2 {
-            font-size: 24px;
-            font-weight: 300;
+            font-size: 20px;
+            font-weight: 500;
             letter-spacing: -0.02em;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
         }
 
         .client-detail-header .sector {
-            font-size: 13px;
+            font-size: 12px;
             color: #999;
         }
 
         .status-badge {
             font-size: 10px;
             font-weight: 500;
-            letter-spacing: 0.1em;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            padding: 8px 16px;
+            padding: 6px 12px;
             background: #f5f5f5;
             color: #666;
+            border-radius: 20px;
         }
 
         .status-badge.active {
@@ -918,28 +941,35 @@
         /* Tabs */
         .tabs {
             display: flex;
-            gap: 32px;
-            margin-bottom: 32px;
-            border-bottom: 1px solid #f0f0f0;
+            gap: 4px;
+            margin-bottom: 16px;
+            background: #f5f5f7;
+            border-radius: 10px;
+            padding: 3px;
         }
 
         .tab {
-            padding: 16px 0;
+            padding: 8px 16px;
             font-size: 12px;
-            color: #999;
+            font-weight: 500;
+            color: #86868b;
             cursor: pointer;
-            border-bottom: 1px solid transparent;
-            margin-bottom: -1px;
+            border-bottom: none;
+            border-radius: 8px;
             transition: all 0.2s;
+            flex: 1;
+            text-align: center;
         }
 
         .tab:hover {
-            color: #666;
+            color: #1d1d1f;
         }
 
         .tab.active {
-            color: #000;
-            border-color: #000;
+            color: #1d1d1f;
+            background: #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            border-color: transparent;
         }
 
         .tab-content {
@@ -1072,27 +1102,31 @@
         body.dark .informe-badge.cliente { background: #143a20; color: #6fcf97; }
 
         .move-section {
-            margin-top: 40px;
-            padding-top: 32px;
+            margin-top: 16px;
+            padding-top: 16px;
             border-top: 1px solid #f0f0f0;
             display: flex;
-            gap: 16px;
+            gap: 10px;
             align-items: center;
         }
 
         .move-section select {
             flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #e0e0e0;
-            background: #fff;
+            padding: 10px 12px;
+            border: 1px solid transparent;
+            background: #f5f5f7;
+            border-radius: 10px;
             font-family: 'Inter', sans-serif;
             font-size: 13px;
             cursor: pointer;
+            color: #1d1d1f;
         }
 
         .move-section select:focus {
             outline: none;
-            border-color: #000;
+            background: #fff;
+            border-color: #0071e3;
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.15);
         }
 
         /* Form buttons */
@@ -1921,7 +1955,20 @@
                 max-width: 100%;
                 max-height: 100vh;
                 margin: 0;
-                border-radius: 0;
+                border-radius: 16px 16px 0 0;
+            }
+            .modal-overlay {
+                align-items: flex-end;
+                padding: 0;
+            }
+
+            /* Botón Actualizar móvil */
+            .btn-primary {
+                -webkit-tap-highlight-color: transparent;
+            }
+            .btn-primary:active {
+                background: rgba(38, 188, 171, 0.85);
+                border-color: rgba(38, 188, 171, 0.9);
             }
 
             /* Header right en móvil */
@@ -2959,14 +3006,14 @@
 
                 <div class="tabs">
                     <div class="tab active" onclick="showTab('info')">Información</div>
-                    <div class="tab" onclick="showTab('activity')">Actividad</div>
+                    <div class="tab" onclick="showTab('contacto')">Contacto</div>
                     <div class="tab" onclick="showTab('investigation')">Investigación</div>
                 </div>
 
                 <div class="tab-content active" id="tab-info">
                 </div>
 
-                <div class="tab-content" id="tab-activity">
+                <div class="tab-content" id="tab-contacto">
                 </div>
 
                 <div class="tab-content" id="tab-investigation">
@@ -3961,24 +4008,52 @@
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    // Si hay menos empresas que las nuevas, actualizar manteniendo el progreso
-                    if (parsed.prospects && parsed.prospects.length < initialProspects.length) {
-                        console.log('Nuevas empresas detectadas. Actualizando de ' + parsed.prospects.length + ' a ' + initialProspects.length);
-                        // Mantener el estado de las empresas existentes
-                        const existingStatus = {};
-                        parsed.prospects.forEach(p => { existingStatus[p.id] = p.status; });
-                        // Crear nueva lista con todas las empresas
-                        appData = {
-                            prospects: initialProspects.map(p => ({
-                                ...p,
-                                status: existingStatus[p.id] || 'porcontactar'
-                            })),
-                            pipeline: parsed.pipeline || { contactado: [], reunion: [], piloto: [], cliente: [] }
-                        };
-                        saveData();
-                    } else {
-                        appData = parsed;
+                    // Crear mapa de datos guardados por el usuario
+                    const savedMap = {};
+                    if (parsed.prospects) {
+                        parsed.prospects.forEach(p => { savedMap[p.id] = p; });
                     }
+                    // Merge: datos base de SABI + datos editados por usuario
+                    const initialIds = new Set(initialProspects.map(p => p.id));
+                    const mergedProspects = initialProspects.map(p => {
+                        const s = savedMap[p.id];
+                        if (s) {
+                            return {
+                                ...p,
+                                // Mantener datos editados por el usuario
+                                status: s.status || 'porcontactar',
+                                contacto: s.contacto || '',
+                                cargo: s.cargo || '',
+                                telefono: s.telefono || '',
+                                email: s.email || '',
+                                cif: s.cif || '',
+                                web: s.web || '',
+                                necesidad: s.necesidad || '',
+                                notasInv: s.notasInv || '',
+                                notes: s.notes || '',
+                                priority: s.priority || p.priority,
+                                mrr: s.mrr || 0,
+                                facturacion: s.facturacion || '',
+                                empleados: s.empleados || ''
+                            };
+                        }
+                        return { ...p, status: 'porcontactar' };
+                    });
+
+                    // Recuperar empresas añadidas manualmente por el usuario
+                    if (parsed.prospects) {
+                        parsed.prospects.forEach(p => {
+                            if (!initialIds.has(p.id)) {
+                                mergedProspects.push(p);
+                            }
+                        });
+                    }
+
+                    appData = {
+                        prospects: mergedProspects,
+                        pipeline: parsed.pipeline || { contactado: [], reunion: [], piloto: [], cliente: [] }
+                    };
+                    saveData();
                     console.log('Datos cargados: ' + appData.prospects.length + ' empresas');
                 } catch (e) {
                     console.log('Error cargando datos, usando iniciales');
@@ -4493,7 +4568,7 @@
             showNotification(company.name + ' guardado');
         }
 
-        function saveInvestigation() {
+        function saveContacto() {
             if (!currentDetailCompanyId) return;
             const company = appData.prospects.find(p => p.id === currentDetailCompanyId);
             if (!company) return;
@@ -4504,9 +4579,32 @@
             company.email = document.getElementById('editEmail').value.trim();
             company.cif = document.getElementById('editCif').value.trim();
             company.web = document.getElementById('editWeb').value.trim();
+
+            saveData();
+            renderAll();
+            syncToCloud(company);
+            showNotification(company.name + ' — contacto guardado');
+        }
+
+        function saveInvestigation() {
+            if (!currentDetailCompanyId) return;
+            const company = appData.prospects.find(p => p.id === currentDetailCompanyId);
+            if (!company) return;
+
+            company.sector = document.getElementById('editSector').value.trim();
+            company.location = document.getElementById('editUbicacion').value.trim();
             company.necesidad = document.getElementById('editNecesidad').value.trim();
             company.notasInv = document.getElementById('editNotasInv').value.trim();
-            company.oportunidades = document.getElementById('editOportunidades').value.trim();
+
+            // Actualizar empleados y facturación en detail
+            const newEmpleados = document.getElementById('editEmpleados').value.trim();
+            const newFacturacion = document.getElementById('editFacturacion').value.trim();
+            if (newEmpleados) {
+                company.empleados = newEmpleados;
+            }
+            if (newFacturacion) {
+                company.facturacion = newFacturacion;
+            }
 
             saveData();
             renderAll();
@@ -4516,6 +4614,49 @@
 
         function updateCompanyStatus() {
             if (!currentDetailCompanyId) return;
+            const company = appData.prospects.find(p => p.id === currentDetailCompanyId);
+            if (!company) return;
+
+            // Guardar datos de información
+            const editName = document.getElementById('editName');
+            if (editName) {
+                company.name = editName.value.trim() || company.name;
+                company.priority = document.getElementById('editPriority').value;
+                company.mrr = parseInt(document.getElementById('editMrr').value) || 0;
+                company.notes = document.getElementById('editNotes').value.trim();
+                const facVal = document.getElementById('editFacturacion') ? document.getElementById('editFacturacion').value.trim() : '';
+                const empVal = document.getElementById('editEmpleados') ? document.getElementById('editEmpleados').value.trim() : '';
+                if (facVal || empVal) {
+                    company.detail = 'Facturación: ' + (facVal || '0') + 'M€ · ' + (empVal || '0') + ' empleados';
+                }
+                const editLoc = document.getElementById('editLocation');
+                if (editLoc) company.location = editLoc.value.trim();
+                const editSec = document.getElementById('editSector');
+                if (editSec) company.sector = editSec.value.trim();
+            }
+
+            // Guardar datos de contacto
+            const editContacto = document.getElementById('editContacto');
+            if (editContacto) {
+                company.contacto = editContacto.value.trim();
+                company.cargo = document.getElementById('editCargo').value.trim();
+                company.telefono = document.getElementById('editTelefono').value.trim();
+                company.email = document.getElementById('editEmail').value.trim();
+                company.cif = document.getElementById('editCif').value.trim();
+                company.web = document.getElementById('editWeb').value.trim();
+            }
+
+            // Guardar datos de investigación
+            const editNecesidad = document.getElementById('editNecesidad');
+            if (editNecesidad) {
+                company.necesidad = editNecesidad.value.trim();
+                company.notasInv = document.getElementById('editNotasInv').value.trim();
+            }
+
+            saveData();
+            syncToCloud(company);
+
+            // Mover estado
             const newStatus = document.getElementById('moveStatusSelect').value;
             moveCompany(currentDetailCompanyId, newStatus);
             closeClientDetail();
@@ -4582,116 +4723,64 @@
                             <input type="number" id="editMrr" value="${company.mrr || ''}" placeholder="0" min="0">
                         </div>
                     </div>
+                `;
+            }
+
+
+            // Update contacto tab
+            const contactoTab = document.getElementById('tab-contacto');
+            if (contactoTab) {
+                contactoTab.innerHTML = `
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Contacto</label>
+                            <input type="text" id="editContacto" value="${company.contacto || ''}" placeholder="Nombre del contacto">
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo</label>
+                            <input type="text" id="editCargo" value="${company.cargo || ''}" placeholder="Director, Gerente...">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" id="editTelefono" value="${company.telefono || ''}" placeholder="944 123 456">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="editEmail" value="${company.email || ''}" placeholder="contacto@empresa.com">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CIF</label>
+                            <input type="text" id="editCif" value="${company.cif || ''}" placeholder="B12345678">
+                        </div>
+                        <div class="form-group">
+                            <label>Web</label>
+                            <input type="text" id="editWeb" value="${company.web || ''}" placeholder="www.empresa.com">
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label>Notas</label>
                         <textarea id="editNotes" rows="3" placeholder="Añade notas sobre esta empresa...">${company.notes || ''}</textarea>
                     </div>
-                    <div style="display: flex; gap: 12px; margin-top: 24px;">
-                        <button class="btn btn-primary" style="flex: 1;" onclick="saveCompanyDetails()">Guardar cambios</button>
-                        <button class="detail-contact-btn" onclick="moveToContactado(${company.id}); closeClientDetail();">Contactar</button>
-                    </div>
-                `;
-            }
-
-            // Update activity tab
-            const actTab = document.getElementById('tab-activity');
-            if (actTab) {
-                const status = company.status || 'porcontactar';
-                const actItems = [];
-                if (status === 'cliente') actItems.push({ icon: '✓', text: 'Cliente activo', desc: 'Empresa convertida a cliente' });
-                if (status === 'piloto') actItems.push({ icon: '◉', text: 'Piloto en curso', desc: 'Prueba de servicio iniciada' });
-                if (status === 'reunion') actItems.push({ icon: '→', text: 'Reunión programada', desc: 'Pendiente de reunión comercial' });
-                if (status === 'contactado') actItems.push({ icon: '·', text: 'Primer contacto realizado', desc: 'Empresa contactada' });
-                if (status !== 'porcontactar') actItems.push({ icon: '○', text: 'Añadida al pipeline', desc: 'Empresa identificada como oportunidad' });
-
-                actTab.innerHTML = `
-                    <ul class="activity-log">
-                        ${actItems.map(a => `
-                            <li class="activity-item">
-                                <div class="activity-icon">${a.icon}</div>
-                                <div class="activity-content">
-                                    <strong>${a.text}</strong>
-                                    <p>${a.desc}</p>
-                                </div>
-                            </li>
-                        `).join('')}
-                        ${actItems.length === 0 ? '<li class="activity-item"><div class="activity-content"><p style="color:#999;">Sin actividad registrada</p></div></li>' : ''}
-                    </ul>
                 `;
             }
 
             // Update investigation tab - datos auto-generados + editable
             const invTab = document.getElementById('tab-investigation');
             if (invTab) {
-                const rev = parseRevenue(company.detail);
-                const detailStr = company.detail || '';
-                const empMatch = detailStr.match(/([\d.,]+)\s*empleados/i);
-                const empNum = empMatch ? empMatch[1] : '-';
-                const facText = rev > 0 ? rev.toFixed(1) + 'M€' : '-';
-
                 invTab.innerHTML = `
-                    <div class="info-grid" style="margin-bottom: 24px;">
-                        <div class="info-item">
-                            <div class="label">Facturación</div>
-                            <div class="value">${facText}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Empleados</div>
-                            <div class="value">${empNum}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Sector</div>
-                            <div class="value">${company.sector || '-'}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="label">Ubicación</div>
-                            <div class="value">${company.location || '-'}</div>
-                        </div>
+                    <div class="form-group">
+                        <label>Necesidad detectada</label>
+                        <textarea id="editNecesidad" rows="3" placeholder="¿Qué problema tienen? ¿Qué buscan?">${company.necesidad || ''}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Notas de investigación</label>
+                        <textarea id="editNotasInv" rows="4" placeholder="Datos del registro mercantil, noticias, LinkedIn...">${company.notasInv || ''}</textarea>
                     </div>
 
-                    <div>
-                        <h5 style="margin-bottom: 16px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #999;">Datos de contacto</h5>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Contacto</label>
-                                <input type="text" id="editContacto" value="${company.contacto || ''}" placeholder="Nombre del contacto">
-                            </div>
-                            <div class="form-group">
-                                <label>Cargo</label>
-                                <input type="text" id="editCargo" value="${company.cargo || ''}" placeholder="Director, Gerente...">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Teléfono</label>
-                                <input type="text" id="editTelefono" value="${company.telefono || ''}" placeholder="944 123 456">
-                            </div>
-                            <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" id="editEmail" value="${company.email || ''}" placeholder="contacto@empresa.com">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>CIF</label>
-                                <input type="text" id="editCif" value="${company.cif || ''}" placeholder="B12345678">
-                            </div>
-                            <div class="form-group">
-                                <label>Web</label>
-                                <input type="text" id="editWeb" value="${company.web || ''}" placeholder="www.empresa.com">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Necesidad detectada</label>
-                            <textarea id="editNecesidad" rows="2" placeholder="¿Qué problema tienen? ¿Qué buscan?">${company.necesidad || ''}</textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Notas de investigación</label>
-                            <textarea id="editNotasInv" rows="3" placeholder="Datos del registro mercantil, noticias, LinkedIn...">${company.notasInv || ''}</textarea>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary" style="width: 100%; margin-top: 16px;" onclick="saveInvestigation()">Guardar investigación</button>
                 `;
             }
         }
@@ -4825,8 +4914,59 @@
         }
 
         function saveCompany() {
-            alert('Empresa guardada en el pipeline');
+            const name = document.getElementById('companyName')?.value.trim();
+            if (!name) {
+                showNotification('Introduce el nombre de la empresa');
+                return;
+            }
+
+            const sector = document.getElementById('companySector')?.value || 'Otros';
+            const cif = document.getElementById('companyCIF')?.value.trim() || '';
+            const contacto = document.getElementById('companyContact')?.value.trim() || '';
+            const notes = document.getElementById('companyNotes')?.value.trim() || '';
+
+            // Leer datos de investigación si existen
+            const facturacion = document.getElementById('resFacturacion')?.textContent || '';
+            const empleados = document.getElementById('resEmpleados')?.textContent || '';
+
+            // Generar ID único (mayor que cualquier existente)
+            const maxId = appData.prospects.reduce((max, p) => Math.max(max, p.id), 0);
+            const newId = maxId + 1;
+
+            const newCompany = {
+                id: newId,
+                name: name,
+                sector: sector.charAt(0).toUpperCase() + sector.slice(1),
+                location: '',
+                priority: 'medium',
+                detail: facturacion && facturacion !== '—' ? facturacion : '',
+                status: 'porcontactar',
+                cif: cif,
+                contacto: contacto,
+                notes: notes,
+                facturacion: facturacion && facturacion !== '—' ? facturacion : '',
+                empleados: empleados && empleados !== '—' ? empleados : '',
+                userAdded: true
+            };
+
+            appData.prospects.push(newCompany);
+            saveData();
+            renderAll();
             closeAddModal();
+
+            // Limpiar formulario
+            document.getElementById('companyName').value = '';
+            document.getElementById('companyCIF').value = '';
+            document.getElementById('companySector').value = '';
+            document.getElementById('companyContact').value = '';
+            document.getElementById('companyNotes').value = '';
+            document.getElementById('investigationResults').style.display = 'none';
+            document.getElementById('resFacturacion').textContent = '—';
+            document.getElementById('resEmpleados').textContent = '—';
+            document.getElementById('resConstitucion').textContent = '—';
+            document.getElementById('resAuditoria').textContent = '—';
+
+            showNotification(`${name} añadida al pipeline`);
         }
 
         // Close modals on outside click
