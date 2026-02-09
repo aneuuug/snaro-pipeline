@@ -529,21 +529,18 @@
         }
 
         /* Semáforo */
-        .card-top-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
         .semaforo {
-            width: 8px;
-            height: 8px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            flex-shrink: 0;
-            box-shadow: 0 0 4px rgba(0,0,0,0.15);
         }
 
         /* Client Cards */
         .client-card {
+            position: relative;
             padding: 16px;
             margin-bottom: 8px;
             background: #fff;
@@ -4316,10 +4313,8 @@
                 const cardsHtml = companies.length > 0
                     ? companies.map(c => `
                         <div class="client-card" onclick="openClientDetail(${c.id})">
-                            <div class="card-top-row">
-                                <span class="semaforo" style="background:${stageLight[stage]}"></span>
-                                <div class="name">${c.name}</div>
-                            </div>
+                            <span class="semaforo" style="background:${stageLight[stage]}"></span>
+                            <div class="name">${c.name}</div>
                             <div class="sector">${c.sector}</div>
                             <div class="mrr ${stage === 'cliente' ? 'active' : ''}">${c.mrr ? c.mrr.toLocaleString() + '€/mes' : '-'}</div>
                         </div>
