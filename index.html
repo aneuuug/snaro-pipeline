@@ -165,11 +165,13 @@
         /* Sidebar */
         .sidebar {
             width: 200px;
-            padding: 40px 24px;
+            padding: 40px 24px 0;
             border-right: 1px solid #f0f0f0;
             display: flex;
             flex-direction: column;
-            min-height: calc(100vh - 80px);
+            height: calc(100vh - 60px);
+            position: sticky;
+            top: 60px;
         }
 
         .sidebar-section {
@@ -2476,7 +2478,7 @@
                 <div class="sidebar-item" data-view="calendario" onclick="showView('calendario')">Calendario</div>
                 <div class="sidebar-item" data-view="informes" onclick="showView('informes')">Informes</div>
             </div>
-            <div class="sidebar-section" id="sidebarLogout" style="display: none; margin-top: auto; padding-top: 20px;">
+            <div class="sidebar-section" id="sidebarLogout" style="display: none; margin-top: auto; padding-bottom: 20px;">
                 <div class="sidebar-item" onclick="logout()" style="color: #999;">Cerrar sesión</div>
             </div>
         </nav>
