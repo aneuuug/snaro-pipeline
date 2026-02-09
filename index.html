@@ -4869,18 +4869,32 @@
             try {
                 const { data, error } = await supabaseClient.from('prospects').select('*').order('id');
                 if (!error && data && data.length > 0) {
-                    const localStatuses = {};
-                    appData.prospects.forEach(p => { localStatuses[p.id] = { status: p.status, notes: p.notes }; });
-                    data.forEach(cp => {
-                        const local = localStatuses[cp.id];
-                        if (local && local.status !== 'porcontactar') {
-                            cp.status = local.status;
-                            cp.notes = local.notes || cp.notes;
+                    // Merge: cloud wins unless local has newer changes
+                    const localMap = {};
+                    appData.prospects.forEach(p => { localMap[p.id] = p; });
+
+                    const merged = initialProspects.map(ip => {
+                        const cloud = data.find(d => d.id === ip.id);
+                        const local = localMap[ip.id];
+
+                        // Cloud has modifications → use cloud
+                        if (cloud && (cloud.status !== 'porcontactar' || cloud.notes || cloud.contacto || cloud.notasInv)) {
+                            return { ...ip, ...cloud };
                         }
+                        // Local has modifications → use local
+                        if (local && (local.status !== 'porcontactar' || local.notes || local.contacto || local.notasInv)) {
+                            return { ...ip, ...local };
+                        }
+                        // Neither modified → use initial + cloud data
+                        return cloud ? { ...ip, ...cloud } : { ...ip, status: 'porcontactar' };
                     });
-                    appData.prospects = data;
+
+                    appData.prospects = merged;
                     saveData();
                     renderAll();
+
+                    // Push local modifications to cloud
+                    await syncAllToCloud();
                     showNotification('Sincronizado');
                 }
             } catch (e) {}
@@ -4890,9 +4904,38 @@
             if (!supabaseClient || !isCloudConnected) return;
             try {
                 await supabaseClient.from('prospects')
-                    .update({ status: prospect.status, notes: prospect.notes, mrr: prospect.mrr || 0, updated_at: new Date().toISOString() })
-                    .eq('id', prospect.id);
+                    .upsert({
+                        id: prospect.id,
+                        name: prospect.name,
+                        sector: prospect.sector,
+                        location: prospect.location,
+                        detail: prospect.detail,
+                        priority: prospect.priority,
+                        status: prospect.status || 'porcontactar',
+                        notes: prospect.notes || '',
+                        mrr: prospect.mrr || 0,
+                        contacto: prospect.contacto || '',
+                        cargo: prospect.cargo || '',
+                        telefono: prospect.telefono || '',
+                        email: prospect.email || '',
+                        cif: prospect.cif || '',
+                        web: prospect.web || '',
+                        necesidad: prospect.necesidad || '',
+                        notasInv: prospect.notasInv || '',
+                        oportunidades: prospect.oportunidades || '',
+                        updated_at: new Date().toISOString()
+                    });
             } catch (e) {}
+        }
+
+        async function syncAllToCloud() {
+            if (!supabaseClient || !isCloudConnected) return;
+            const modified = appData.prospects.filter(p =>
+                p.status !== 'porcontactar' || p.notes || p.contacto || p.notasInv || p.mrr
+            );
+            for (const p of modified) {
+                await syncToCloud(p);
+            }
         }
 
         // Override to sync
